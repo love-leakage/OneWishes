@@ -534,11 +534,15 @@ function unlockTiers(unlocked){
 }
 
 // Authentication & Profile Handler
-async function refreshAuthUI(){
+async function refreshAuthUI(sessionOverride = null){
   const client = initDb();
   if(!client) return;
   try{
-    const { data: { session } } = await client.auth.getSession();
+    let session = sessionOverride;
+    if(!session){
+      const { data } = await client.auth.getSession();
+      session = data ? data.session : null;
+    }
     currentUser = session ? session.user : null;
 
     const nav = document.getElementById('navAuthState');
@@ -588,6 +592,19 @@ async function refreshAuthUI(){
     updateUrlPreview();
   }catch(e){ console.error('Auth refresh failed', e); }
 }
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const client = initDb();
+  if(client){
+    client.auth.onAuthStateChange((event, session) => {
+      refreshAuthUI(session);
+    });
+  }
+  await refreshAuthUI();
+  await loadHomepageNeverfade();
+  await loadWishFromHash();
+});
+window.addEventListener('hashchange', loadWishFromHash);
 
 // Google OAuth Sign In
 const btnGoogle = document.getElementById('btnGoogleAuth');
