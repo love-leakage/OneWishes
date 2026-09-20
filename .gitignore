@@ -2,4 +2,5 @@
 .env*.local
 node_modules/
 .next/
+.wrangler/
 .DS_Store
