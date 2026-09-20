@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONEWISHES — A wish worth sending</title>
+<meta name="description" content="OneWishes limits how many people you can wish, on purpose — so the ones you do wish know exactly what it cost you.">
+<meta property="og:title" content="ONEWISHES">
+<meta property="og:description" content="Most wishes are forgotten in a day. Some are meant to last a lifetime.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='50' y='68' font-size='55' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+<style>
+  :root{
+    --black:#0A0A0A; --white:#FAFAF8; --grey-1:#1A1A1A; --grey-2:#5C5C58; --grey-3:#B8B8B2;
+    --line: rgba(10,10,10,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  body{ font-family:'Inter', sans-serif; color:var(--black); background:var(--white); line-height:1.55; }
+  h1,h2,h3{ font-family:'Fraunces', serif; letter-spacing:-0.02em; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:'Inter', sans-serif; }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001s !important; transition-duration:0.001s !important; } }
+
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 28px; }
+  @media (max-width:700px){ .wrap{ padding:0 18px; } }
+
+  nav{ display:flex; justify-content:space-between; align-items:center; padding:28px 0; border-bottom:1px solid var(--line); }
+  .brand{ font-family:'Fraunces', serif; font-weight:900; font-size:1.1rem; letter-spacing:0.02em; }
+  nav .links{ display:flex; gap:26px; font-size:0.9rem; align-items:center; }
+  nav .links a{ border-bottom:1px solid transparent; padding-bottom:2px; }
+  nav .links a:hover{ border-bottom-color:var(--black); }
+  #navAuthState{ font-size:0.82rem; color:var(--grey-2); }
+
+  .hero{ padding:90px 0 60px; }
+  .hero .kicker{ font-size:0.8rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--grey-2); margin-bottom:22px; opacity:0; animation: rise 0.6s ease-out 0.05s forwards; }
+  .hero h1{ font-weight:900; font-size:clamp(2.6rem, 8vw, 5.6rem); line-height:0.98; letter-spacing:-0.03em; max-width:920px; opacity:0; animation: rise 0.7s ease-out 0.15s forwards; }
+  .hero h1 em{ font-style:italic; font-weight:300; }
+  .hero p{ margin-top:26px; color:var(--grey-2); max-width:480px; font-size:1.05rem; opacity:0; animation: rise 0.7s ease-out 0.35s forwards; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:translateY(0);} }
+  .cta-row{ display:flex; gap:14px; margin-top:36px; flex-wrap:wrap; opacity:0; animation: rise 0.7s ease-out 0.5s forwards; }
+
+  .btn{ display:inline-block; padding:14px 28px; font-size:0.92rem; font-weight:500; cursor:pointer; border:1.5px solid var(--black); transition: all 0.15s ease; }
+  .btn-solid{ background:var(--black); color:var(--white); }
+  .btn-solid:hover{ background:var(--grey-1); }
+  .btn-outline{ background:transparent; color:var(--black); }
+  .btn-outline:hover{ background:var(--black); color:var(--white); }
+  .btn:active{ transform:scale(0.97); }
+  .btn:disabled{ opacity:0.4; cursor:not-allowed; }
+  .btn-small{ padding:9px 16px; font-size:0.82rem; }
+
+  .section{ padding:70px 0; border-top:1px solid var(--line); }
+  @media (max-width:700px){ .section{ padding:44px 0; } }
+  .section-title{ font-weight:900; font-size:clamp(1.8rem, 4vw, 2.6rem); margin-bottom:8px; }
+  .section-lead{ color:var(--grey-2); max-width:480px; margin-bottom:44px; }
+
+  .tier-row{ display:grid; grid-template-columns:70px 1fr 220px; gap:24px; align-items:start; padding:30px 0; border-top:1px solid var(--line); cursor:pointer; transition: opacity 0.15s ease; }
+  .tier-row:first-of-type{ border-top:1px solid var(--black); }
+  .tier-row:hover{ opacity:0.6; }
+  @media (max-width:700px){ .tier-row{ grid-template-columns:40px 1fr; } .tier-row .limit-col{ grid-column:1 / -1; } }
+  .tier-row .num{ font-family:'Fraunces', serif; font-weight:300; font-size:1.6rem; color:var(--grey-3); }
+  .tier-row h3{ font-size:1.7rem; font-weight:600; margin-bottom:8px; }
+  .tier-row p{ color:var(--grey-2); max-width:420px; font-size:0.98rem; }
+  .tier-row .limit-col{ text-align:right; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--grey-2); padding-top:6px; }
+  @media (max-width:700px){ .tier-row .limit-col{ text-align:left; margin-top:6px; } }
+
+  .create-card{ max-width:560px; border:1.5px solid var(--black); padding:40px; }
+  @media (max-width:700px){ .create-card{ padding:26px; } }
+  .field{ margin-bottom:22px; }
+  .field label{ display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--grey-2); margin-bottom:8px; }
+  .field input, .field textarea{ width:100%; background:transparent; border:none; border-bottom:1.5px solid var(--line); color:var(--black); padding:10px 2px; font-family:'Inter',sans-serif; font-size:1rem; }
+  .field textarea{ min-height:100px; resize:vertical; font-family:'Fraunces', serif; font-size:1.1rem; }
+  .field input:focus, .field textarea:focus{ outline:none; border-bottom-color:var(--black); }
+  .field input:disabled{ opacity:0.4; }
+  .tier-select{ display:flex; gap:8px; }
+  .tier-opt{ flex:1; text-align:center; padding:10px; border:1.5px solid var(--line); cursor:pointer; font-size:0.85rem; transition: all 0.15s ease; }
+  .tier-opt.active{ border-color:var(--black); background:var(--black); color:var(--white); }
+  .tier-opt.locked{ opacity:0.4; cursor:not-allowed; }
+  .status-msg{ font-size:0.85rem; margin-top:14px; min-height:20px; }
+  .status-msg.err{ color:#8a1f1f; }
+  .status-msg.ok{ color:var(--grey-1); }
+
+  .auth-box{ border:1.5px solid var(--line); padding:18px 20px; margin-bottom:24px; font-size:0.88rem; }
+  .auth-box .row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .auth-box input{ flex:1; min-width:160px; background:transparent; border:none; border-bottom:1.5px solid var(--line); padding:8px 2px; font-family:'Inter',sans-serif; font-size:0.95rem; }
+  .auth-box input:focus{ outline:none; border-bottom-color:var(--black); }
+  .signed-in-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+
+  footer{ padding:40px 0; color:var(--grey-2); font-size:0.85rem; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+
+  .marquee-band{ background:var(--black); overflow:hidden; padding:16px 0; white-space:nowrap; }
+  .marquee-track{ display:inline-flex; gap:40px; animation: marquee 26s linear infinite; font-family:'Fraunces', serif; font-style:italic; font-size:1rem; color:var(--white); }
+  @keyframes marquee{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  .marquee-band:hover .marquee-track{ animation-play-state:paused; }
+
+  .poem{ font-family:'Fraunces', serif; font-style:italic; font-size:clamp(1.3rem, 3vw, 1.8rem); line-height:1.6; max-width:640px; }
+  .poem .line{ display:block; opacity:0; transform:translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .poem.in .line{ opacity:1; transform:translateY(0); }
+  .poem .signature{ margin-top:28px; font-family:'Inter', sans-serif; font-style:normal; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--grey-2); opacity:0; transition: opacity 0.6s ease 0.6s; }
+  .poem.in .signature{ opacity:1; }
+
+  .tier-detail{ grid-column:1 / -1; max-height:0; overflow:hidden; transition: max-height 0.35s ease, padding 0.35s ease; font-size:0.9rem; color:var(--grey-2); border-left:2px solid var(--black); padding-left:0; }
+  .tier-row.open .tier-detail{ max-height:160px; padding:14px 0 4px 16px; margin-top:10px; }
+
+  #screen-view{ display:none; }
+  #screen-view.active{ display:flex; }
+  .view-screen{ min-height:100vh; width:100%; align-items:center; justify-content:center; flex-direction:column; padding:40px 20px; background:var(--black); color:var(--white); text-align:left; }
+  .view-card{ max-width:560px; }
+  .view-card .from{ font-size:0.82rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-3); margin-bottom:18px; }
+  .view-card h2{ font-weight:900; font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:26px; }
+  .view-card .msg{ font-family:'Fraunces', serif; font-size:1.2rem; line-height:1.75; color:var(--white); }
+
+  #app-screens > div{ display:none; }
+  #app-screens > div.active{ display:block; }
+
+  .offline-note{ display:none; background:var(--black); color:var(--white); text-align:center; font-size:0.85rem; padding:10px; }
+  .offline-note.show{ display:block; }
+</style>
+</head>
+<body>
+
+<div class="offline-note" id="offlineNote">You're offline — reconnect to create or view wishes.</div>
+
+<div id="app-screens">
+
+<div id="screen-home" class="active">
+  <div class="wrap">
+    <nav>
+      <div class="brand">ONEWISHES</div>
+      <div class="links">
+        <a href="#tiers">How it works</a>
+        <a href="#create">Write a wish</a>
+        <span id="navAuthState"></span>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="kicker">One wish. That's the whole idea.</div>
+      <h1>Most wishes are <em>forgotten</em><br>in a day. Some should<br>last a lifetime.</h1>
+      <p>OneWishes limits how many people you can wish, on purpose — so the ones you do wish know exactly what it cost you.</p>
+      <div class="cta-row">
+        <a href="#create" class="btn btn-solid">Write a wish</a>
+        <a href="#tiers" class="btn btn-outline">See how it works</a>
+      </div>
+    </section>
+  </div>
+
+  <div class="marquee-band">
+    <div class="marquee-track">
+      <span>ONE WISH, NOT MANY —</span>
+      <span>A WISH SPENT CARELESSLY IS WORTH NOTHING —</span>
+      <span>SOME THINGS SHOULD STAY RARE —</span>
+      <span>SAY IT ONCE. MEAN IT FOREVER —</span>
+      <span>ONE WISH, NOT MANY —</span>
+      <span>A WISH SPENT CARELESSLY IS WORTH NOTHING —</span>
+      <span>SOME THINGS SHOULD STAY RARE —</span>
+      <span>SAY IT ONCE. MEAN IT FOREVER —</span>
+    </div>
+  </div>
+
+  <section class="section" id="tiers">
+    <div class="wrap">
+      <div class="section-title">Three ways to say it</div>
+      <div class="section-lead">Each one trades reach for weight. The rarer the wish, the more it says.</div>
+
+      <div class="tier-row" data-tier="spark">
+        <div class="num">01</div>
+        <div>
+          <h3>Spark Wish</h3>
+          <p>For anyone, anytime. A private link with a message — nicer than a text, lighter than what's next.</p>
+          <div class="tier-detail">No limit on how many you send. Free, forever. No sign-in needed.
+            <br><a href="#create" class="pick-link" data-tier="spark">Choose Spark →</a>
+          </div>
+        </div>
+        <div class="limit-col">Unlimited · Free</div>
+      </div>
+      <div class="tier-row" data-tier="golden">
+        <div class="num">02</div>
+        <div>
+          <h3>Golden Wish</h3>
+          <p>You get three, ever. Save them for the people who defined your life.</p>
+          <div class="tier-detail">Once used, a Golden Wish is gone for good — there is no fourth. Requires sign-in so the limit is real.
+            <br><a href="#create" class="pick-link" data-tier="golden">Choose Golden →</a>
+          </div>
+        </div>
+        <div class="limit-col">3 per lifetime</div>
+      </div>
+      <div class="tier-row" data-tier="spotlight">
+        <div class="num">03</div>
+        <div>
+          <h3>Spotlight</h3>
+          <p>One person, one day, the entire front page.</p>
+          <div class="tier-detail">One slot exists per calendar date, worldwide. Requires sign-in to book.
+            <br><a href="#create" class="pick-link" data-tier="spotlight">Choose Spotlight →</a>
+          </div>
+        </div>
+        <div class="limit-col">1 slot a day, worldwide</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="poetry">
+    <div class="wrap">
+      <div class="poem reveal">
+        <span class="line">Not every word needs saying twice.</span>
+        <span class="line">Not every hand deserves your key.</span>
+        <span class="line">A wish, like fire, has its price —</span>
+        <span class="line">spend it once. Spend it wisely.</span>
+        <div class="signature">— written for OneWishes</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="create">
+    <div class="wrap">
+      <div class="section-title">Write a wish</div>
+      <div class="section-lead">Spark needs nothing. Golden and Spotlight need a real sign-in, so the limits mean something.</div>
+
+      <div class="auth-box" id="authBox">
+        <div id="authLoggedOut">
+          <div class="row">
+            <input type="email" id="authEmail" placeholder="you@email.com">
+            <button class="btn btn-solid btn-small" id="sendMagicLink">Send sign-in link</button>
+          </div>
+          <div class="status-msg" id="authStatus"></div>
+        </div>
+        <div id="authLoggedIn" style="display:none;">
+          <div class="signed-in-row">
+            <span>Signed in as <strong id="authEmailShown"></strong> · Golden Wishes used: <strong id="goldenCount">0</strong>/3</span>
+            <button class="btn btn-outline btn-small" id="signOutBtn">Sign out</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="create-card">
+        <div class="field">
+          <label>Tier</label>
+          <div class="tier-select">
+            <div class="tier-opt active" data-tier="spark">Spark</div>
+            <div class="tier-opt locked" data-tier="golden">Golden</div>
+            <div class="tier-opt locked" data-tier="spotlight">Spotlight</div>
+          </div>
+        </div>
+        <div class="field" id="spotlightDateField" style="display:none;">
+          <label>Spotlight date</label>
+          <input type="date" id="spotlightDate">
+        </div>
+        <div class="field">
+          <label>Your name</label>
+          <input type="text" id="fromName" placeholder="e.g. Yoga" maxlength="60">
+        </div>
+        <div class="field">
+          <label>Recipient's name</label>
+          <input type="text" id="toName" placeholder="Who is this for?" maxlength="60">
+        </div>
+        <div class="field">
+          <label>Your message</label>
+          <textarea id="msg" placeholder="Write what you actually want to say..." maxlength="800"></textarea>
+        </div>
+        <button class="btn btn-solid" id="createBtn" style="width:100%;">Send this wish</button>
+        <div class="status-msg" id="statusMsg"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <footer>
+      <span>ONEWISHES</span>
+      <span>onewishes.com</span>
+    </footer>
+  </div>
+</div>
+
+<div id="screen-view">
+  <div class="view-screen active">
+    <div class="view-card">
+      <div class="from" id="viewFrom">FROM —</div>
+      <h2 id="viewTier">A Wish</h2>
+      <div class="msg" id="viewMsg"></div>
+    </div>
+    <a href="#" onclick="goHome()" class="btn btn-outline" style="margin-top:30px; border-color:var(--white); color:var(--white);">Write your own →</a>
+  </div>
+</div>
+
+</div>
+
+<script>
+window.addEventListener('offline', () => document.getElementById('offlineNote').classList.add('show'));
+window.addEventListener('online', () => document.getElementById('offlineNote').classList.remove('show'));
+
+function showScreen(id){
+  document.querySelectorAll('#app-screens > div').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+}
+function goHome(){ location.hash = ''; showScreen('screen-home'); }
+
+let currentTier = 'spark';
+function setActiveTier(tier){
+  const opt = document.querySelector('.tier-opt[data-tier="'+tier+'"]');
+  if(opt && opt.classList.contains('locked')) return;
+  currentTier = tier;
+  document.querySelectorAll('.tier-opt').forEach(o => o.classList.toggle('active', o.dataset.tier === tier));
+  document.getElementById('spotlightDateField').style.display = (tier === 'spotlight') ? 'block' : 'none';
+}
+document.querySelectorAll('.tier-opt').forEach(opt => {
+  opt.addEventListener('click', () => setActiveTier(opt.dataset.tier));
+});
+document.querySelectorAll('.tier-row').forEach(row => {
+  row.addEventListener('click', (e) => {
+    if(e.target.closest('.pick-link')) return;
+    document.querySelectorAll('.tier-row').forEach(r => { if(r !== row) r.classList.remove('open'); });
+    row.classList.toggle('open');
+  });
+});
+document.querySelectorAll('.pick-link').forEach(link => {
+  link.addEventListener('click', (e) => { e.stopPropagation(); setActiveTier(link.dataset.tier); });
+});
+
+const poemLines = document.querySelectorAll('.poem.reveal .line');
+if('IntersectionObserver' in window && poemLines.length){
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        poemLines.forEach((line, i) => { line.style.transitionDelay = (i * 0.12) + 's'; });
+        obs.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  obs.observe(document.querySelector('.poem.reveal'));
+}
+
+// ===== Supabase + Auth =====
+const SUPABASE_URL = 'https://wsncqboamchsmcasueye.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_LTcFehtUC6QmkGGktRaSow_4P6KdFLs';
+let db = null;
+let currentUser = null;
+
+function initDb(){
+  try{
+    if(typeof supabase === 'undefined'){ return null; }
+    if(!db){ db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
+    return db;
+  }catch(e){ console.error('Supabase init failed', e); return null; }
+}
+
+function unlockTiers(unlocked){
+  document.querySelectorAll('.tier-opt[data-tier="golden"], .tier-opt[data-tier="spotlight"]').forEach(o => {
+    o.classList.toggle('locked', !unlocked);
+  });
+}
+
+async function refreshAuthUI(){
+  const client = initDb();
+  if(!client) return;
+  try{
+    const { data: { session } } = await client.auth.getSession();
+    currentUser = session ? session.user : null;
+
+    const nav = document.getElementById('navAuthState');
+    const loggedOutBox = document.getElementById('authLoggedOut');
+    const loggedInBox = document.getElementById('authLoggedIn');
+
+    if(currentUser){
+      loggedOutBox.style.display = 'none';
+      loggedInBox.style.display = 'block';
+      document.getElementById('authEmailShown').textContent = currentUser.email;
+      nav.textContent = currentUser.email;
+      unlockTiers(true);
+
+      const { data: profile } = await client.from('profiles').select('golden_used').eq('id', currentUser.id).single();
+      document.getElementById('goldenCount').textContent = profile ? profile.golden_used : 0;
+    }else{
+      loggedOutBox.style.display = 'block';
+      loggedInBox.style.display = 'none';
+      nav.textContent = '';
+      unlockTiers(false);
+      if(currentTier !== 'spark') setActiveTier('spark');
+    }
+  }catch(e){ console.error('Auth refresh failed', e); }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const client = initDb();
+  if(client){
+    client.auth.onAuthStateChange(() => refreshAuthUI());
+  }
+  await refreshAuthUI();
+  loadWishFromHash();
+});
+
+document.getElementById('sendMagicLink').addEventListener('click', async () => {
+  const email = document.getElementById('authEmail').value.trim();
+  const statusEl = document.getElementById('authStatus');
+  if(!email){ statusEl.textContent = 'Enter your email first.'; return; }
+  const client = initDb();
+  if(!client){ statusEl.textContent = 'Could not connect — try again.'; return; }
+  statusEl.textContent = 'Sending...';
+  try{
+    const { error } = await client.auth.signInWithOtp({ email, options: { emailRedirectTo: location.href } });
+    statusEl.textContent = error ? 'Something went wrong — try again.' : 'Check your email for a sign-in link.';
+  }catch(e){
+    statusEl.textContent = 'Network error — try again.';
+    console.error(e);
+  }
+});
+
+document.getElementById('signOutBtn').addEventListener('click', async () => {
+  const client = initDb();
+  if(client) await client.auth.signOut();
+  refreshAuthUI();
+});
+
+const createBtn = document.getElementById('createBtn');
+if(createBtn){
+  createBtn.addEventListener('click', async () => {
+    const tier = currentTier;
+    const fromName = document.getElementById('fromName').value.trim();
+    const toName = document.getElementById('toName').value.trim();
+    const msg = document.getElementById('msg').value.trim();
+    const statusEl = document.getElementById('statusMsg');
+    const btn = createBtn;
+
+    statusEl.classList.remove('ok','err');
+
+    if(!fromName || !toName || !msg){
+      statusEl.classList.add('err');
+      statusEl.textContent = 'Fill in your name, their name, and a message first.';
+      return;
+    }
+    if((tier === 'golden' || tier === 'spotlight') && !currentUser){
+      statusEl.classList.add('err');
+      statusEl.textContent = 'Sign in above first — this tier needs a real identity.';
+      return;
+    }
+
+    const client = initDb();
+    if(!client){
+      statusEl.classList.add('err');
+      statusEl.textContent = 'Could not connect — check your internet and try again.';
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.textContent = 'Sending...';
+
+    try{
+      if(tier === 'golden'){
+        const { data: allowed, error: claimError } = await client.rpc('claim_golden_wish');
+        if(claimError || !allowed){
+          btn.disabled = false;
+          statusEl.classList.add('err');
+          statusEl.textContent = 'All 3 Golden Wishes are used. That is the point.';
+          return;
+        }
+      }
+
+      if(tier === 'spotlight'){
+        const dateVal = document.getElementById('spotlightDate').value;
+        if(!dateVal){
+          btn.disabled = false;
+          statusEl.classList.add('err');
+          statusEl.textContent = 'Pick a date for the Spotlight.';
+          return;
+        }
+        const { data: wishRow, error: wishErr } = await client
+          .from('wishes')
+          .insert({ tier, from_name: fromName, to_name: toName, message: msg, user_id: currentUser.id })
+          .select('id')
+          .single();
+        if(wishErr || !wishRow){
+          btn.disabled = false;
+          statusEl.classList.add('err');
+          statusEl.textContent = 'Something went wrong — try again.';
+          return;
+        }
+        const { error: bookErr } = await client
+          .from('spotlight_bookings')
+          .insert({ booking_date: dateVal, wish_id: wishRow.id, user_id: currentUser.id });
+        if(bookErr){
+          btn.disabled = false;
+          statusEl.classList.add('err');
+          statusEl.textContent = (bookErr.code === '23505')
+            ? 'That date is already booked by someone else — pick another.'
+            : 'Something went wrong booking that date — try again.';
+          return;
+        }
+        btn.disabled = false;
+        const link = location.origin + location.pathname + '#view=' + wishRow.id;
+        statusEl.classList.add('ok');
+        statusEl.innerHTML = 'Booked for ' + dateVal + '. Share this link: <br>' + link;
+        return;
+      }
+
+      const { data, error } = await client
+        .from('wishes')
+        .insert({ tier, from_name: fromName, to_name: toName, message: msg, user_id: currentUser ? currentUser.id : null })
+        .select('id')
+        .single();
+
+      btn.disabled = false;
+
+      if(error || !data){
+        statusEl.classList.add('err');
+        statusEl.textContent = 'Something went wrong — try again.';
+        console.error(error);
+        return;
+      }
+
+      if(tier === 'golden') refreshAuthUI();
+
+      const link = location.origin + location.pathname + '#view=' + data.id;
+      statusEl.classList.add('ok');
+      statusEl.innerHTML = 'Sent. Share this link: <br>' + link;
+    }catch(e){
+      btn.disabled = false;
+      statusEl.classList.add('err');
+      statusEl.textContent = 'Network error — try again.';
+      console.error(e);
+    }
+  });
+}
+
+async function loadWishFromHash(){
+  const hash = location.hash;
+  if(hash.startsWith('#view=')){
+    const id = hash.replace('#view=', '');
+    const client = initDb();
+    if(!client){ showScreen('screen-home'); return; }
+    try{
+      const { data: wish, error } = await client
+        .from('wishes')
+        .select('tier, from_name, to_name, message')
+        .eq('id', id)
+        .single();
+
+      if(wish && !error){
+        document.getElementById('viewFrom').textContent = 'FROM ' + wish.from_name.toUpperCase() + ', TO ' + wish.to_name.toUpperCase();
+        document.getElementById('viewTier').textContent =
+          wish.tier === 'golden' ? 'A Golden Wish' : wish.tier === 'spotlight' ? 'A Spotlight' : 'A Spark Wish';
+        document.getElementById('viewMsg').textContent = wish.message;
+        showScreen('screen-view');
+        return;
+      }
+    }catch(e){ console.error('Failed to load wish', e); }
+  }
+  showScreen('screen-home');
+}
+window.addEventListener('hashchange', loadWishFromHash);
+</script>
+</body>
+</html>
