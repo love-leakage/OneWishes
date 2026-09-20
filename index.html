@@ -214,7 +214,7 @@
         <div class="num">01</div>
         <div>
           <h3>Spark Wish</h3>
-          <p>For anyone, anytime. A shareable custom link with a message and optional photo/video.</p>
+          <p>For anyone, anytime. A customizable link with a message and optional photo/video.</p>
           <div class="tier-detail">Requires sign-in. Free & unlimited.
             <br><a href="#create" class="pick-link" data-tier="spark">Choose Spark →</a>
           </div>
@@ -322,6 +322,12 @@
         <div class="field">
           <label>Recipient's name</label>
           <input type="text" id="toName" placeholder="Who is this wish for?" maxlength="60">
+        </div>
+
+        <div class="field">
+          <label>Custom Link Extension (Customize your wish URL)</label>
+          <input type="text" id="customSlug" placeholder="e.g. sender-to-receiver" maxlength="60">
+          <div style="font-size:0.75rem; color:var(--grey-2); margin-top:4px;" id="urlPreviewText">Wish link will be: onewishes.com/#spark=...</div>
         </div>
 
         <div class="field">
@@ -448,7 +454,31 @@ function setActiveTier(tier){
       dateInput.value = new Date().toISOString().split('T')[0];
     }
   }
+  updateUrlPreview();
 }
+
+// Auto update custom URL preview text
+function updateUrlPreview(){
+  const customSlugInput = document.getElementById('customSlug');
+  const previewText = document.getElementById('urlPreviewText');
+  if(!customSlugInput || !previewText) return;
+
+  const fromVal = document.getElementById('fromName').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  const toVal = document.getElementById('toName').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  const userPrefix = (currentProfile && currentProfile.username) ? currentProfile.username : 'user';
+  
+  if(!customSlugInput.value && (fromVal || toVal)){
+    customSlugInput.value = userPrefix + '-' + (toVal || 'wish');
+  }
+
+  const slug = customSlugInput.value.trim() || (userPrefix + '-to-' + (toVal || 'recipient'));
+  previewText.textContent = 'Wish link will be: onewishes.com/#' + currentTier + '=' + slug;
+}
+
+['fromName', 'toName', 'customSlug'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', updateUrlPreview);
+});
 
 document.querySelectorAll('.tier-opt').forEach(opt => {
   opt.addEventListener('click', () => setActiveTier(opt.dataset.tier));
@@ -555,6 +585,7 @@ async function refreshAuthUI(){
       unlockTiers(false);
       if(currentTier !== 'spark') setActiveTier('spark');
     }
+    updateUrlPreview();
   }catch(e){ console.error('Auth refresh failed', e); }
 }
 
@@ -635,6 +666,7 @@ if(createBtn){
     const fromName = document.getElementById('fromName').value.trim();
     const toName = document.getElementById('toName').value.trim();
     const msg = document.getElementById('msg').value.trim();
+    const customSlugVal = document.getElementById('customSlug').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
     const statusEl = document.getElementById('statusMsg');
 
     statusEl.classList.remove('ok','err');
@@ -645,7 +677,6 @@ if(createBtn){
       return;
     }
 
-    // Dynamically fetch or verify profile
     if(!currentProfile || !currentProfile.username){
       const { data: prof } = await client.from('profiles').select('id, email, username, golden_used').eq('id', currentUser.id).single();
       if(prof) currentProfile = prof;
@@ -659,13 +690,10 @@ if(createBtn){
       return;
     }
 
-    const client = initDb();
-    if(!client) return;
-
     createBtn.disabled = true;
     statusEl.textContent = 'Sending wish...';
 
-    const slug = tier + '-' + effectiveUsername + '-' + toName.toLowerCase().replace(/[^a-z0-9]/g, '') + '-' + Date.now().toString(36);
+    const slug = customSlugVal || (tier + '-' + effectiveUsername + '-' + toName.toLowerCase().replace(/[^a-z0-9]/g, '') + '-' + Date.now().toString(36));
 
     try{
       if(tier === 'golden'){
@@ -706,7 +734,7 @@ if(createBtn){
         if(wishErr || !wishRow){
           createBtn.disabled = false;
           statusEl.classList.add('err');
-          statusEl.textContent = 'Something went wrong creating the wish.';
+          statusEl.textContent = wishErr && wishErr.code === '23505' ? 'That custom URL link is already taken — try another custom link name.' : 'Could not create Neverfade Wish.';
           return;
         }
 
@@ -724,7 +752,7 @@ if(createBtn){
         createBtn.disabled = false;
         const link = location.origin + location.pathname + '#neverfade=' + dateVal;
         statusEl.classList.add('ok');
-        statusEl.innerHTML = 'Booked for ' + dateVal + '! Share clean URL:<br><a href="' + link + '" target="_blank">' + link + '</a>';
+        statusEl.innerHTML = 'Booked for ' + dateVal + '! Share custom URL:<br><a href="' + link + '" target="_blank">' + link + '</a>';
         loadHomepageNeverfade();
         return;
       }
@@ -750,15 +778,15 @@ if(createBtn){
 
       if(error || !data){
         statusEl.classList.add('err');
-        statusEl.textContent = 'Could not create wish.';
+        statusEl.textContent = error && error.code === '23505' ? 'That custom URL link extension is already taken — type a unique link extension.' : 'Could not create wish.';
         return;
       }
 
       if(tier === 'golden') refreshAuthUI();
 
-      const link = location.origin + location.pathname + '#' + tier + '=' + slug;
+      const link = location.origin + location.pathname + '#' + tier + '=' + data.slug;
       statusEl.classList.add('ok');
-      statusEl.innerHTML = 'Sent! Share clean URL:<br><a href="' + link + '" target="_blank">' + link + '</a>';
+      statusEl.innerHTML = 'Sent! Share custom URL:<br><a href="' + link + '" target="_blank">' + link + '</a>';
     }catch(e){
       createBtn.disabled = false;
       statusEl.classList.add('err');
@@ -808,6 +836,11 @@ async function loadHomepageNeverfade(){
 async function loadWishFromHash(){
   const hash = location.hash;
   const client = initDb();
+
+  // DO NOT intercept Supabase OAuth / Auth callback hash tokens (#access_token=..., #error=...) as wish links!
+  if(hash.includes('access_token=') || hash.includes('refresh_token=') || hash.includes('error=')){
+    return;
+  }
 
   if(hash.startsWith('#history') && currentUser){
     showScreen('screen-history');
