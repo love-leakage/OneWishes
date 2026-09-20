@@ -613,11 +613,12 @@ document.getElementById('claimUsernameBtn').addEventListener('click', async () =
   statusEl.textContent = 'Claiming username...';
 
   try{
-    const { error } = await client.from('profiles').update({ username: val }).eq('id', currentUser.id);
+    const { error } = await client.from('profiles').upsert({ id: currentUser.id, email: currentUser.email, username: val }, { onConflict: 'id' });
     if(error){
       statusEl.textContent = error.code === '23505' ? 'Username already taken — pick another.' : 'Could not set username.';
       return;
     }
+    currentProfile = { id: currentUser.id, email: currentUser.email, username: val, golden_used: currentProfile ? currentProfile.golden_used : 0 };
     statusEl.textContent = 'Username claimed!';
     await refreshAuthUI();
   }catch(e){ statusEl.textContent = 'Error setting username.'; }
@@ -627,6 +628,9 @@ document.getElementById('claimUsernameBtn').addEventListener('click', async () =
 const createBtn = document.getElementById('createBtn');
 if(createBtn){
   createBtn.addEventListener('click', async () => {
+    const client = initDb();
+    if(!client) return;
+
     const tier = currentTier;
     const fromName = document.getElementById('fromName').value.trim();
     const toName = document.getElementById('toName').value.trim();
@@ -635,11 +639,19 @@ if(createBtn){
 
     statusEl.classList.remove('ok','err');
 
-    if(!currentUser || !currentProfile || !currentProfile.username){
+    if(!currentUser){
       statusEl.classList.add('err');
-      statusEl.textContent = 'User login & claimed username are required before creating any wish.';
+      statusEl.textContent = 'Please sign in above first to create a wish.';
       return;
     }
+
+    // Dynamically fetch or verify profile
+    if(!currentProfile || !currentProfile.username){
+      const { data: prof } = await client.from('profiles').select('id, email, username, golden_used').eq('id', currentUser.id).single();
+      if(prof) currentProfile = prof;
+    }
+
+    const effectiveUsername = (currentProfile && currentProfile.username) ? currentProfile.username : currentUser.email.split('@')[0].replace(/[^a-z0-9_]/gi, '').toLowerCase();
 
     if(!fromName || !toName || !msg){
       statusEl.classList.add('err');
@@ -653,7 +665,7 @@ if(createBtn){
     createBtn.disabled = true;
     statusEl.textContent = 'Sending wish...';
 
-    const slug = tier + '-' + currentProfile.username + '-' + toName.toLowerCase().replace(/[^a-z0-9]/g, '') + '-' + Date.now().toString(36);
+    const slug = tier + '-' + effectiveUsername + '-' + toName.toLowerCase().replace(/[^a-z0-9]/g, '') + '-' + Date.now().toString(36);
 
     try{
       if(tier === 'golden'){
@@ -678,7 +690,7 @@ if(createBtn){
           .from('wishes')
           .insert({
             user_id: currentUser.id,
-            sender_username: currentProfile.username,
+            sender_username: effectiveUsername,
             tier,
             from_name: fromName,
             to_name: toName,
@@ -721,7 +733,7 @@ if(createBtn){
         .from('wishes')
         .insert({
           user_id: currentUser.id,
-          sender_username: currentProfile.username,
+          sender_username: effectiveUsername,
           tier,
           from_name: fromName,
           to_name: toName,
