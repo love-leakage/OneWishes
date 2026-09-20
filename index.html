@@ -428,10 +428,26 @@ function initDb(){
 let currentTier = 'spark';
 function setActiveTier(tier){
   const opt = document.querySelector('.tier-opt[data-tier="'+tier+'"]');
-  if(opt && opt.classList.contains('locked')) return;
+  const statusEl = document.getElementById('statusMsg');
+  if(opt && opt.classList.contains('locked')){
+    if(statusEl){
+      statusEl.classList.remove('ok');
+      statusEl.classList.add('err');
+      statusEl.textContent = 'Sign in & claim your username above to unlock Golden and Neverfade Wishes!';
+    }
+    return;
+  }
+  if(statusEl) statusEl.textContent = '';
   currentTier = tier;
   document.querySelectorAll('.tier-opt').forEach(o => o.classList.toggle('active', o.dataset.tier === tier));
-  document.getElementById('neverfadeDateField').style.display = (tier === 'neverfade') ? 'block' : 'none';
+  const dateField = document.getElementById('neverfadeDateField');
+  if(dateField){
+    dateField.style.display = (tier === 'neverfade') ? 'block' : 'none';
+    const dateInput = document.getElementById('neverfadeDate');
+    if(dateInput && !dateInput.value){
+      dateInput.value = new Date().toISOString().split('T')[0];
+    }
+  }
 }
 
 document.querySelectorAll('.tier-opt').forEach(opt => {
@@ -484,7 +500,7 @@ function unlockTiers(unlocked){
     o.classList.toggle('locked', !unlocked);
   });
   const createBtn = document.getElementById('createBtn');
-  if(createBtn) createBtn.disabled = !unlocked;
+  if(createBtn) createBtn.disabled = false;
 }
 
 // Authentication & Profile Handler
@@ -521,6 +537,13 @@ async function refreshAuthUI(){
         nav.textContent = currentUser.email;
         document.getElementById('userDisplayName').textContent = currentUser.email;
         if(navHistory) navHistory.style.display = 'none';
+        
+        // Auto suggest username from email prefix
+        const usernameInput = document.getElementById('usernameInput');
+        if(usernameInput && !usernameInput.value && currentUser.email){
+          const suggested = currentUser.email.split('@')[0].replace(/[^a-z0-9_]/gi, '').toLowerCase();
+          usernameInput.value = suggested;
+        }
         unlockTiers(false);
       }
     }else{
