@@ -539,12 +539,21 @@ async function refreshAuthUI(){
 const btnGoogle = document.getElementById('btnGoogleAuth');
 if(btnGoogle){
   btnGoogle.addEventListener('click', async () => {
+    const statusEl = document.getElementById('authStatus');
+    statusEl.textContent = '';
     const client = initDb();
     if(!client) return;
-    await client.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin + window.location.pathname }
-    });
+    try{
+      const { error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + window.location.pathname }
+      });
+      if(error){
+        statusEl.textContent = 'Google Sign-In is not enabled in Supabase dashboard. Please use Email Magic Link below for instant sign-in!';
+      }
+    }catch(e){
+      statusEl.textContent = 'Google Sign-In is not enabled. Please use Email Magic Link below!';
+    }
   });
 }
 
