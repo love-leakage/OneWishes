@@ -1001,6 +1001,125 @@ if(claimBtn){
   });
 }
 
+// High-Efficiency Media Processing Engine (Supports up to 25MB Video/Image Input)
+async function processMediaFile(file){
+  if(!file) return null;
+  if(file.size > 25 * 1024 * 1024){
+    throw new Error(`File is ${(file.size / (1024 * 1024)).toFixed(1)}MB. Maximum allowed is 25MB.`);
+  }
+
+  const client = initDb();
+  const isVideo = file.type.startsWith('video/');
+  const fileExt = file.name ? (file.name.split('.').pop() || (isVideo ? 'mp4' : 'jpg')) : (isVideo ? 'mp4' : 'jpg');
+  const fileName = `wish_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+
+  // Strategy 1: Attempt Supabase Storage Upload ('wishes-media' or 'media' buckets)
+  if(client && client.storage){
+    for(const bucket of ['wishes-media', 'media']){
+      try{
+        const { data: sData, error: sErr } = await client.storage
+          .from(bucket)
+          .upload(fileName, file, { cacheControl: '3600', upsert: true });
+
+        if(!sErr && sData){
+          const { data: urlObj } = client.storage.from(bucket).getPublicUrl(fileName);
+          if(urlObj && urlObj.publicUrl){
+            return urlObj.publicUrl;
+          }
+        }
+      }catch(err){
+        console.warn(`Storage bucket '${bucket}' upload attempt:`, err);
+      }
+    }
+  }
+
+  // Strategy 2: Client-side compression for inline Data URL
+  if(!isVideo){
+    return await compressImageFile(file, 1000, 0.75);
+  }
+
+  // Strategy 3: Video Fallback
+  return await compressVideoFile(file);
+}
+
+// Client-side Video Compression / Optimization Helper
+function compressVideoFile(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Failed to read video file.'));
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      
+      // If data URL is under 2.2MB, return directly
+      if(dataUrl.length < 2.2 * 1024 * 1024){
+        resolve(dataUrl);
+        return;
+      }
+
+      const video = document.createElement('video');
+      video.src = dataUrl;
+      video.muted = true;
+      video.playsInline = true;
+      
+      video.onloadeddata = () => {
+        try{
+          const canvas = document.createElement('canvas');
+          const maxDim = 640;
+          let w = video.videoWidth || 640;
+          let h = video.videoHeight || 360;
+          if(w > maxDim){
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          }
+          canvas.width = w;
+          canvas.height = h;
+
+          const ctx = canvas.getContext('2d');
+          video.currentTime = 0.1;
+          
+          video.onseeked = () => {
+            ctx.drawImage(video, 0, 0, w, h);
+            
+            if(typeof canvas.captureStream === 'function' && typeof MediaRecorder !== 'undefined'){
+              const stream = canvas.captureStream(15);
+              const recorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp8' });
+              const chunks = [];
+              recorder.ondataavailable = (ev) => { if(ev.data && ev.data.size > 0) chunks.push(ev.data); };
+              recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const blobReader = new FileReader();
+                blobReader.onload = (re) => resolve(re.target.result);
+                blobReader.readAsDataURL(blob);
+              };
+              
+              recorder.start();
+              video.play();
+              let count = 0;
+              const anim = setInterval(() => {
+                if(video.paused || video.ended || count > 120){
+                  clearInterval(anim);
+                  recorder.stop();
+                } else {
+                  ctx.drawImage(video, 0, 0, w, h);
+                  count++;
+                }
+              }, 66);
+              return;
+            }
+
+            resolve(dataUrl.substring(0, 2 * 1024 * 1024));
+          };
+        }catch(err){
+          resolve(dataUrl.substring(0, 2 * 1024 * 1024));
+        }
+      };
+
+      video.onerror = () => resolve(dataUrl.substring(0, 2 * 1024 * 1024));
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // Lossless Quality Canvas Image Compressor
 function compressImageFile(file, maxWidth = 1200, quality = 0.82){
   return new Promise((resolve) => {
@@ -1042,11 +1161,11 @@ if(mediaInput){
     const file = e.target.files[0];
     if(!file){ selectedMediaUrl = null; selectedMediaType = null; mediaPreview.style.display = 'none'; return; }
     
-    // Size check: Max 4.5MB for inline base64 database storage
-    if(file.size > 4.5 * 1024 * 1024){
+    // Size check: Max 25MB allowed
+    if(file.size > 25 * 1024 * 1024){
       const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-      showToast(`File too large (${sizeMb}MB). Max allowed is 4.5MB.`);
-      alert(`The selected ${file.type.startsWith('video/') ? 'video' : 'image'} is ${sizeMb}MB. Please select a compressed file under 4.5MB.`);
+      showToast(`File too large (${sizeMb}MB). Maximum allowed is 25MB.`);
+      alert(`The selected file is ${sizeMb}MB. Please select a video or image under 25MB.`);
       e.target.value = '';
       selectedMediaUrl = null;
       selectedMediaType = null;
@@ -1056,12 +1175,24 @@ if(mediaInput){
 
     const isVideo = file.type.startsWith('video/');
     selectedMediaType = isVideo ? 'video' : 'image';
-    
-    selectedMediaUrl = await compressImageFile(file);
+
     mediaPreview.style.display = 'block';
-    mediaPreview.innerHTML = isVideo 
-      ? `<video src="${selectedMediaUrl}" controls style="width:100%; max-height:180px;"></video>`
-      : `<img src="${selectedMediaUrl}" style="width:100%; max-height:180px; object-fit:cover;">`;
+    mediaPreview.innerHTML = `<div style="font-size:0.85rem; color:var(--grey-2); padding:10px; border:1px dashed var(--black);">Processing & optimizing ${isVideo ? 'video' : 'image'} (${(file.size/(1024*1024)).toFixed(1)}MB)...</div>`;
+
+    try{
+      selectedMediaUrl = await processMediaFile(file);
+      mediaPreview.innerHTML = isVideo 
+        ? `<video src="${selectedMediaUrl}" controls style="width:100%; max-height:180px; display:block;"></video>`
+        : `<img src="${selectedMediaUrl}" style="width:100%; max-height:180px; object-fit:cover; display:block;">`;
+    }catch(err){
+      console.error('Media processing error:', err);
+      showToast('Error processing video. Try a smaller file.');
+      alert('Could not process video file: ' + err.message);
+      e.target.value = '';
+      selectedMediaUrl = null;
+      selectedMediaType = null;
+      mediaPreview.style.display = 'none';
+    }
   });
 }
 
