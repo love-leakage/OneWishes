@@ -576,7 +576,7 @@ async function sendResendWelcomeEmail(toEmail, username){
         'Authorization': 'Bearer ' + RESEND_API_KEY
       },
       body: JSON.stringify({
-        from: 'OneWishes <onboarding@resend.dev>',
+        from: 'OneWishes <welcome@onewishes.com>',
         to: [toEmail],
         subject: 'Welcome to OneWishes — A wish worth sending',
         html: `
@@ -613,7 +613,7 @@ async function sendResendWishEmail(toEmail, fromName, toName, tier, link){
         'Authorization': 'Bearer ' + RESEND_API_KEY
       },
       body: JSON.stringify({
-        from: 'OneWishes <onboarding@resend.dev>',
+        from: 'OneWishes <welcome@onewishes.com>',
         to: [toEmail],
         subject: `Your ${tier.toUpperCase()} Wish for ${toName} is live!`,
         html: `
