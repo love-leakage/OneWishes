@@ -639,9 +639,15 @@ window.addEventListener('offline', () => document.getElementById('offlineNote').
 window.addEventListener('online', () => document.getElementById('offlineNote').classList.remove('show'));
 
 function showScreen(id){
-  document.querySelectorAll('#app-screens > div').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('#app-screens > div').forEach(el => {
+    el.classList.remove('active', 'fadeInScreen');
+  });
   const el = document.getElementById(id);
-  if(el) el.classList.add('active');
+  if(el){
+    el.classList.add('active');
+    void el.offsetWidth;
+    el.classList.add('fadeInScreen');
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1148,49 +1154,83 @@ if(createBtn){
 async function loadHomepageNeverfade(){
   const client = initDb();
   if(!client) return;
-  const todayStr = new Date().toISOString().split('T')[0];
   const section = document.getElementById('neverfadeHomeSection');
+  if(!section) return;
 
   try{
-    let { data: booking } = await client
-      .from('neverfade_bookings')
-      .select('booking_date, wish_id, wishes(id, from_name, to_name, message, media_url, media_type, sender_username, privacy, views_count)')
-      .eq('booking_date', todayStr)
-      .maybeSingle();
+    let targetWish = null;
+    let targetDate = '';
 
-    if(!booking || !booking.wishes){
-      const { data: latestList } = await client
-        .from('neverfade_bookings')
-        .select('booking_date, wish_id, wishes(id, from_name, to_name, message, media_url, media_type, sender_username, privacy, views_count)')
-        .order('booking_date', { ascending: false })
-        .limit(1);
+    // Strategy 1: Fetch latest Neverfade wish directly from wishes table
+    const { data: latestNeverfadeWishes } = await client
+      .from('wishes')
+      .select('*')
+      .eq('tier', 'neverfade')
+      .order('created_at', { ascending: false })
+      .limit(5);
 
-      if(latestList && latestList.length > 0) booking = latestList[0];
+    if(latestNeverfadeWishes && latestNeverfadeWishes.length > 0){
+      const pubWish = latestNeverfadeWishes.find(w => w.privacy === 'public') || latestNeverfadeWishes[0];
+      if(pubWish){
+        targetWish = pubWish;
+        const { data: bRow } = await client.from('neverfade_bookings').select('booking_date').eq('wish_id', pubWish.id).maybeSingle();
+        targetDate = bRow ? bRow.booking_date : (pubWish.created_at ? pubWish.created_at.split('T')[0] : '');
+      }
     }
 
-    if(booking && booking.wishes && booking.wishes.privacy === 'public'){
-      const w = booking.wishes;
+    // Strategy 2: If no direct wish found, try neverfade_bookings table
+    if(!targetWish){
+      const { data: bList } = await client.from('neverfade_bookings').select('booking_date, wish_id').order('booking_date', { ascending: false }).limit(5);
+      if(bList && bList.length > 0){
+        for(const b of bList){
+          if(b.wish_id){
+            const { data: w } = await client.from('wishes').select('*').eq('id', b.wish_id).maybeSingle();
+            if(w){
+              targetWish = w;
+              targetDate = b.booking_date;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if(targetWish){
       section.style.display = 'block';
-      document.getElementById('neverfadeBadge').textContent = 'NEVERFADE FEATURE — ' + booking.booking_date;
-      document.getElementById('neverfadeTitle').textContent = 'For ' + w.to_name;
-      document.getElementById('neverfadeMsg').textContent = '"' + w.message + '"';
-      document.getElementById('neverfadeSender').textContent = 'FROM — ' + w.from_name.toUpperCase() + ' (@' + w.sender_username + ') · 👁 ' + (w.views_count || 0) + ' views';
+      const badgeEl = document.getElementById('neverfadeBadge');
+      if(badgeEl) badgeEl.textContent = 'NEVERFADE FEATURE' + (targetDate ? (' — ' + targetDate) : '');
+      
+      const titleEl = document.getElementById('neverfadeTitle');
+      if(titleEl) titleEl.textContent = 'For ' + targetWish.to_name;
+      
+      const msgEl = document.getElementById('neverfadeMsg');
+      if(msgEl) msgEl.textContent = '"' + targetWish.message + '"';
+      
+      const senderEl = document.getElementById('neverfadeSender');
+      if(senderEl) senderEl.textContent = 'FROM — ' + (targetWish.from_name || '').toUpperCase() + ' (@' + (targetWish.sender_username || 'user') + ') · 👁 ' + (targetWish.views_count || 0) + ' views';
       
       const mediaBox = document.getElementById('neverfadeMediaBox');
-      if(w.media_url){
-        mediaBox.style.display = 'block';
-        mediaBox.innerHTML = (w.media_type === 'video')
-          ? `<video src="${w.media_url}" controls autoplay loop muted></video>`
-          : `<img src="${w.media_url}">`;
-      }else{ mediaBox.style.display = 'none'; }
+      if(mediaBox){
+        if(targetWish.media_url){
+          mediaBox.style.display = 'block';
+          mediaBox.innerHTML = (targetWish.media_type === 'video')
+            ? `<video src="${targetWish.media_url}" controls autoplay loop muted style="width:100%; max-height:360px; object-fit:cover; display:block;"></video>`
+            : `<img src="${targetWish.media_url}" style="width:100%; max-height:360px; object-fit:cover; display:block;">`;
+        }else{ mediaBox.style.display = 'none'; }
+      }
 
       const linkBtn = document.getElementById('neverfadeLinkBtn');
-      linkBtn.href = '/neverfade/' + booking.booking_date;
-      linkBtn.onclick = (e) => { e.preventDefault(); navigateTo('/neverfade/' + booking.booking_date); };
+      if(linkBtn){
+        const navUrl = targetDate ? ('/neverfade/' + targetDate) : ('/w/' + targetWish.slug);
+        linkBtn.href = navUrl;
+        linkBtn.onclick = (e) => { e.preventDefault(); navigateTo(navUrl); };
+      }
     }else{
       section.style.display = 'none';
     }
-  }catch(e){ console.error('Failed to load Neverfade wish for homepage', e); }
+  }catch(e){
+    console.error('Failed to load Neverfade wish for homepage', e);
+  }
 }
 
 async function incrementWishViews(wishId, currentViews = 0){
@@ -1573,6 +1613,7 @@ async function routeApp(){
   }
 
   showScreen('screen-home');
+  await loadHomepageNeverfade();
   if(window.location.hash){
     const targetId = window.location.hash.replace('#','');
     const targetEl = document.getElementById(targetId);
