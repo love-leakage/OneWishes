@@ -17,12 +17,17 @@
 - [x] Basic form validation (required fields)
 - [ ] Inline field-level error messages (currently status line)
 
-## Phase 3: Real Scarcity Enforcement
-- [x] Add Supabase Auth (Email Magic Link / OTP)
+## Phase 3: Real Scarcity Enforcement & Admin Management
+- [x] Add Supabase Auth (Google OAuth & Email Magic Link)
 - [x] Create `profiles` table with `golden_used` column
 - [x] Enforce Golden Wish limit via atomic SQL RPC (`claim_golden_wish`)
 - [x] Create `spotlight_bookings` table with `UNIQUE(booking_date)` constraint
 - [x] Build Spotlight booking flow using that constraint
+- [x] Admin Dashboard (/admin) for rylyoga@gmail.com with live user metrics, username, email & usage table
+- [x] Tier Showcase Galleries (/spark, /golden, /neverfade) for public wish browsing with search filter
+- [x] Wish View Tracking (views_count + increment_wish_views RPC)
+- [x] Author Wish Editing & Deletion on /history dashboard
+- [x] Login welcome notification toast & email status
 
 ## Phase 4: Media
 - [ ] Enable Cloudflare R2 (waiting on user to enable via dashboard)

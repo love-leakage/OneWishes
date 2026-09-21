@@ -166,8 +166,11 @@
       <div class="brand" onclick="goHome()">ONEWISHES</div>
       <div class="links">
         <a href="/#tiers" onclick="scrollToSection('tiers'); return false;">How it works</a>
-        <a href="/#create" onclick="scrollToSection('create'); return false;">Write a wish</a>
+        <a href="/spark" onclick="navigateTo('/spark'); return false;">Spark</a>
+        <a href="/golden" onclick="navigateTo('/golden'); return false;">Golden</a>
+        <a href="/neverfade" onclick="navigateTo('/neverfade'); return false;">Neverfade</a>
         <a href="/history" onclick="navigateTo('/history'); return false;" id="navHistoryLink" style="display:none;">My History</a>
+        <a href="/admin" onclick="navigateTo('/admin'); return false;" id="navAdminLink" style="display:none; color:#a31c1c; font-weight:700;">👑 Admin</a>
         <span id="navAuthState"></span>
       </div>
     </nav>
@@ -388,8 +391,8 @@
     <nav>
       <div class="brand" onclick="goHome()">ONEWISHES</div>
       <div class="links">
-        <a href="#" onclick="goHome()">Back to Home</a>
-        <a href="#create">Write a wish</a>
+        <a href="/" onclick="goHome(); return false;">Back to Home</a>
+        <a href="/#create" onclick="scrollToSection('create'); return false;">Write a wish</a>
       </div>
     </nav>
 
@@ -404,9 +407,163 @@
   </div>
 </div>
 
+<!-- SCREEN 4: PUBLIC WISH TIER SHOWCASE GALLERY -->
+<div id="screen-gallery">
+  <div class="wrap" style="padding:40px 28px;">
+    <nav>
+      <div class="brand" onclick="goHome()">ONEWISHES</div>
+      <div class="links">
+        <a href="/" onclick="goHome(); return false;">Home</a>
+        <a href="/spark" onclick="navigateTo('/spark'); return false;">Spark</a>
+        <a href="/golden" onclick="navigateTo('/golden'); return false;">Golden</a>
+        <a href="/neverfade" onclick="navigateTo('/neverfade'); return false;">Neverfade</a>
+        <a href="/history" onclick="navigateTo('/history'); return false;" id="galleryNavHistory" style="display:none;">My History</a>
+      </div>
+    </nav>
+
+    <section class="section" style="border:none; padding-top:40px;">
+      <div class="section-title" id="galleryTitle">Public Wishes</div>
+      <div class="section-lead" id="galleryLead">Explore public wishes sent across the world.</div>
+
+      <div style="margin-bottom:24px; display:flex; gap:12px; max-width:480px;">
+        <input type="text" id="gallerySearchInput" placeholder="Search by recipient or sender username..." style="flex:1; padding:10px 14px; border:1.5px solid var(--line); font-size:0.92rem; background:var(--white);">
+      </div>
+
+      <div id="galleryGrid" class="history-grid">
+        <div style="color:var(--grey-2); font-size:0.95rem;">Loading wishes...</div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- SCREEN 5: LIVE ADMIN DASHBOARD FOR rylyoga@gmail.com -->
+<div id="screen-admin">
+  <div class="wrap" style="padding:40px 28px;">
+    <nav>
+      <div class="brand" onclick="goHome()">ONEWISHES <span style="font-size:0.75rem; background:var(--black); color:var(--white); padding:2px 8px; font-family:'Inter',sans-serif;">ADMIN</span></div>
+      <div class="links">
+        <a href="/" onclick="goHome(); return false;">Back to Home</a>
+        <a href="/history" onclick="navigateTo('/history'); return false;">My History</a>
+      </div>
+    </nav>
+
+    <section class="section" style="border:none; padding-top:30px;">
+      <div class="section-title">Platform Admin Dashboard</div>
+      <div class="section-lead">Live usage metrics and registered user accounts for <strong>rylyoga@gmail.com</strong>.</div>
+
+      <!-- STATS CARDS -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:40px;">
+        <div style="border:1.5px solid var(--black); padding:20px; background:var(--white);">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-2);">Total Registered Users</div>
+          <div style="font-size:2.2rem; font-weight:900; font-family:'Fraunces',serif;" id="statTotalUsers">0</div>
+        </div>
+        <div style="border:1.5px solid var(--black); padding:20px; background:var(--white);">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-2);">Total Wishes Created</div>
+          <div style="font-size:2.2rem; font-weight:900; font-family:'Fraunces',serif;" id="statTotalWishes">0</div>
+        </div>
+        <div style="border:1.5px solid var(--black); padding:20px; background:var(--white);">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-2);">Golden Wishes Used</div>
+          <div style="font-size:2.2rem; font-weight:900; font-family:'Fraunces',serif;" id="statGoldenUsed">0</div>
+        </div>
+        <div style="border:1.5px solid var(--black); padding:20px; background:var(--white);">
+          <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-2);">Total Platform Views</div>
+          <div style="font-size:2.2rem; font-weight:900; font-family:'Fraunces',serif;" id="statTotalViews">0</div>
+        </div>
+      </div>
+
+      <!-- USERS TABLE -->
+      <h3 style="font-size:1.4rem; font-weight:700; margin-bottom:16px;">Registered Accounts & Usage</h3>
+      <div style="overflow-x:auto; margin-bottom:40px; border:1.5px solid var(--black);">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+          <thead>
+            <tr style="background:var(--black); color:var(--white);">
+              <th style="padding:12px 16px;">Email</th>
+              <th style="padding:12px 16px;">Username</th>
+              <th style="padding:12px 16px;">Golden Used</th>
+              <th style="padding:12px 16px;">Joined Date</th>
+            </tr>
+          </thead>
+          <tbody id="adminUsersTbody">
+            <tr><td colspan="4" style="padding:16px; color:var(--grey-2);">Loading user list...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ALL WISHES TABLE -->
+      <h3 style="font-size:1.4rem; font-weight:700; margin-bottom:16px;">All Platform Wishes</h3>
+      <div style="overflow-x:auto; border:1.5px solid var(--black);">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+          <thead>
+            <tr style="background:var(--black); color:var(--white);">
+              <th style="padding:12px 16px;">Tier</th>
+              <th style="padding:12px 16px;">From</th>
+              <th style="padding:12px 16px;">To</th>
+              <th style="padding:12px 16px;">Privacy</th>
+              <th style="padding:12px 16px;">Views</th>
+              <th style="padding:12px 16px;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminWishesTbody">
+            <tr><td colspan="6" style="padding:16px; color:var(--grey-2);">Loading wishes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+</div>
+
+<!-- EDIT WISH MODAL -->
+<div id="editWishModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:99999; align-items:center; justify-content:center;">
+  <div style="background:var(--white); border:2px solid var(--black); padding:32px; max-width:540px; width:90%; box-shadow:0 16px 40px rgba(0,0,0,0.2); animation:cardPop 0.3s ease-out;">
+    <div style="font-family:'Fraunces',serif; font-size:1.6rem; font-weight:700; margin-bottom:16px;">Edit Your Wish</div>
+    <input type="hidden" id="editWishId">
+    <div class="field">
+      <label>From Name</label>
+      <input type="text" id="editFromName" maxlength="60">
+    </div>
+    <div class="field">
+      <label>Recipient Name</label>
+      <input type="text" id="editToName" maxlength="60">
+    </div>
+    <div class="field">
+      <label>Message</label>
+      <textarea id="editMsg" style="min-height:90px;" maxlength="1000"></textarea>
+    </div>
+    <div class="field">
+      <label>Privacy</label>
+      <select id="editPrivacySelect" style="padding:8px 0; font-size:0.95rem; border:none; border-bottom:1.5px solid var(--line); width:100%; background:transparent;">
+        <option value="public">Public (Shareable Link)</option>
+        <option value="private">Recipient Only (Private)</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:24px; justify-content:flex-end;">
+      <button class="btn btn-outline btn-small" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-solid btn-small" id="saveEditWishBtn">Save Changes</button>
+    </div>
+    <div class="status-msg" id="editWishStatus"></div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="deleteWishModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:99999; align-items:center; justify-content:center;">
+  <div style="background:var(--white); border:2px solid var(--black); padding:28px; max-width:440px; width:90%; box-shadow:0 16px 40px rgba(0,0,0,0.2);">
+    <div style="font-family:'Fraunces',serif; font-size:1.4rem; font-weight:700; margin-bottom:12px;">Delete Wish</div>
+    <p style="font-size:0.95rem; color:var(--grey-2); margin-bottom:20px;">Are you sure you want to permanently delete this wish? This action cannot be undone.</p>
+    <input type="hidden" id="deleteWishId">
+    <div style="display:flex; gap:12px; justify-content:flex-end;">
+      <button class="btn btn-outline btn-small" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-solid btn-small" id="confirmDeleteWishBtn" style="background:#a31c1c; border-color:#a31c1c; color:var(--white);">Delete Wish</button>
+    </div>
+  </div>
 </div>
 
 <script>
+const ADMIN_EMAIL = 'rylyoga@gmail.com';
+let welcomeNotified = false;
+let currentGalleryWishes = [];
+
 window.addEventListener('offline', () => document.getElementById('offlineNote').classList.add('show'));
 window.addEventListener('online', () => document.getElementById('offlineNote').classList.remove('show'));
 
@@ -505,7 +662,6 @@ function setActiveTier(tier){
   updateUrlPreview();
 }
 
-// Auto update custom URL preview text
 function updateUrlPreview(){
   const customSlugInput = document.getElementById('customSlug');
   const previewText = document.getElementById('urlPreviewText');
@@ -581,6 +737,7 @@ async function refreshAuthUI(sessionOverride = null){
 
     const nav = document.getElementById('navAuthState');
     const navHistory = document.getElementById('navHistoryLink');
+    const navAdmin = document.getElementById('navAdminLink');
     const loggedOutBox = document.getElementById('authLoggedOut');
     const loggedInBox = document.getElementById('authLoggedIn');
     const usernameBox = document.getElementById('usernameBox');
@@ -593,7 +750,17 @@ async function refreshAuthUI(sessionOverride = null){
       currentProfile = profile;
       
       document.getElementById('goldenCount').textContent = profile ? profile.golden_used : 0;
+
+      if(navAdmin){
+        navAdmin.style.display = (currentUser.email === ADMIN_EMAIL) ? 'inline-block' : 'none';
+      }
       
+      if(!welcomeNotified){
+        welcomeNotified = true;
+        const displayName = (profile && profile.username) ? '@' + profile.username : currentUser.email;
+        showToast(`Welcome back, ${displayName}! Account active.`);
+      }
+
       if(profile && profile.username){
         usernameBox.style.display = 'none';
         nav.textContent = '@' + profile.username;
@@ -606,7 +773,6 @@ async function refreshAuthUI(sessionOverride = null){
         document.getElementById('userDisplayName').textContent = currentUser.email;
         if(navHistory) navHistory.style.display = 'none';
         
-        // Auto suggest username from email prefix
         const usernameInput = document.getElementById('usernameInput');
         if(usernameInput && !usernameInput.value && currentUser.email){
           const suggested = currentUser.email.split('@')[0].replace(/[^a-z0-9_]/gi, '').toLowerCase();
@@ -619,6 +785,7 @@ async function refreshAuthUI(sessionOverride = null){
       loggedInBox.style.display = 'none';
       usernameBox.style.display = 'none';
       if(navHistory) navHistory.style.display = 'none';
+      if(navAdmin) navAdmin.style.display = 'none';
       nav.textContent = '';
       unlockTiers(false);
       if(currentTier !== 'spark') setActiveTier('spark');
@@ -663,7 +830,9 @@ if(signOutBtn){
   signOutBtn.addEventListener('click', async () => {
     const client = initDb();
     if(client) await client.auth.signOut();
+    welcomeNotified = false;
     refreshAuthUI();
+    navigateTo('/');
   });
 }
 
@@ -693,7 +862,7 @@ if(claimBtn){
   });
 }
 
-// Lossless Quality Canvas Image Compressor (Saves storage space)
+// Lossless Quality Canvas Image Compressor
 function compressImageFile(file, maxWidth = 1200, quality = 0.82){
   return new Promise((resolve) => {
     if(!file || !file.type.startsWith('image/')){
@@ -816,7 +985,8 @@ if(createBtn){
             media_url: selectedMediaUrl,
             media_type: selectedMediaType,
             privacy: currentPrivacy,
-            slug
+            slug,
+            views_count: 0
           })
           .select('id, slug')
           .single();
@@ -863,7 +1033,8 @@ if(createBtn){
           media_url: selectedMediaUrl,
           media_type: selectedMediaType,
           privacy: currentPrivacy,
-          slug
+          slug,
+          views_count: 0
         })
         .select('id, slug')
         .single();
@@ -903,14 +1074,14 @@ async function loadHomepageNeverfade(){
   try{
     let { data: booking } = await client
       .from('neverfade_bookings')
-      .select('booking_date, wish_id, wishes(id, from_name, to_name, message, media_url, media_type, sender_username, privacy)')
+      .select('booking_date, wish_id, wishes(id, from_name, to_name, message, media_url, media_type, sender_username, privacy, views_count)')
       .eq('booking_date', todayStr)
       .maybeSingle();
 
     if(!booking || !booking.wishes){
       const { data: latestList } = await client
         .from('neverfade_bookings')
-        .select('booking_date, wish_id, wishes(id, from_name, to_name, message, media_url, media_type, sender_username, privacy)')
+        .select('booking_date, wish_id, wishes(id, from_name, to_name, message, media_url, media_type, sender_username, privacy, views_count)')
         .order('booking_date', { ascending: false })
         .limit(1);
 
@@ -923,7 +1094,7 @@ async function loadHomepageNeverfade(){
       document.getElementById('neverfadeBadge').textContent = 'NEVERFADE FEATURE — ' + booking.booking_date;
       document.getElementById('neverfadeTitle').textContent = 'For ' + w.to_name;
       document.getElementById('neverfadeMsg').textContent = '"' + w.message + '"';
-      document.getElementById('neverfadeSender').textContent = 'FROM — ' + w.from_name.toUpperCase() + ' (@' + w.sender_username + ')';
+      document.getElementById('neverfadeSender').textContent = 'FROM — ' + w.from_name.toUpperCase() + ' (@' + w.sender_username + ') · 👁 ' + (w.views_count || 0) + ' views';
       
       const mediaBox = document.getElementById('neverfadeMediaBox');
       if(w.media_url){
@@ -940,6 +1111,17 @@ async function loadHomepageNeverfade(){
       section.style.display = 'none';
     }
   }catch(e){ console.error('Failed to load Neverfade wish for homepage', e); }
+}
+
+async function incrementWishViews(wishId, currentViews = 0){
+  const client = initDb();
+  if(!client || !wishId) return;
+  try{
+    const { error } = await client.rpc('increment_wish_views', { target_wish_id: wishId });
+    if(error){
+      await client.from('wishes').update({ views_count: currentViews + 1 }).eq('id', wishId);
+    }
+  }catch(e){ console.error('View increment error', e); }
 }
 
 async function loadWishBySlug(slug){
@@ -976,7 +1158,7 @@ async function loadWishByNeverfadeDate(dateStr){
 function renderWishView(wish){
   document.getElementById('viewFrom').textContent = 'FROM ' + wish.from_name.toUpperCase() + ' (@' + wish.sender_username + '), TO ' + wish.to_name.toUpperCase();
   document.getElementById('viewTier').textContent =
-    wish.tier === 'golden' ? 'A Golden Wish' : wish.tier === 'neverfade' ? 'A Neverfade Wish' : 'A Spark Wish';
+    wish.tier === 'golden' ? 'A Golden Wish 🌟' : wish.tier === 'neverfade' ? 'A Neverfade Wish ⭐' : 'A Spark Wish';
   document.getElementById('viewMsg').textContent = wish.message;
 
   const mediaBox = document.getElementById('viewMediaBox');
@@ -987,14 +1169,268 @@ function renderWishView(wish){
       : `<img src="${wish.media_url}">`;
   }else{ mediaBox.style.display = 'none'; }
 
-  document.getElementById('viewPrivacyBadge').textContent = wish.privacy === 'private' ? '🔒 Recipient Only Wish' : '🌐 Public Link';
+  const updatedViews = (wish.views_count || 0) + 1;
+  document.getElementById('viewPrivacyBadge').textContent = (wish.privacy === 'private' ? '🔒 Recipient Only Wish' : '🌐 Public Link') + ' · 👁 ' + updatedViews + ' views';
   showScreen('screen-view');
+
+  incrementWishViews(wish.id, wish.views_count || 0);
+}
+
+// Tier Showcase Gallery Loader
+async function loadGalleryTier(tier){
+  const client = initDb();
+  const grid = document.getElementById('galleryGrid');
+  const titleEl = document.getElementById('galleryTitle');
+  const leadEl = document.getElementById('galleryLead');
+  if(document.getElementById('galleryNavHistory')){
+    document.getElementById('galleryNavHistory').style.display = currentUser ? 'inline-block' : 'none';
+  }
+
+  if(tier === 'golden'){
+    titleEl.textContent = 'Golden Wishes 🌟';
+    leadEl.textContent = '3 per lifetime per identity. Rare wishes sent for the people who defined a life.';
+  } else if(tier === 'neverfade'){
+    titleEl.textContent = 'Neverfade Daily Features ⭐';
+    leadEl.textContent = '1 slot per date worldwide. Front-page takeover wishes.';
+  } else {
+    titleEl.textContent = 'Public Spark Wishes';
+    leadEl.textContent = 'Unlimited, free, shareable wishes sent by people across the globe.';
+  }
+
+  try{
+    const { data: wishes } = await client
+      .from('wishes')
+      .select('*')
+      .eq('tier', tier)
+      .eq('privacy', 'public')
+      .order('created_at', { ascending: false });
+
+    currentGalleryWishes = wishes || [];
+    renderGalleryGrid(currentGalleryWishes);
+  }catch(e){
+    grid.innerHTML = '<div style="color:var(--grey-2);">Could not load public wishes.</div>';
+  }
+}
+
+function renderGalleryGrid(wishes){
+  const grid = document.getElementById('galleryGrid');
+  if(!wishes || !wishes.length){
+    grid.innerHTML = '<div style="color:var(--grey-2);">No public wishes found in this tier yet. Be the first to send one!</div>';
+    return;
+  }
+
+  grid.innerHTML = wishes.map(w => {
+    const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/w/${w.slug}`;
+    const tierBadge = w.tier === 'golden' ? 'GOLDEN 🌟' : w.tier === 'neverfade' ? 'NEVERFADE ⭐' : 'SPARK';
+    return `
+      <div class="history-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span class="tier-tag">${tierBadge}</span>
+          <span style="font-size:0.75rem; color:var(--grey-2);">👁 ${w.views_count || 0} views</span>
+        </div>
+        <h4>For ${w.to_name}</h4>
+        <p>"${w.message}"</p>
+        <div style="font-size:0.8rem; color:var(--grey-2); margin-bottom:14px;">From: <strong>${w.from_name}</strong> (@${w.sender_username})</div>
+        <a href="${link}" onclick="navigateTo('${link}'); return false;" class="btn btn-outline btn-small">Open Wish →</a>
+      </div>
+    `;
+  }).join('');
+}
+
+const gallerySearchInput = document.getElementById('gallerySearchInput');
+if(gallerySearchInput){
+  gallerySearchInput.addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    if(!q){ renderGalleryGrid(currentGalleryWishes); return; }
+    const filtered = currentGalleryWishes.filter(w =>
+      w.to_name.toLowerCase().includes(q) ||
+      w.from_name.toLowerCase().includes(q) ||
+      w.sender_username.toLowerCase().includes(q) ||
+      w.message.toLowerCase().includes(q)
+    );
+    renderGalleryGrid(filtered);
+  });
+}
+
+// Load History Dashboard
+async function loadHistoryData(){
+  if(!currentUser || !currentProfile) return;
+  const client = initDb();
+  const grid = document.getElementById('historyGrid');
+  document.getElementById('historyUsername').textContent = '@' + currentProfile.username;
+
+  try{
+    const { data: wishes } = await client.from('wishes').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    if(!wishes || !wishes.length){
+      grid.innerHTML = '<div style="color:var(--grey-2);">No wishes created yet. Write your first wish today!</div>';
+      return;
+    }
+    grid.innerHTML = wishes.map(w => {
+      const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/w/${w.slug}`;
+      const escapedMsg = (w.message || '').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+      const escapedFrom = (w.from_name || '').replace(/'/g, "\\'");
+      const escapedTo = (w.to_name || '').replace(/'/g, "\\'");
+      return `
+        <div class="history-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="tier-tag">${w.tier.toUpperCase()} WISH</span>
+            <span style="font-size:0.75rem; color:var(--grey-2);">👁 ${w.views_count || 0} views</span>
+          </div>
+          <h4>For ${w.to_name}</h4>
+          <p>"${w.message}"</p>
+          <div style="font-size:0.8rem; color:var(--grey-2); margin-bottom:14px;">Sent as: ${w.from_name} · ${w.privacy === 'private' ? '🔒 Private' : '🌐 Public'}</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <a href="${link}" onclick="navigateTo('${link}'); return false;" class="btn btn-outline btn-small" style="flex:1; text-align:center;">Open →</a>
+            <button class="btn btn-outline btn-small" onclick="openEditModal('${w.id}', '${escapedFrom}', '${escapedTo}', '${escapedMsg}', '${w.privacy}')">✏️ Edit</button>
+            <button class="btn btn-outline btn-small" onclick="openDeleteModal('${w.id}')" style="color:#a31c1c; border-color:#a31c1c;">🗑️</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }catch(e){ grid.innerHTML = 'Could not load history.'; }
+}
+
+// Edit & Delete Wish Handlers
+function openEditModal(id, fromName, toName, msg, privacy){
+  document.getElementById('editWishId').value = id;
+  document.getElementById('editFromName').value = fromName;
+  document.getElementById('editToName').value = toName;
+  document.getElementById('editMsg').value = msg;
+  document.getElementById('editPrivacySelect').value = privacy || 'public';
+  document.getElementById('editWishStatus').textContent = '';
+  document.getElementById('editWishModal').style.display = 'flex';
+}
+
+function closeEditModal(){
+  document.getElementById('editWishModal').style.display = 'none';
+}
+
+const saveEditWishBtn = document.getElementById('saveEditWishBtn');
+if(saveEditWishBtn){
+  saveEditWishBtn.addEventListener('click', async () => {
+    const id = document.getElementById('editWishId').value;
+    const from_name = document.getElementById('editFromName').value.trim();
+    const to_name = document.getElementById('editToName').value.trim();
+    const message = document.getElementById('editMsg').value.trim();
+    const privacy = document.getElementById('editPrivacySelect').value;
+    const statusEl = document.getElementById('editWishStatus');
+
+    if(!from_name || !to_name || !message){
+      statusEl.classList.add('err');
+      statusEl.textContent = 'Please fill out all fields.';
+      return;
+    }
+
+    const client = initDb();
+    if(!client || !id) return;
+    statusEl.textContent = 'Saving changes...';
+
+    try{
+      const { error } = await client.from('wishes').update({ from_name, to_name, message, privacy }).eq('id', id);
+      if(error){
+        statusEl.classList.add('err');
+        statusEl.textContent = 'Could not save wish updates.';
+        return;
+      }
+      closeEditModal();
+      showToast('Wish updated successfully!');
+      if(window.location.pathname === '/history') await loadHistoryData();
+    }catch(e){ statusEl.textContent = 'Error updating wish.'; }
+  });
+}
+
+function openDeleteModal(id){
+  document.getElementById('deleteWishId').value = id;
+  document.getElementById('deleteWishModal').style.display = 'flex';
+}
+
+function closeDeleteModal(){
+  document.getElementById('deleteWishModal').style.display = 'none';
+}
+
+const confirmDeleteWishBtn = document.getElementById('confirmDeleteWishBtn');
+if(confirmDeleteWishBtn){
+  confirmDeleteWishBtn.addEventListener('click', async () => {
+    const id = document.getElementById('deleteWishId').value;
+    const client = initDb();
+    if(!client || !id) return;
+
+    try{
+      const { error } = await client.from('wishes').delete().eq('id', id);
+      closeDeleteModal();
+      if(error){
+        showToast('Could not delete wish.');
+        return;
+      }
+      showToast('Wish deleted permanently.');
+      if(window.location.pathname === '/history') await loadHistoryData();
+      if(window.location.pathname === '/admin') await loadAdminDashboard();
+    }catch(e){ closeDeleteModal(); showToast('Error deleting wish.'); }
+  });
+}
+
+// Live Admin Dashboard for rylyoga@gmail.com
+async function loadAdminDashboard(){
+  if(!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+  const client = initDb();
+  if(!client) return;
+
+  try{
+    const { data: users } = await client.from('profiles').select('*').order('created_at', { ascending: false });
+    const { data: wishes } = await client.from('wishes').select('*').order('created_at', { ascending: false });
+
+    const userList = users || [];
+    const wishList = wishes || [];
+
+    document.getElementById('statTotalUsers').textContent = userList.length;
+    document.getElementById('statTotalWishes').textContent = wishList.length;
+
+    const goldenCount = userList.reduce((acc, u) => acc + (u.golden_used || 0), 0);
+    document.getElementById('statGoldenUsed').textContent = goldenCount;
+
+    const totalViews = wishList.reduce((acc, w) => acc + (w.views_count || 0), 0);
+    document.getElementById('statTotalViews').textContent = totalViews;
+
+    // Users Table
+    const usersTbody = document.getElementById('adminUsersTbody');
+    if(!userList.length){
+      usersTbody.innerHTML = '<tr><td colspan="4" style="padding:16px; color:var(--grey-2);">No registered users yet.</td></tr>';
+    } else {
+      usersTbody.innerHTML = userList.map(u => `
+        <tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:10px 16px;">${u.email || 'OAuth User'}</td>
+          <td style="padding:10px 16px;"><strong>@${u.username || 'unclaimed'}</strong></td>
+          <td style="padding:10px 16px;">${u.golden_used || 0} / 3</td>
+          <td style="padding:10px 16px; font-size:0.8rem; color:var(--grey-2);">${new Date(u.created_at).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Wishes Table
+    const wishesTbody = document.getElementById('adminWishesTbody');
+    if(!wishList.length){
+      wishesTbody.innerHTML = '<tr><td colspan="6" style="padding:16px; color:var(--grey-2);">No platform wishes created yet.</td></tr>';
+    } else {
+      wishesTbody.innerHTML = wishList.map(w => `
+        <tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:10px 16px;"><span class="tier-tag">${w.tier.toUpperCase()}</span></td>
+          <td style="padding:10px 16px;">${w.from_name} (@${w.sender_username})</td>
+          <td style="padding:10px 16px;">${w.to_name}</td>
+          <td style="padding:10px 16px;">${w.privacy === 'private' ? '🔒 Private' : '🌐 Public'}</td>
+          <td style="padding:10px 16px;">👁 ${w.views_count || 0}</td>
+          <td style="padding:10px 16px;">
+            <a href="/w/${w.slug}" onclick="navigateTo('/w/${w.slug}'); return false;" class="btn btn-outline btn-small">View</a>
+            <button onclick="openDeleteModal('${w.id}')" class="btn btn-outline btn-small" style="color:#a31c1c; border-color:#a31c1c;">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }catch(e){ console.error('Admin dashboard load error', e); }
 }
 
 async function routeApp(){
   const hash = window.location.hash;
   
-  // Backward compatibility for legacy hash URLs (#spark=slug, #golden=slug, #neverfade=date, #history)
   if(hash && !hash.includes('access_token=') && !hash.includes('refresh_token=') && !hash.includes('error=')){
     if(hash.startsWith('#history')){
       window.history.replaceState({}, '', '/history');
@@ -1008,12 +1444,31 @@ async function routeApp(){
     }
   }
 
-  const path = window.location.pathname;
+  const path = window.location.pathname.toLowerCase();
+
+  if(path === '/spark' || path === '/golden' || path === '/neverfade'){
+    const tier = path.replace('/','');
+    showScreen('screen-gallery');
+    await loadGalleryTier(tier);
+    return;
+  }
+
+  if(path === '/admin'){
+    if(currentUser && currentUser.email === ADMIN_EMAIL){
+      showScreen('screen-admin');
+      await loadAdminDashboard();
+      return;
+    } else {
+      showToast('Admin access restricted to rylyoga@gmail.com');
+      navigateTo('/', true);
+      return;
+    }
+  }
 
   if(path === '/history'){
     if(currentUser){
       showScreen('screen-history');
-      loadHistoryData();
+      await loadHistoryData();
       return;
     } else {
       navigateTo('/', true);
@@ -1043,34 +1498,6 @@ async function routeApp(){
     const targetEl = document.getElementById(targetId);
     if(targetEl) setTimeout(() => targetEl.scrollIntoView({ behavior: 'smooth' }), 100);
   }
-}
-
-// Load History Dashboard
-async function loadHistoryData(){
-  if(!currentUser || !currentProfile) return;
-  const client = initDb();
-  const grid = document.getElementById('historyGrid');
-  document.getElementById('historyUsername').textContent = '@' + currentProfile.username;
-
-  try{
-    const { data: wishes } = await client.from('wishes').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-    if(!wishes || !wishes.length){
-      grid.innerHTML = '<div style="color:var(--grey-2);">No wishes created yet. Write your first wish today!</div>';
-      return;
-    }
-    grid.innerHTML = wishes.map(w => {
-      const link = (w.tier === 'neverfade') ? (location.origin + '/neverfade/' + w.slug) : (location.origin + '/w/' + w.slug);
-      return `
-        <div class="history-card">
-          <div class="tier-tag">${w.tier.toUpperCase()} WISH</div>
-          <h4>For ${w.to_name}</h4>
-          <p>"${w.message}"</p>
-          <div style="font-size:0.8rem; color:var(--grey-2); margin-bottom:12px;">Sent as: ${w.from_name}</div>
-          <a href="${link}" onclick="navigateTo('${(w.tier === 'neverfade') ? '/neverfade/' + w.slug : '/w/' + w.slug}'); return false;" class="btn btn-outline btn-small">Open Wish →</a>
-        </div>
-      `;
-    }).join('');
-  }catch(e){ grid.innerHTML = 'Could not load history.'; }
 }
 
 window.addEventListener('popstate', routeApp);

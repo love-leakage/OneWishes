@@ -5,6 +5,7 @@
 
 -- 1. CLEANUP (Drop existing objects if any)
 DROP FUNCTION IF EXISTS public.claim_golden_wish() CASCADE;
+DROP FUNCTION IF EXISTS public.increment_wish_views(UUID) CASCADE;
 DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
 DROP TABLE IF EXISTS public.neverfade_bookings CASCADE;
 DROP TABLE IF EXISTS public.spotlight_bookings CASCADE;
@@ -49,7 +50,7 @@ CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 4. WISHES TABLE (Stores Spark, Golden, Neverfade wishes with Media & Privacy)
+-- 4. WISHES TABLE (Stores Spark, Golden, Neverfade wishes with Media, Privacy & Views Count)
 CREATE TABLE public.wishes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -62,6 +63,7 @@ CREATE TABLE public.wishes (
     media_type TEXT CHECK (media_type IN ('image', 'video', null)),
     privacy TEXT NOT NULL DEFAULT 'public' CHECK (privacy IN ('public', 'private')),
     slug TEXT UNIQUE NOT NULL,
+    views_count INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -74,6 +76,10 @@ CREATE POLICY "Public can view wishes"
 CREATE POLICY "Authenticated users can create wishes"
     ON public.wishes FOR INSERT
     WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own wishes"
+    ON public.wishes FOR UPDATE
+    USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can delete own wishes"
     ON public.wishes FOR DELETE
@@ -123,5 +129,15 @@ BEGIN
     WHERE id = auth.uid();
 
     RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 7. ATOMIC WISH VIEW COUNTER INCREMENT RPC
+CREATE OR REPLACE FUNCTION public.increment_wish_views(target_wish_id UUID)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE public.wishes
+    SET views_count = views_count + 1
+    WHERE id = target_wish_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
