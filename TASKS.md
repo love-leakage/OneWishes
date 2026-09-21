@@ -12,6 +12,8 @@
 ## Phase 2: Core Wish Flow
 - [x] Create a Spark Wish → get shareable link
 - [x] View a wish from its link (cross-device, via Supabase)
+- [x] Clean HTML5 path routing (/w/slug, /neverfade/date, /history) without hash tags
+- [x] Vercel SPA Rewrites (vercel.json)
 - [x] Basic form validation (required fields)
 - [ ] Inline field-level error messages (currently status line)
 
