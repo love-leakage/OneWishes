@@ -364,10 +364,10 @@
         <div class="field">
           <label>Custom Link Extension (Customize your wish URL)</label>
           <div class="url-input-wrapper">
-            <span class="url-prefix">onewishes.com/w/</span>
+            <span class="url-prefix">onewishes.com/</span>
             <input type="text" id="customSlug" placeholder="e.g. happy-birthday-alex" maxlength="60">
           </div>
-          <div style="font-size:0.75rem; color:var(--grey-2); margin-top:6px;" id="urlPreviewText">Wish link will be: onewishes.com/w/...</div>
+          <div style="font-size:0.75rem; color:var(--grey-2); margin-top:6px;" id="urlPreviewText">Wish link will be: onewishes.com/...</div>
         </div>
 
         <div class="field">
@@ -837,7 +837,7 @@ function updateUrlPreview(){
   }
 
   const slug = customSlugInput.value.trim() || (userPrefix + '-to-' + (toVal || 'recipient'));
-  const basePath = currentTier === 'neverfade' ? '/neverfade/' : '/w/';
+  const basePath = currentTier === 'neverfade' ? '/neverfade/' : '/';
   previewText.textContent = 'Wish link will be: onewishes.com' + basePath + slug;
 }
 
@@ -1421,7 +1421,7 @@ if(createBtn){
 
       if(tier === 'golden') refreshAuthUI();
 
-      const link = location.origin + '/w/' + data.slug;
+      const link = location.origin + '/' + data.slug;
       if(currentUser && currentUser.email){
         sendResendWishEmail(currentUser.email, fromName, toName, tier, link);
       }
@@ -1692,7 +1692,7 @@ function renderGalleryGrid(wishes){
   }
 
   grid.innerHTML = wishes.map(w => {
-    const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/w/${w.slug}`;
+    const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/${w.slug}`;
     const tierBadge = w.tier === 'golden' ? 'GOLDEN 🌟' : w.tier === 'neverfade' ? 'NEVERFADE ⭐' : 'SPARK';
     const isLiked = localStorage.getItem('liked_wish_' + w.id) === 'true';
     return `
@@ -1744,7 +1744,7 @@ async function loadHistoryData(){
       return;
     }
     grid.innerHTML = wishes.map(w => {
-      const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/w/${w.slug}`;
+      const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/${w.slug}`;
       const escapedMsg = (w.message || '').replace(/"/g, '&quot;').replace(/'/g, "\\'");
       const escapedFrom = (w.from_name || '').replace(/'/g, "\\'");
       const escapedTo = (w.to_name || '').replace(/'/g, "\\'");
@@ -1923,49 +1923,48 @@ async function routeApp(){
       if(prefix === 'neverfade'){
         window.history.replaceState({}, '', '/neverfade/' + param);
       } else {
-        window.history.replaceState({}, '', '/w/' + param);
+        window.history.replaceState({}, '', '/' + param);
       }
     }
   }
 
   const path = window.location.pathname.toLowerCase();
+  const reservedPages = ['/', '/spark', '/golden', '/neverfade', '/admin', '/admn', '/history'];
 
-  if(path === '/spark' || path === '/golden' || path === '/neverfade'){
-    const tier = path.replace('/','');
-    showScreen('screen-gallery');
-    await loadGalleryTier(tier);
+  if(reservedPages.includes(path)){
+    if(path === '/spark' || path === '/golden' || path === '/neverfade'){
+      const tier = path.replace('/','');
+      showScreen('screen-gallery');
+      await loadGalleryTier(tier);
+      return;
+    }
+
+    if(path === '/admin' || path === '/admn'){
+      if(currentUser && currentUser.email === ADMIN_EMAIL){
+        showScreen('screen-admin');
+        await loadAdminDashboard();
+        return;
+      } else {
+        showToast('Access restricted.');
+        navigateTo('/', true);
+        return;
+      }
+    }
+
+    if(path === '/history'){
+      if(currentUser){
+        showScreen('screen-history');
+        await loadHistoryData();
+        return;
+      } else {
+        navigateTo('/', true);
+        return;
+      }
+    }
+
+    showScreen('screen-home');
+    await loadHomepageNeverfade();
     return;
-  }
-
-  if(path === '/admin' || path === '/admn'){
-    if(currentUser && currentUser.email === ADMIN_EMAIL){
-      showScreen('screen-admin');
-      await loadAdminDashboard();
-      return;
-    } else {
-      showToast('Access restricted.');
-      navigateTo('/', true);
-      return;
-    }
-  }
-
-  if(path === '/history'){
-    if(currentUser){
-      showScreen('screen-history');
-      await loadHistoryData();
-      return;
-    } else {
-      navigateTo('/', true);
-      return;
-    }
-  }
-
-  if(path.startsWith('/w/')){
-    const slug = path.replace('/w/', '').trim();
-    if(slug){
-      await loadWishBySlug(slug);
-      return;
-    }
   }
 
   if(path.startsWith('/neverfade/')){
@@ -1974,6 +1973,14 @@ async function routeApp(){
       await loadWishByNeverfadeDate(dateStr);
       return;
     }
+  }
+
+  // Handle clean root wish links /slug or legacy /w/slug
+  let slug = path.startsWith('/w/') ? path.replace('/w/', '') : path.replace('/', '');
+  slug = slug.trim();
+  if(slug && slug !== 'index.html'){
+    await loadWishBySlug(slug);
+    return;
   }
 
   showScreen('screen-home');
