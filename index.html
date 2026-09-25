@@ -255,20 +255,20 @@
     </div>
   </section>
 
-  <section class="section" id="poetry">
+  <section class="section" id="poetry" style="padding: 36px 0; background: rgba(10,10,10,0.02);">
     <div class="wrap">
-      <div class="poem reveal">
-        <span class="line">Not every word needs saying twice.</span>
-        <span class="line">Not every hand deserves your key.</span>
-        <span class="line">A wish, like fire, has its price —</span>
-        <span class="line">spend it once. Spend it wisely.</span>
-        <div class="signature">— written for OneWishes</div>
+      <div class="poem in" style="margin: 0 auto; max-width: 580px; text-align: center;">
+        <span class="line" style="opacity: 1; transform: none; display: block; margin-bottom: 4px;">Not every word needs saying twice.</span>
+        <span class="line" style="opacity: 1; transform: none; display: block; margin-bottom: 4px;">Not every hand deserves your key.</span>
+        <span class="line" style="opacity: 1; transform: none; display: block; margin-bottom: 4px;">A wish, like fire, has its price —</span>
+        <span class="line" style="opacity: 1; transform: none; display: block;">spend it once. Spend it wisely.</span>
+        <div class="signature" style="opacity: 1; margin-top: 14px; text-align: center;">— written for OneWishes</div>
       </div>
     </div>
   </section>
 
   <!-- WRITE A WISH SECTION -->
-  <section class="section" id="create">
+  <section class="section" id="create" style="padding: 44px 0 70px;">
     <div class="wrap">
       <div class="section-title">Write a wish</div>
       <div class="section-lead">User sign-in is required so that scarcity limits and unique usernames mean something.</div>
@@ -1356,7 +1356,7 @@ if(createBtn){
   });
 }
 
-// Fetch Active or Featured Public Neverfade Wish for Homepage (Automatic Day-Wise Rollout)
+// Fetch Active Public Neverfade Wish for TODAY ONLY on Homepage
 async function loadHomepageNeverfade(){
   const client = initDb();
   if(!client) return;
@@ -1371,7 +1371,7 @@ async function loadHomepageNeverfade(){
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
 
-    // Strategy 1: Check neverfade_bookings for TODAY'S EXACT DATE
+    // Check neverfade_bookings ONLY FOR TODAY'S EXACT DATE
     const { data: todayBooking } = await client
       .from('neverfade_bookings')
       .select('booking_date, wish_id')
@@ -1386,50 +1386,10 @@ async function loadHomepageNeverfade(){
       }
     }
 
-    // Strategy 2: If no wish booked specifically for TODAY, check most recent booking on or before today (booking_date <= todayStr)
-    if(!targetWish){
-      const { data: pastBookings } = await client
-        .from('neverfade_bookings')
-        .select('booking_date, wish_id')
-        .lte('booking_date', todayStr)
-        .order('booking_date', { ascending: false })
-        .limit(10);
-
-      if(pastBookings && pastBookings.length > 0){
-        for(const b of pastBookings){
-          if(b.wish_id){
-            const { data: w } = await client.from('wishes').select('*').eq('id', b.wish_id).maybeSingle();
-            if(w && (w.privacy === 'public' || w.user_id === (currentUser ? currentUser.id : null))){
-              targetWish = w;
-              targetDate = b.booking_date;
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    // Strategy 3: Fallback to latest public Neverfade wish
-    if(!targetWish){
-      const { data: latestNeverfadeWishes } = await client
-        .from('wishes')
-        .select('*')
-        .eq('tier', 'neverfade')
-        .eq('privacy', 'public')
-        .order('created_at', { ascending: false })
-        .limit(5);
-
-      if(latestNeverfadeWishes && latestNeverfadeWishes.length > 0){
-        targetWish = latestNeverfadeWishes[0];
-        const { data: bRow } = await client.from('neverfade_bookings').select('booking_date').eq('wish_id', targetWish.id).maybeSingle();
-        targetDate = bRow ? bRow.booking_date : (targetWish.created_at ? targetWish.created_at.split('T')[0] : '');
-      }
-    }
-
     if(targetWish){
       section.style.display = 'block';
       const badgeEl = document.getElementById('neverfadeBadge');
-      if(badgeEl) badgeEl.textContent = 'NEVERFADE FEATURE' + (targetDate ? (' — ' + targetDate) : '');
+      if(badgeEl) badgeEl.textContent = 'TODAY\'S NEVERFADE FEATURE — ' + targetDate;
       
       const titleEl = document.getElementById('neverfadeTitle');
       if(titleEl) titleEl.textContent = 'For ' + targetWish.to_name;
@@ -1452,7 +1412,7 @@ async function loadHomepageNeverfade(){
 
       const linkBtn = document.getElementById('neverfadeLinkBtn');
       if(linkBtn){
-        const navUrl = targetDate ? ('/neverfade/' + targetDate) : ('/w/' + targetWish.slug);
+        const navUrl = '/neverfade/' + targetDate;
         linkBtn.href = navUrl;
         linkBtn.onclick = (e) => { e.preventDefault(); navigateTo(navUrl); };
       }
@@ -1461,6 +1421,7 @@ async function loadHomepageNeverfade(){
     }
   }catch(e){
     console.error('Failed to load Neverfade wish for homepage', e);
+    section.style.display = 'none';
   }
 }
 
