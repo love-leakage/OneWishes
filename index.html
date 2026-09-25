@@ -77,24 +77,28 @@
   .tier-row .limit-col{ text-align:right; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--grey-2); padding-top:6px; }
   @media (max-width:700px){ .tier-row .limit-col{ text-align:left; margin-top:6px; } }
 
-  /* Animated Wish Card Form */
-  .create-card{ max-width:620px; border:2px solid var(--black); padding:40px; background:var(--white); box-shadow:0 12px 36px rgba(0,0,0,0.04); transition: transform 0.3s ease, box-shadow 0.3s ease; animation: cardPop 0.4s ease-out; }
-  @keyframes cardPop{ from{ opacity:0; transform:scale(0.98) translateY(12px); } to{ opacity:1; transform:scale(1) translateY(0); } }
-  @media (max-width:700px){ .create-card{ padding:26px; } }
-  .field{ margin-bottom:22px; }
-  .field label{ display:block; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-2); margin-bottom:8px; font-weight:600; }
-  .field input, .field textarea, .field select{ width:100%; background:transparent; border:none; border-bottom:1.5px solid var(--line); color:var(--black); padding:10px 2px; font-family:'Inter',sans-serif; font-size:1rem; transition: border-color 0.2s ease; }
-  .field textarea{ min-height:110px; resize:vertical; font-family:'Fraunces', serif; font-size:1.15rem; line-height:1.5; }
-  .field input:focus, .field textarea:focus, .field select:focus{ outline:none; border-bottom-color:var(--black); }
+  /* Animated High-End Wish Card Form */
+  .create-card{ max-width:660px; position:relative; border:1.5px solid rgba(10,10,10,0.12); border-radius:22px; padding:44px; background:linear-gradient(145deg, #ffffff 0%, #fafaf7 100%); box-shadow:0 20px 50px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.02); transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); overflow:hidden; }
+  .create-card::before{ content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle at 50% 50%, rgba(225,48,108,0.04), rgba(245,166,35,0.03), transparent 70%); animation: cardAuraRotate 18s linear infinite; pointer-events:none; }
+  @keyframes cardAuraRotate{ 0%{ transform:rotate(0deg); } 100%{ transform:rotate(360deg); } }
+  .create-card:hover{ transform:translateY(-3px); box-shadow:0 28px 60px rgba(0,0,0,0.09); }
+  @media (max-width:700px){ .create-card{ padding:26px; border-radius:16px; } }
   
-  .tier-select{ display:flex; gap:10px; margin-bottom:24px; }
-  .tier-opt{ flex:1; text-align:center; padding:12px; border:1.5px solid var(--line); cursor:pointer; font-size:0.88rem; font-weight:500; transition: all 0.2s ease; }
-  .tier-opt.active{ border-color:var(--black); background:var(--black); color:var(--white); }
-  .tier-opt.locked{ opacity:0.4; cursor:not-allowed; }
+  .field{ position:relative; margin-bottom:24px; z-index:2; }
+  .field label{ display:flex; align-items:center; gap:6px; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--grey-2); margin-bottom:8px; font-weight:700; }
+  .field input[type="text"], .field input[type="date"], .field textarea, .field select{ width:100%; background:rgba(255,255,255,0.85); border:1.5px solid var(--line); border-radius:12px; color:var(--black); padding:12px 14px; font-family:'Inter',sans-serif; font-size:1rem; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+  .field textarea{ min-height:120px; resize:vertical; font-family:'Fraunces', serif; font-size:1.2rem; line-height:1.5; }
+  .field input:focus, .field textarea:focus, .field select:focus{ outline:none; border-color:var(--black); background:var(--white); box-shadow:0 0 0 4px rgba(10,10,10,0.06), 0 4px 16px rgba(0,0,0,0.03); transform:translateY(-1px); }
+  
+  .tier-select{ display:flex; gap:12px; margin-bottom:26px; z-index:2; position:relative; }
+  .tier-opt{ flex:1; text-align:center; padding:14px 10px; border:1.5px solid var(--line); border-radius:14px; cursor:pointer; font-size:0.9rem; font-weight:600; background:var(--white); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .tier-opt:hover:not(.locked){ transform:translateY(-2px); border-color:var(--black); box-shadow:0 6px 16px rgba(0,0,0,0.06); }
+  .tier-opt.active{ border-color:var(--black); background:var(--black); color:var(--white); transform:translateY(-2px); box-shadow:0 8px 24px rgba(10,10,10,0.18); }
+  .tier-opt.locked{ opacity:0.45; cursor:not-allowed; background:rgba(0,0,0,0.02); }
 
   .privacy-toggle{ display:flex; gap:10px; margin-top:8px; }
-  .privacy-opt{ flex:1; text-align:center; padding:9px 12px; border:1.5px solid var(--line); cursor:pointer; font-size:0.82rem; transition: all 0.2s ease; }
-  .privacy-opt.active{ border-color:var(--black); background:var(--black); color:var(--white); }
+  .privacy-opt{ flex:1; text-align:center; padding:11px 14px; border:1.5px solid var(--line); border-radius:12px; cursor:pointer; font-size:0.85rem; font-weight:500; background:var(--white); transition: all 0.25s ease; }
+  .privacy-opt.active{ border-color:var(--black); background:var(--black); color:var(--white); box-shadow:0 4px 14px rgba(10,10,10,0.12); }
 
   .status-msg{ font-size:0.88rem; margin-top:16px; min-height:20px; line-height:1.5; word-break:break-all; }
   .status-msg.err{ color:#a31c1c; font-weight:500; }
@@ -312,59 +316,70 @@
       <!-- ANIMATED WISH CREATION CARD -->
       <div class="create-card" id="createCard">
         <div class="field">
-          <label>Tier</label>
+          <label>✨ Select Wish Tier</label>
           <div class="tier-select">
-            <div class="tier-opt active" data-tier="spark">Spark</div>
-            <div class="tier-opt locked" data-tier="golden">Golden</div>
-            <div class="tier-opt locked" data-tier="neverfade">Neverfade</div>
+            <div class="tier-opt active" data-tier="spark">
+              <span style="font-size:1.1rem;">⚡</span>
+              <span>Spark</span>
+            </div>
+            <div class="tier-opt locked" data-tier="golden">
+              <span style="font-size:1.1rem;">🌟</span>
+              <span>Golden</span>
+            </div>
+            <div class="tier-opt locked" data-tier="neverfade">
+              <span style="font-size:1.1rem;">⭐</span>
+              <span>Neverfade</span>
+            </div>
           </div>
         </div>
 
         <div class="field" id="neverfadeDateField" style="display:none;">
-          <label>Neverfade booking date</label>
+          <label>📅 Neverfade Booking Date</label>
           <input type="date" id="neverfadeDate">
         </div>
 
         <div class="field">
-          <label>Your name</label>
-          <input type="text" id="fromName" placeholder="Your name" maxlength="60">
+          <label>👤 Your Name (Sender)</label>
+          <input type="text" id="fromName" placeholder="Your name (e.g. Alex)" maxlength="60">
         </div>
 
         <div class="field">
-          <label>Recipient's name</label>
-          <input type="text" id="toName" placeholder="Who is this wish for?" maxlength="60">
+          <label>💌 Recipient's Name</label>
+          <input type="text" id="toName" placeholder="Who is this wish for? (e.g. Maya)" maxlength="60">
         </div>
 
         <div class="field">
-          <label>Custom Link Extension (Customize your wish URL)</label>
-          <input type="text" id="customSlug" placeholder="e.g. sender-to-receiver" maxlength="60">
-          <div style="font-size:0.75rem; color:var(--grey-2); margin-top:4px;" id="urlPreviewText">Wish link will be: onewishes.com/w/...</div>
+          <label>🔗 Custom Wish Link URL</label>
+          <input type="text" id="customSlug" placeholder="e.g. alex-to-maya" maxlength="60">
+          <div style="font-size:0.8rem; color:var(--grey-2); margin-top:6px; background:rgba(10,10,10,0.03); padding:6px 12px; border-radius:6px; display:inline-block;" id="urlPreviewText">Wish link: onewishes.com/w/...</div>
         </div>
 
         <div class="field">
-          <label>Your message</label>
+          <label>✍️ Your Message</label>
           <textarea id="msg" placeholder="Write what you actually want to say..." maxlength="1000"></textarea>
-          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--grey-2); margin-top:4px;">
-            <span>Express yourself meaningfully</span>
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--grey-2); margin-top:6px;">
+            <span>Express your true feelings</span>
             <span id="msgCharCount">0 / 1000</span>
           </div>
         </div>
 
         <div class="field">
-          <label>Attach Photo or Video (Optional)</label>
-          <input type="file" id="mediaFileInput" accept="image/*,video/*" style="font-size:0.85rem; padding:8px 0;">
-          <div id="mediaPreview" style="margin-top:10px; display:none; max-height:180px; overflow:hidden; border:1px solid var(--line);"></div>
-        </div>
-
-        <div class="field">
-          <label>Privacy Setting</label>
-          <div class="privacy-toggle">
-            <div class="privacy-opt active" data-privacy="public">Public (Shareable Link)</div>
-            <div class="privacy-opt" data-privacy="private">Recipient Only (Private)</div>
+          <label>📸 Attach Photo or Video (Optional HD Media)</label>
+          <div style="border:1.5px dashed var(--line); border-radius:12px; padding:16px; text-align:center; background:rgba(255,255,255,0.6);">
+            <input type="file" id="mediaFileInput" accept="image/*,video/*" style="font-size:0.85rem; cursor:pointer;">
+            <div id="mediaPreview" style="margin-top:12px; display:none; max-height:220px; overflow:hidden; border-radius:8px;"></div>
           </div>
         </div>
 
-        <button class="btn btn-solid" id="createBtn" style="width:100%; margin-top:10px;">Send this wish</button>
+        <div class="field">
+          <label>🔒 Privacy & Visibility</label>
+          <div class="privacy-toggle">
+            <div class="privacy-opt active" data-privacy="public">🌐 Public (Shareable Link)</div>
+            <div class="privacy-opt" data-privacy="private">🔒 Recipient Only (Private)</div>
+          </div>
+        </div>
+
+        <button class="btn btn-solid" id="createBtn" style="width:100%; margin-top:12px; border-radius:12px; padding:16px; font-size:1rem;">✨ Publish & Send Wish →</button>
         <div class="status-msg" id="statusMsg"></div>
       </div>
 
