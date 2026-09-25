@@ -284,21 +284,28 @@
           <div class="status-msg" id="authStatus"></div>
         </div>
         <div id="authLoggedIn" style="display:none;">
-          <div class="signed-in-row">
+          <div class="signed-in-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
             <span>Signed in as <strong id="userDisplayName"></strong> · Golden Wishes used: <strong id="goldenCount">0</strong>/3</span>
             <button class="btn btn-outline btn-small" id="signOutBtn">Sign out</button>
+          </div>
+          <div style="margin-top:12px; padding-top:10px; border-top:1px dashed var(--line); display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <span style="font-size:0.85rem; font-weight:600; color:var(--grey-2);">Instagram Profile:</span>
+            <input type="text" id="instagramInput" placeholder="e.g. alex_wishes" style="padding:6px 10px; font-size:0.85rem; border:1px solid var(--line); border-radius:4px; flex:1; max-width:220px;">
+            <button class="btn btn-solid btn-small" id="saveIgBtn" style="padding:6px 14px;">Save Instagram</button>
+            <span id="igStatus" class="status-msg" style="font-size:0.82rem;"></span>
           </div>
         </div>
       </div>
 
       <!-- USERNAME CLAIM MODAL / CARD -->
       <div class="username-modal" id="usernameBox" style="display:none;">
-        <div style="font-weight:700; font-size:1.1rem; margin-bottom:6px;">Claim your unique username</div>
+        <div style="font-weight:700; font-size:1.1rem; margin-bottom:6px;">Claim your unique username & Instagram Profile</div>
         <p style="font-size:0.9rem; color:var(--grey-2); margin-bottom:16px;">Choose a permanent username to send and track your wishes.</p>
-        <div class="row" style="display:flex; gap:10px;">
-          <input type="text" id="usernameInput" placeholder="e.g. alex" style="flex:1; padding:10px; border:1px solid var(--line); font-size:1rem;" maxlength="20">
-          <button class="btn btn-solid btn-small" id="claimUsernameBtn">Claim Username</button>
+        <div class="row" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+          <input type="text" id="usernameInput" placeholder="Username (e.g. alex)" style="flex:1; min-width:180px; padding:10px; border:1px solid var(--line); font-size:1rem;" maxlength="20">
+          <input type="text" id="claimIgInput" placeholder="Instagram handle (optional)" style="flex:1; min-width:180px; padding:10px; border:1px solid var(--line); font-size:1rem;">
         </div>
+        <button class="btn btn-solid btn-small" id="claimUsernameBtn" style="width:100%; padding:10px;">Claim Username & Save Profile</button>
         <div class="status-msg" id="usernameStatus"></div>
       </div>
 
@@ -377,10 +384,20 @@
   <div class="view-screen active">
     <div class="view-card">
       <div class="from" id="viewFrom">FROM —</div>
+      <div id="viewUserIdentities" style="margin: 12px 0 20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+        <span id="viewSenderPill" style="font-size:0.85rem; color:var(--grey-3);"></span>
+        <span id="viewRecipientPill" style="font-size:0.85rem; color:var(--grey-3);"></span>
+        <div id="viewSenderIg" style="display:none;"></div>
+      </div>
       <h2 id="viewTier">A Wish</h2>
       <div class="msg" id="viewMsg"></div>
       <div id="viewMediaBox" class="media-box" style="display:none;"></div>
-      <div id="viewPrivacyBadge" style="margin-top:20px; font-size:0.8rem; color:var(--grey-3);"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; flex-wrap:wrap; gap:12px;">
+        <div id="viewPrivacyBadge" style="font-size:0.8rem; color:var(--grey-3);"></div>
+        <button id="viewLikeBtn" class="btn btn-outline btn-small" style="color:var(--white); border-color:rgba(255,255,255,0.4); display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+          ❤️ <span id="viewLikeCount">0</span> Likes
+        </button>
+      </div>
     </div>
     <a href="#" onclick="goHome()" class="btn btn-outline" style="margin-top:30px; border-color:var(--white); color:var(--white);">Write your own wish →</a>
   </div>
@@ -851,10 +868,12 @@ async function refreshAuthUI(sessionOverride = null){
       loggedOutBox.style.display = 'none';
       loggedInBox.style.display = 'block';
       
-      const { data: profile } = await client.from('profiles').select('username, golden_used').eq('id', currentUser.id).single();
+      const { data: profile } = await client.from('profiles').select('username, golden_used, instagram_handle').eq('id', currentUser.id).single();
       currentProfile = profile;
       
       document.getElementById('goldenCount').textContent = profile ? profile.golden_used : 0;
+      const igInput = document.getElementById('instagramInput');
+      if(igInput && profile && profile.instagram_handle) igInput.value = profile.instagram_handle;
 
       if(navAdmin){
         navAdmin.style.display = (currentUser.email === ADMIN_EMAIL) ? 'inline-block' : 'none';
@@ -944,30 +963,55 @@ if(signOutBtn){
   });
 }
 
-// Username Claim Action
+// Username & Profile Claim Action
 const claimBtn = document.getElementById('claimUsernameBtn');
 if(claimBtn){
   claimBtn.addEventListener('click', async () => {
     const val = document.getElementById('usernameInput').value.trim().toLowerCase();
+    const rawIg = document.getElementById('claimIgInput') ? document.getElementById('claimIgInput').value.trim() : '';
+    const cleanIg = rawIg.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').trim();
     const statusEl = document.getElementById('usernameStatus');
     if(!val || val.length < 3){ statusEl.textContent = 'Username must be at least 3 characters.'; return; }
     if(!/^[a-z0-9_]+$/.test(val)){ statusEl.textContent = 'Letters, numbers, and underscores only.'; return; }
 
     const client = initDb();
     if(!client || !currentUser) return;
-    statusEl.textContent = 'Claiming username...';
+    statusEl.textContent = 'Claiming username & saving profile...';
 
     try{
-      const { error } = await client.from('profiles').upsert({ id: currentUser.id, email: currentUser.email, username: val }, { onConflict: 'id' });
+      const { error } = await client.from('profiles').upsert({ id: currentUser.id, email: currentUser.email, username: val, instagram_handle: cleanIg }, { onConflict: 'id' });
       if(error){
-        statusEl.textContent = error.code === '23505' ? 'Username already taken — pick another.' : 'Could not set username.';
+        statusEl.textContent = error.code === '23505' ? 'Username already taken — pick another.' : 'Could not set profile.';
         return;
       }
-      currentProfile = { id: currentUser.id, email: currentUser.email, username: val, golden_used: currentProfile ? currentProfile.golden_used : 0 };
-      statusEl.textContent = 'Username claimed!';
+      currentProfile = { id: currentUser.id, email: currentUser.email, username: val, instagram_handle: cleanIg, golden_used: currentProfile ? currentProfile.golden_used : 0 };
+      statusEl.textContent = 'Profile saved!';
       if(currentUser && currentUser.email) sendResendWelcomeEmail(currentUser.email, val);
       await refreshAuthUI();
-    }catch(e){ statusEl.textContent = 'Error setting username.'; }
+    }catch(e){ statusEl.textContent = 'Error setting profile.'; }
+  });
+}
+
+// Save Standalone Instagram Handle Action
+const saveIgBtn = document.getElementById('saveIgBtn');
+if(saveIgBtn){
+  saveIgBtn.addEventListener('click', async () => {
+    const rawIg = document.getElementById('instagramInput').value.trim();
+    const cleanIg = rawIg.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').trim();
+    const statusEl = document.getElementById('igStatus');
+    const client = initDb();
+    if(!client || !currentUser) return;
+    statusEl.textContent = 'Saving...';
+    try{
+      const { error } = await client.from('profiles').update({ instagram_handle: cleanIg }).eq('id', currentUser.id);
+      if(error){
+        statusEl.textContent = 'Could not save Instagram.';
+      } else {
+        if(currentProfile) currentProfile.instagram_handle = cleanIg;
+        statusEl.textContent = 'Saved! ✓';
+        setTimeout(() => statusEl.textContent = '', 3000);
+      }
+    }catch(e){ statusEl.textContent = 'Error saving.'; }
   });
 }
 
@@ -1467,11 +1511,88 @@ async function loadWishByNeverfadeDate(dateStr){
   showScreen('screen-home');
 }
 
-function renderWishView(wish){
-  document.getElementById('viewFrom').textContent = 'FROM ' + wish.from_name.toUpperCase() + ' (@' + wish.sender_username + '), TO ' + wish.to_name.toUpperCase();
+async function toggleLikeWish(wishId, btnEl, countEl){
+  const client = initDb();
+  if(!client || !wishId) return;
+  const likedKey = 'liked_wish_' + wishId;
+  const isLiked = localStorage.getItem(likedKey) === 'true';
+
+  let currentLikes = parseInt((countEl ? countEl.textContent : '0') || '0', 10);
+  let newLikes = isLiked ? Math.max(0, currentLikes - 1) : currentLikes + 1;
+  
+  if(countEl) countEl.textContent = newLikes;
+  
+  if(isLiked){
+    localStorage.removeItem(likedKey);
+    if(btnEl){
+      btnEl.classList.remove('liked');
+      btnEl.style.color = '';
+      btnEl.style.borderColor = '';
+    }
+  } else {
+    localStorage.setItem(likedKey, 'true');
+    if(btnEl){
+      btnEl.classList.add('liked');
+      btnEl.style.color = '#e1306c';
+      btnEl.style.borderColor = '#e1306c';
+    }
+  }
+
+  try {
+    await client.from('wishes').update({ likes_count: newLikes }).eq('id', wishId);
+  } catch(e) { console.error('Like error', e); }
+}
+
+async function renderWishView(wish){
+  const client = initDb();
+  document.getElementById('viewFrom').textContent = 'FROM — ' + wish.from_name.toUpperCase() + ' (@' + wish.sender_username + '), TO — ' + wish.to_name.toUpperCase();
   document.getElementById('viewTier').textContent =
     wish.tier === 'golden' ? 'A Golden Wish 🌟' : wish.tier === 'neverfade' ? 'A Neverfade Wish ⭐' : 'A Spark Wish';
   document.getElementById('viewMsg').textContent = wish.message;
+
+  const senderPill = document.getElementById('viewSenderPill');
+  if(senderPill) senderPill.innerHTML = `👤 Wisher: <strong>${wish.from_name}</strong> (@${wish.sender_username})`;
+
+  const recipientPill = document.getElementById('viewRecipientPill');
+  if(recipientPill) recipientPill.innerHTML = `💌 Recipient: <strong>${wish.to_name}</strong>`;
+
+  // Fetch Instagram Handle for Sender
+  const igBox = document.getElementById('viewSenderIg');
+  if(igBox) igBox.style.display = 'none';
+  if(client && wish.user_id){
+    try{
+      const { data: p } = await client.from('profiles').select('instagram_handle').eq('id', wish.user_id).maybeSingle();
+      if(p && p.instagram_handle && igBox){
+        const cleanIg = p.instagram_handle.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').trim();
+        if(cleanIg){
+          igBox.style.display = 'inline-block';
+          igBox.innerHTML = `<a href="https://instagram.com/${cleanIg}" target="_blank" rel="noopener noreferrer" style="color:#e1306c; background:rgba(225,48,108,0.15); padding:4px 12px; border-radius:16px; text-decoration:none; font-size:0.82rem; font-weight:600; display:inline-flex; align-items:center; gap:5px; border:1px solid rgba(225,48,108,0.3);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            @${cleanIg} on Instagram ↗
+          </a>`;
+        }
+      }
+    }catch(err){ console.warn('IG load error', err); }
+  }
+
+  // Like Button Setup
+  const likeBtn = document.getElementById('viewLikeBtn');
+  const likeCountEl = document.getElementById('viewLikeCount');
+  if(likeCountEl) likeCountEl.textContent = wish.likes_count || 0;
+  
+  const likedKey = 'liked_wish_' + wish.id;
+  if(likeBtn){
+    if(localStorage.getItem(likedKey) === 'true'){
+      likeBtn.classList.add('liked');
+      likeBtn.style.color = '#e1306c';
+      likeBtn.style.borderColor = '#e1306c';
+    } else {
+      likeBtn.classList.remove('liked');
+      likeBtn.style.color = 'var(--white)';
+      likeBtn.style.borderColor = 'rgba(255,255,255,0.4)';
+    }
+    likeBtn.onclick = () => toggleLikeWish(wish.id, likeBtn, likeCountEl);
+  }
 
   const mediaBox = document.getElementById('viewMediaBox');
   if(wish.media_url){
@@ -1534,6 +1655,7 @@ function renderGalleryGrid(wishes){
   grid.innerHTML = wishes.map(w => {
     const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/w/${w.slug}`;
     const tierBadge = w.tier === 'golden' ? 'GOLDEN 🌟' : w.tier === 'neverfade' ? 'NEVERFADE ⭐' : 'SPARK';
+    const isLiked = localStorage.getItem('liked_wish_' + w.id) === 'true';
     return `
       <div class="history-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -1542,8 +1664,13 @@ function renderGalleryGrid(wishes){
         </div>
         <h4>For ${w.to_name}</h4>
         <p>"${w.message}"</p>
-        <div style="font-size:0.8rem; color:var(--grey-2); margin-bottom:14px;">From: <strong>${w.from_name}</strong> (@${w.sender_username})</div>
-        <a href="${link}" onclick="navigateTo('${link}'); return false;" class="btn btn-outline btn-small">Open Wish →</a>
+        <div style="font-size:0.8rem; color:var(--grey-2); margin-bottom:14px;">Wisher: <strong>${w.from_name}</strong> (@${w.sender_username})</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <a href="${link}" onclick="navigateTo('${link}'); return false;" class="btn btn-outline btn-small" style="flex:1; text-align:center;">Open Wish →</a>
+          <button class="btn btn-outline btn-small ${isLiked ? 'liked' : ''}" style="${isLiked ? 'color:#e1306c; border-color:#e1306c;' : ''}" onclick="toggleLikeWish('${w.id}', this, this.querySelector('.lkCount'))">
+            ❤️ <span class="lkCount">${w.likes_count || 0}</span>
+          </button>
+        </div>
       </div>
     `;
   }).join('');
@@ -1582,15 +1709,16 @@ async function loadHistoryData(){
       const escapedMsg = (w.message || '').replace(/"/g, '&quot;').replace(/'/g, "\\'");
       const escapedFrom = (w.from_name || '').replace(/'/g, "\\'");
       const escapedTo = (w.to_name || '').replace(/'/g, "\\'");
+      const isLiked = localStorage.getItem('liked_wish_' + w.id) === 'true';
       return `
         <div class="history-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <span class="tier-tag">${w.tier.toUpperCase()} WISH</span>
-            <span style="font-size:0.75rem; color:var(--grey-2);">👁 ${w.views_count || 0} views</span>
+            <span style="font-size:0.75rem; color:var(--grey-2);">👁 ${w.views_count || 0} views · ❤️ ${w.likes_count || 0} likes</span>
           </div>
           <h4>For ${w.to_name}</h4>
           <p>"${w.message}"</p>
-          <div style="font-size:0.8rem; color:var(--grey-2); margin-bottom:14px;">Sent as: ${w.from_name} · ${w.privacy === 'private' ? '🔒 Private' : '🌐 Public'}</div>
+          <div style="font-size:0.8rem; color:var(--grey-2); margin-bottom:14px;">Wisher: <strong>${w.from_name}</strong> (@${w.sender_username}) · ${w.privacy === 'private' ? '🔒 Private' : '🌐 Public'}</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <a href="${link}" onclick="navigateTo('${link}'); return false;" class="btn btn-outline btn-small" style="flex:1; text-align:center;">Open →</a>
             <button class="btn btn-outline btn-small" onclick="openEditModal('${w.id}', '${escapedFrom}', '${escapedTo}', '${escapedMsg}', '${w.privacy}')">✏️ Edit</button>
@@ -1770,13 +1898,13 @@ async function routeApp(){
     return;
   }
 
-  if(path === '/admin'){
+  if(path === '/admin' || path === '/admn'){
     if(currentUser && currentUser.email === ADMIN_EMAIL){
       showScreen('screen-admin');
       await loadAdminDashboard();
       return;
     } else {
-      showToast('Admin access restricted to rylyoga@gmail.com');
+      showToast('Access restricted.');
       navigateTo('/', true);
       return;
     }

@@ -17,6 +17,7 @@ CREATE TABLE public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
     email TEXT,
     username TEXT UNIQUE,
+    instagram_handle TEXT,
     golden_used INTEGER NOT NULL DEFAULT 0 CHECK (golden_used >= 0 AND golden_used <= 3),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -64,6 +65,7 @@ CREATE TABLE public.wishes (
     privacy TEXT NOT NULL DEFAULT 'public' CHECK (privacy IN ('public', 'private')),
     slug TEXT UNIQUE NOT NULL,
     views_count INTEGER NOT NULL DEFAULT 0,
+    likes_count INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
