@@ -176,57 +176,60 @@
   .wax-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(10, 10, 10, 0.94);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
     opacity: 1;
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .wax-overlay.unsealing {
     opacity: 0;
     pointer-events: none;
   }
   .envelope-box {
-    max-width: 480px;
+    max-width: 440px;
     width: 100%;
-    background: linear-gradient(145deg, #181818 0%, #0d0d0d 100%);
-    border: 1.5px solid rgba(212, 175, 55, 0.4);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(212, 175, 55, 0.05);
-    padding: 44px 28px;
+    background: #0d0d0c;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1.5px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.9);
+    padding: 50px 32px;
     text-align: center;
     position: relative;
-    border-radius: 6px;
+    border-radius: 2px;
     animation: envelopePop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
   @keyframes envelopePop {
-    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    from { opacity: 0; transform: scale(0.95) translateY(16px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
   }
   .wax-kicker {
-    font-size: 0.75rem;
-    letter-spacing: 0.18em;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #d4af37;
-    margin-bottom: 20px;
+    color: rgba(212, 175, 55, 0.8);
+    margin-bottom: 24px;
     font-weight: 600;
   }
   .wax-to {
     font-family: 'Fraunces', serif;
-    font-size: 2.2rem;
-    font-weight: 900;
-    color: #fafaf8;
-    line-height: 1.15;
-    margin-bottom: 10px;
+    font-size: 2.3rem;
+    font-weight: 300;
+    font-style: italic;
+    color: #FAFAF8;
+    line-height: 1.1;
+    margin-bottom: 8px;
   }
   .wax-from {
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     color: #b8b8b2;
-    margin-bottom: 36px;
+    margin-bottom: 44px;
+    letter-spacing: 0.04em;
   }
   .wax-stamp-btn {
     background: transparent;
@@ -234,35 +237,33 @@
     cursor: pointer;
     outline: none;
     display: inline-block;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease;
   }
   .wax-stamp-btn:hover {
-    transform: scale(1.05);
-  }
-  .wax-stamp-btn:active {
-    transform: scale(0.95);
+    transform: translateY(-2px);
   }
   .stamp-circle {
-    width: 110px;
-    height: 110px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #e60000 0%, #800000 70%, #4a0000 100%);
-    border: 3px solid #d4af37;
-    box-shadow: 0 8px 24px rgba(128, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.4);
+    background: #141412;
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 0 24px rgba(212, 175, 55, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
     position: relative;
-    animation: stampPulse 2.5s infinite ease-in-out;
+    transition: all 0.3s ease;
   }
-  @keyframes stampPulse {
-    0%, 100% { box-shadow: 0 8px 24px rgba(128, 0, 0, 0.6), 0 0 0 0 rgba(212, 175, 55, 0.4); }
-    50% { box-shadow: 0 12px 32px rgba(128, 0, 0, 0.8), 0 0 0 12px rgba(212, 175, 55, 0); }
+  .wax-stamp-btn:hover .stamp-circle {
+    border-color: #d4af37;
+    box-shadow: 0 0 32px rgba(212, 175, 55, 0.25);
+    background: #1a1a17;
   }
-  .stamp-icon { font-size: 2rem; line-height: 1; margin-bottom: 4px; }
-  .stamp-text { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; color: #fff; text-transform: uppercase; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+  .stamp-icon { font-size: 1.4rem; color: #d4af37; line-height: 1; margin-bottom: 4px; }
+  .stamp-text { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.16em; color: rgba(255,255,255,0.7); text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -516,8 +517,8 @@
       <div class="wax-from" id="waxFromName">From someone special</div>
       <button class="wax-stamp-btn" id="waxStampBtn" onclick="unsealWishEnvelope()">
         <div class="stamp-circle">
-          <span class="stamp-icon">⚜️</span>
-          <span class="stamp-text">TAP SEAL TO OPEN</span>
+          <span class="stamp-icon">✦</span>
+          <span class="stamp-text">UNSEAL</span>
         </div>
       </button>
     </div>
@@ -537,8 +538,8 @@
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; flex-wrap:wrap; gap:12px;">
         <div id="viewPrivacyBadge" style="font-size:0.8rem; color:var(--grey-3);"></div>
         <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <button id="viewKeepsakeBtn" class="btn btn-outline btn-small" style="color:#d4af37; border-color:rgba(212,175,55,0.6); display:inline-flex; align-items:center; gap:6px; cursor:pointer; background:rgba(212,175,55,0.08);">
-            💾 Keepsake Poster
+          <button id="viewKeepsakeBtn" class="btn btn-outline btn-small" style="color:var(--white); border-color:rgba(255,255,255,0.3); display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:0.82rem; letter-spacing:0.04em; background:transparent;">
+            ✦ Keepsake Poster
           </button>
           <button id="viewLikeBtn" class="btn btn-outline btn-small" style="color:var(--white); border-color:rgba(255,255,255,0.4); display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             ❤️ <span id="viewLikeCount">0</span> Likes
@@ -547,7 +548,7 @@
       </div>
     </div>
     <div style="display:flex; gap:12px; margin-top:30px; flex-wrap:wrap; align-items:center;">
-      <button onclick="reopenEnvelope()" class="btn btn-outline btn-small" style="border-color:rgba(255,255,255,0.3); color:var(--grey-3); font-size:0.8rem;">✉️ Re-seal Envelope</button>
+      <button onclick="reopenEnvelope()" class="btn btn-outline btn-small" style="border-color:rgba(255,255,255,0.2); color:var(--grey-3); font-size:0.8rem; background:transparent;">✦ Re-seal</button>
       <a href="#" onclick="goHome()" class="btn btn-outline btn-small" style="border-color:var(--white); color:var(--white);">Write your own wish →</a>
     </div>
   </div>
@@ -1732,37 +1733,32 @@ async function exportWishKeepsake(wish){
   canvas.height = height;
 
   // Fill Luxury Background
-  ctx.fillStyle = '#0A0A0A';
+  ctx.fillStyle = '#060606';
   ctx.fillRect(0, 0, width, height);
 
-  // Outer Gold Border
-  ctx.strokeStyle = '#D4AF37';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(30, 30, width - 60, height - 60);
-
-  // Inner Subtle Border
-  ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+  // Outer Hairline Border
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
   ctx.lineWidth = 1;
-  ctx.strokeRect(42, 42, width - 84, height - 84);
+  ctx.strokeRect(36, 36, width - 72, height - 72);
 
   // Header Brand
-  ctx.fillStyle = '#D4AF37';
-  ctx.font = '600 22px "Inter", sans-serif';
+  ctx.fillStyle = '#FAFAF8';
+  ctx.font = '600 20px "Inter", sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('O N E W I S H E S  •  K E E P S A K E', width / 2, 110);
+  ctx.fillText('O N E W I S H E S', width / 2, 100);
 
   // Recipient Title
   ctx.fillStyle = '#FAFAF8';
-  ctx.font = 'bold 54px "Fraunces", Georgia, serif';
+  ctx.font = '300 52px "Fraunces", Georgia, serif';
   ctx.textAlign = 'center';
-  ctx.fillText('For ' + wish.to_name, width / 2, 210);
+  ctx.fillText('For ' + wish.to_name, width / 2, 200);
 
   // Sender Subtitle
-  ctx.fillStyle = '#B8B8B2';
-  ctx.font = '24px "Inter", sans-serif';
-  ctx.fillText('FROM — ' + (wish.from_name || '').toUpperCase() + ' (@' + (wish.sender_username || 'user') + ')', width / 2, 260);
+  ctx.fillStyle = '#888884';
+  ctx.font = '18px "Inter", sans-serif';
+  ctx.fillText('FROM — ' + (wish.from_name || '').toUpperCase() + ' (@' + (wish.sender_username || 'user') + ')', width / 2, 245);
 
-  let currentY = 320;
+  let currentY = 300;
 
   // Media Image rendering if available
   if(wish.media_url && wish.media_type !== 'video'){
@@ -1775,8 +1771,8 @@ async function exportWishKeepsake(wish){
         img.src = wish.media_url;
       });
       if(img.complete && img.naturalWidth > 0){
-        const maxImgWidth = 840;
-        const maxImgHeight = 500;
+        const maxImgWidth = 860;
+        const maxImgHeight = 520;
         let imgWidth = img.naturalWidth;
         let imgHeight = img.naturalHeight;
 
@@ -1787,26 +1783,26 @@ async function exportWishKeepsake(wish){
         const imgX = (width - imgWidth) / 2;
         ctx.drawImage(img, imgX, currentY, imgWidth, imgHeight);
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
         ctx.strokeRect(imgX, currentY, imgWidth, imgHeight);
 
-        currentY += imgHeight + 50;
+        currentY += imgHeight + 48;
       }
     }catch(err){ console.warn('Canvas image error', err); }
   } else {
-    currentY += 40;
+    currentY += 60;
   }
 
   // Draw Wish Message text wrapped
   ctx.fillStyle = '#FAFAF8';
-  ctx.font = 'italic 34px "Fraunces", Georgia, serif';
+  ctx.font = '300 italic 32px "Fraunces", Georgia, serif';
   ctx.textAlign = 'center';
   
   const words = ('"' + wish.message + '"').split(' ');
   let line = '';
-  const maxWidth = 860;
-  const lineHeight = 52;
+  const maxWidth = 840;
+  const lineHeight = 50;
 
   for(let n = 0; n < words.length; n++) {
     let testLine = line + words[n] + ' ';
@@ -1823,13 +1819,13 @@ async function exportWishKeepsake(wish){
   ctx.fillText(line, width / 2, currentY);
 
   // Footer Branding
-  ctx.fillStyle = '#D4AF37';
-  ctx.font = '600 20px "Inter", sans-serif';
-  ctx.fillText('ONEWISHES.COM/' + (wish.slug || ''), width / 2, height - 90);
+  ctx.fillStyle = '#888884';
+  ctx.font = '500 18px "Inter", sans-serif';
+  ctx.fillText('ONEWISHES.COM/' + (wish.slug || ''), width / 2, height - 80);
 
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.font = '16px "Inter", sans-serif';
-  ctx.fillText('A Wish Worth Sending • Lifetime Digital Memory', width / 2, height - 60);
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = '14px "Inter", sans-serif';
+  ctx.fillText('Intentional Scarcity • Pure Digital Keepsake', width / 2, height - 54);
 
   // Convert canvas to download link
   canvas.toBlob((blob) => {
