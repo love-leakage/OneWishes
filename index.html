@@ -171,6 +171,98 @@
   /* Toast Notification */
   .toast-notice{ position:fixed; bottom:24px; right:24px; background:var(--black); color:var(--white); padding:12px 20px; border-radius:4px; font-size:0.88rem; box-shadow:0 8px 24px rgba(0,0,0,0.2); transform:translateY(80px); opacity:0; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index:9999; }
   .toast-notice.show{ transform:translateY(0); opacity:1; }
+
+  /* Digital Wax Seal & Envelope Unboxing Overlay */
+  .wax-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(10, 10, 10, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 1;
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .wax-overlay.unsealing {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .envelope-box {
+    max-width: 480px;
+    width: 100%;
+    background: linear-gradient(145deg, #181818 0%, #0d0d0d 100%);
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(212, 175, 55, 0.05);
+    padding: 44px 28px;
+    text-align: center;
+    position: relative;
+    border-radius: 6px;
+    animation: envelopePop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes envelopePop {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .wax-kicker {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #d4af37;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .wax-to {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #fafaf8;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .wax-from {
+    font-size: 0.95rem;
+    color: #b8b8b2;
+    margin-bottom: 36px;
+  }
+  .wax-stamp-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .wax-stamp-btn:hover {
+    transform: scale(1.05);
+  }
+  .wax-stamp-btn:active {
+    transform: scale(0.95);
+  }
+  .stamp-circle {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e60000 0%, #800000 70%, #4a0000 100%);
+    border: 3px solid #d4af37;
+    box-shadow: 0 8px 24px rgba(128, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    animation: stampPulse 2.5s infinite ease-in-out;
+  }
+  @keyframes stampPulse {
+    0%, 100% { box-shadow: 0 8px 24px rgba(128, 0, 0, 0.6), 0 0 0 0 rgba(212, 175, 55, 0.4); }
+    50% { box-shadow: 0 12px 32px rgba(128, 0, 0, 0.8), 0 0 0 12px rgba(212, 175, 55, 0); }
+  }
+  .stamp-icon { font-size: 2rem; line-height: 1; margin-bottom: 4px; }
+  .stamp-text { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; color: #fff; text-transform: uppercase; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 </style>
 </head>
 <body>
@@ -416,8 +508,23 @@
 
 <!-- SCREEN 2: VIEW WISH PAGE -->
 <div id="screen-view">
+  <!-- Digital Wax Seal Unboxing Overlay -->
+  <div id="waxSealOverlay" class="wax-overlay" style="display:none;">
+    <div class="envelope-box">
+      <div class="wax-kicker">ONEWISHES • INTENTIONAL WISH</div>
+      <div class="wax-to" id="waxToName">A Special Wish</div>
+      <div class="wax-from" id="waxFromName">From someone special</div>
+      <button class="wax-stamp-btn" id="waxStampBtn" onclick="unsealWishEnvelope()">
+        <div class="stamp-circle">
+          <span class="stamp-icon">⚜️</span>
+          <span class="stamp-text">TAP SEAL TO OPEN</span>
+        </div>
+      </button>
+    </div>
+  </div>
+
   <div class="view-screen active">
-    <div class="view-card">
+    <div class="view-card" id="viewCardContent">
       <div class="from" id="viewFrom">FROM —</div>
       <div id="viewUserIdentities" style="margin: 12px 0 20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
         <span id="viewSenderPill" style="font-size:0.85rem; color:var(--grey-3);"></span>
@@ -429,12 +536,20 @@
       <div id="viewMediaBox" class="media-box" style="display:none;"></div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; flex-wrap:wrap; gap:12px;">
         <div id="viewPrivacyBadge" style="font-size:0.8rem; color:var(--grey-3);"></div>
-        <button id="viewLikeBtn" class="btn btn-outline btn-small" style="color:var(--white); border-color:rgba(255,255,255,0.4); display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
-          ❤️ <span id="viewLikeCount">0</span> Likes
-        </button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <button id="viewKeepsakeBtn" class="btn btn-outline btn-small" style="color:#d4af37; border-color:rgba(212,175,55,0.6); display:inline-flex; align-items:center; gap:6px; cursor:pointer; background:rgba(212,175,55,0.08);">
+            💾 Keepsake Poster
+          </button>
+          <button id="viewLikeBtn" class="btn btn-outline btn-small" style="color:var(--white); border-color:rgba(255,255,255,0.4); display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+            ❤️ <span id="viewLikeCount">0</span> Likes
+          </button>
+        </div>
       </div>
     </div>
-    <a href="#" onclick="goHome()" class="btn btn-outline" style="margin-top:30px; border-color:var(--white); color:var(--white);">Write your own wish →</a>
+    <div style="display:flex; gap:12px; margin-top:30px; flex-wrap:wrap; align-items:center;">
+      <button onclick="reopenEnvelope()" class="btn btn-outline btn-small" style="border-color:rgba(255,255,255,0.3); color:var(--grey-3); font-size:0.8rem;">✉️ Re-seal Envelope</button>
+      <a href="#" onclick="goHome()" class="btn btn-outline btn-small" style="border-color:var(--white); color:var(--white);">Write your own wish →</a>
+    </div>
   </div>
 </div>
 
@@ -1582,8 +1697,179 @@ async function toggleLikeWish(wishId, btnEl, countEl){
   } catch(e) { console.error('Like error', e); }
 }
 
+let currentViewingWish = null;
+
+function unsealWishEnvelope(){
+  const overlay = document.getElementById('waxSealOverlay');
+  if(!overlay) return;
+  overlay.classList.add('unsealing');
+  setTimeout(() => {
+    overlay.style.display = 'none';
+  }, 600);
+  if(currentViewingWish){
+    sessionStorage.setItem('unsealed_' + currentViewingWish.id, 'true');
+  }
+}
+
+function reopenEnvelope(){
+  const overlay = document.getElementById('waxSealOverlay');
+  if(!overlay) return;
+  overlay.classList.remove('unsealing');
+  overlay.style.display = 'flex';
+}
+
+async function exportWishKeepsake(wish){
+  if(!wish) return;
+  showToast('Generating Keepsake Poster... 🎨');
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  const width = 1080;
+  let height = 1440;
+  
+  canvas.width = width;
+  canvas.height = height;
+
+  // Fill Luxury Background
+  ctx.fillStyle = '#0A0A0A';
+  ctx.fillRect(0, 0, width, height);
+
+  // Outer Gold Border
+  ctx.strokeStyle = '#D4AF37';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(30, 30, width - 60, height - 60);
+
+  // Inner Subtle Border
+  ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(42, 42, width - 84, height - 84);
+
+  // Header Brand
+  ctx.fillStyle = '#D4AF37';
+  ctx.font = '600 22px "Inter", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('O N E W I S H E S  •  K E E P S A K E', width / 2, 110);
+
+  // Recipient Title
+  ctx.fillStyle = '#FAFAF8';
+  ctx.font = 'bold 54px "Fraunces", Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('For ' + wish.to_name, width / 2, 210);
+
+  // Sender Subtitle
+  ctx.fillStyle = '#B8B8B2';
+  ctx.font = '24px "Inter", sans-serif';
+  ctx.fillText('FROM — ' + (wish.from_name || '').toUpperCase() + ' (@' + (wish.sender_username || 'user') + ')', width / 2, 260);
+
+  let currentY = 320;
+
+  // Media Image rendering if available
+  if(wish.media_url && wish.media_type !== 'video'){
+    try{
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      await new Promise((resolve) => {
+        img.onload = resolve;
+        img.onerror = resolve;
+        img.src = wish.media_url;
+      });
+      if(img.complete && img.naturalWidth > 0){
+        const maxImgWidth = 840;
+        const maxImgHeight = 500;
+        let imgWidth = img.naturalWidth;
+        let imgHeight = img.naturalHeight;
+
+        const ratio = Math.min(maxImgWidth / imgWidth, maxImgHeight / imgHeight);
+        imgWidth = imgWidth * ratio;
+        imgHeight = imgHeight * ratio;
+
+        const imgX = (width - imgWidth) / 2;
+        ctx.drawImage(img, imgX, currentY, imgWidth, imgHeight);
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(imgX, currentY, imgWidth, imgHeight);
+
+        currentY += imgHeight + 50;
+      }
+    }catch(err){ console.warn('Canvas image error', err); }
+  } else {
+    currentY += 40;
+  }
+
+  // Draw Wish Message text wrapped
+  ctx.fillStyle = '#FAFAF8';
+  ctx.font = 'italic 34px "Fraunces", Georgia, serif';
+  ctx.textAlign = 'center';
+  
+  const words = ('"' + wish.message + '"').split(' ');
+  let line = '';
+  const maxWidth = 860;
+  const lineHeight = 52;
+
+  for(let n = 0; n < words.length; n++) {
+    let testLine = line + words[n] + ' ';
+    let metrics = ctx.measureText(testLine);
+    let testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      ctx.fillText(line, width / 2, currentY);
+      line = words[n] + ' ';
+      currentY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line, width / 2, currentY);
+
+  // Footer Branding
+  ctx.fillStyle = '#D4AF37';
+  ctx.font = '600 20px "Inter", sans-serif';
+  ctx.fillText('ONEWISHES.COM/' + (wish.slug || ''), width / 2, height - 90);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = '16px "Inter", sans-serif';
+  ctx.fillText('A Wish Worth Sending • Lifetime Digital Memory', width / 2, height - 60);
+
+  // Convert canvas to download link
+  canvas.toBlob((blob) => {
+    if(!blob){
+      showToast('Could not generate poster file.');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `onewishes-keepsake-${wish.slug || 'wish'}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Keepsake Poster saved to downloads! 💾');
+  }, 'image/png');
+}
+
 async function renderWishView(wish){
+  currentViewingWish = wish;
   const client = initDb();
+
+  // Wax Seal Overlay Setup
+  const waxOverlay = document.getElementById('waxSealOverlay');
+  const waxToName = document.getElementById('waxToName');
+  const waxFromName = document.getElementById('waxFromName');
+
+  if(waxToName) waxToName.textContent = 'For ' + wish.to_name;
+  if(waxFromName) waxFromName.textContent = 'From ' + wish.from_name + ' (@' + wish.sender_username + ')';
+
+  if(waxOverlay){
+    const isUnsealed = sessionStorage.getItem('unsealed_' + wish.id) === 'true';
+    if(isUnsealed){
+      waxOverlay.style.display = 'none';
+      waxOverlay.classList.remove('unsealing');
+    } else {
+      waxOverlay.style.display = 'flex';
+      waxOverlay.classList.remove('unsealing');
+    }
+  }
+
   document.getElementById('viewFrom').textContent = 'FROM — ' + wish.from_name.toUpperCase() + ' (@' + wish.sender_username + '), TO — ' + wish.to_name.toUpperCase();
   document.getElementById('viewTier').textContent =
     wish.tier === 'golden' ? 'A Golden Wish 🌟' : wish.tier === 'neverfade' ? 'A Neverfade Wish ⭐' : 'A Spark Wish';
@@ -1612,6 +1898,12 @@ async function renderWishView(wish){
         }
       }
     }catch(err){ console.warn('IG load error', err); }
+  }
+
+  // Keepsake Export Setup
+  const keepsakeBtn = document.getElementById('viewKeepsakeBtn');
+  if(keepsakeBtn){
+    keepsakeBtn.onclick = () => exportWishKeepsake(wish);
   }
 
   // Like Button Setup
