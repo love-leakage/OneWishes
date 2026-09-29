@@ -1234,6 +1234,7 @@ const btnInstagram = document.getElementById('btnInstagramAuth');
 if(btnInstagram){
   btnInstagram.addEventListener('click', async () => {
     const statusEl = document.getElementById('authStatus');
+    statusEl.classList.remove('ok','err');
     statusEl.textContent = 'Connecting to Instagram...';
     const client = initDb();
     if(!client){
@@ -1249,11 +1250,17 @@ if(btnInstagram){
         }
       });
       if(error){
-        statusEl.textContent = 'Instagram Sign-In error: ' + error.message;
+        statusEl.classList.add('err');
+        if(error.message.includes('not enabled') || error.message.includes('validation_failed') || error.status === 400){
+          statusEl.textContent = 'Meta/Instagram OAuth provider is not enabled in Supabase Dashboard yet. Please sign in with Google!';
+        } else {
+          statusEl.textContent = 'Instagram Sign-In error: ' + error.message;
+        }
       } else if (data && data.url) {
         window.location.href = data.url;
       }
     }catch(e){
+      statusEl.classList.add('err');
       statusEl.textContent = 'Instagram Sign-In failed: ' + (e.message || e);
     }
   });
