@@ -24,7 +24,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='50' y='68' font-size='55' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E1%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <style>
   :root{
@@ -92,13 +92,218 @@
   .section-title{ font-weight:300; font-size:clamp(1.8rem, 4vw, 2.8rem); margin-bottom:10px; color:var(--white); }
   .section-lead{ color:var(--grey-muted); max-width:560px; margin-bottom:48px; font-size:1.02rem; }
 
-  /* Homepage Active Neverfade Wish Banner */
-  .neverfade-feature-card{ border:1px solid var(--card-border); padding:44px; margin-bottom:40px; background:var(--card-bg); border-radius:16px; animation: cardPop 0.5s ease-out; box-shadow:0 20px 50px rgba(0,0,0,0.6); }
-  .neverfade-feature-card .badge{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.2em; color:var(--white); font-weight:600; margin-bottom:18px; display:inline-block; border-bottom:1px solid var(--white); padding-bottom:4px; }
-  .neverfade-feature-card h2{ font-size:clamp(1.8rem, 4vw, 2.8rem); line-height:1.1; margin-bottom:20px; font-weight:300; }
-  .neverfade-feature-card .msg{ font-family:'Fraunces', serif; font-size:1.35rem; font-style:italic; line-height:1.65; color:var(--white); margin-bottom:30px; border-left:2px solid var(--white); padding-left:22px; }
-  .neverfade-feature-card .media-box{ margin:24px 0; max-height:400px; overflow:hidden; border:1px solid var(--line); border-radius:12px; }
-  .neverfade-feature-card img, .neverfade-feature-card video{ width:100%; max-height:400px; object-fit:cover; display:block; }
+  /* Homepage Featured Neverfade Hero Card (Top Placement & Upscaling Blur) */
+  #neverfadeHomeSection {
+    margin-top: 24px;
+    margin-bottom: 50px;
+    position: relative;
+  }
+
+  .neverfade-hero-card {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 20px;
+    background: #0d0d0d;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.08);
+    animation: cardPop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .neverfade-hero-media-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 480px;
+    max-height: 640px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #050505;
+  }
+
+  @media (max-width: 700px) {
+    .neverfade-hero-media-wrapper {
+      min-height: 420px;
+    }
+  }
+
+  /* Aspect Ratio Upscale Backdrop Blur */
+  .neverfade-media-backdrop {
+    position: absolute;
+    inset: -30px;
+    width: calc(100% + 60px);
+    height: calc(100% + 60px);
+    object-fit: cover;
+    filter: blur(40px) brightness(0.35) scale(1.15);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Media Dark Vignette Gradient */
+  .neverfade-media-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.78) 70%, rgba(0,0,0,0.96) 100%);
+    pointer-events: none;
+  }
+
+  /* Foreground Media object-fit contain */
+  .neverfade-media-fg {
+    position: relative;
+    z-index: 3;
+    max-width: 100%;
+    max-height: 580px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 16px 40px rgba(0,0,0,0.9));
+  }
+
+  /* Overlaid Text Content Box on Top of Photo */
+  .neverfade-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 24px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.92) 100%);
+  }
+
+  .neverfade-hero-header-badge {
+    font-size: 0.68rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 700;
+    margin-bottom: 20px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 4px 14px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Typewriter Animated Message */
+  .neverfade-typewriter-container {
+    max-width: 780px;
+    margin: 0 auto 20px;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .neverfade-typewriter-text {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.4rem, 4.2vw, 2.5rem);
+    font-style: italic;
+    line-height: 1.4;
+    color: #FFFFFF;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95);
+    word-break: break-word;
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    color: #e2c044;
+    font-weight: 300;
+    margin-left: 2px;
+    animation: cursorBlink 0.8s infinite;
+  }
+
+  @keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Recipient Small Username / Name */
+  .neverfade-receiver-tag {
+    font-size: 0.76rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+    margin-top: 10px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  }
+
+  /* Handwriting Font Sender Name */
+  .neverfade-handwritten {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    color: #f3cf65;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.95);
+    margin-top: 4px;
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+
+  /* Official Gold Wax Seal Stamp Badge */
+  .animated-wax-seal {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 5;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2a220c 0%, #110d04 100%);
+    border: 2px solid #d4af37;
+    box-shadow: 0 0 24px rgba(212, 175, 55, 0.35), inset 0 0 12px rgba(212, 175, 55, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    animation: stampDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, sealPulse 3s ease-in-out infinite 1s;
+    transition: transform 0.3s ease;
+  }
+
+  @media (max-width: 600px) {
+    .animated-wax-seal {
+      top: 16px;
+      right: 16px;
+      width: 64px;
+      height: 64px;
+    }
+    .animated-wax-seal .seal-icon { font-size: 1rem !important; }
+    .animated-wax-seal .seal-tag { font-size: 0.45rem !important; }
+  }
+
+  .animated-wax-seal:hover {
+    transform: scale(1.08) rotate(5deg);
+    border-color: #fef08a;
+  }
+
+  .animated-wax-seal .seal-icon {
+    font-size: 1.3rem;
+    color: #d4af37;
+    line-height: 1;
+  }
+
+  .animated-wax-seal .seal-tag {
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  @keyframes stampDown {
+    0% { transform: scale(2.4) rotate(-20deg); opacity: 0; }
+    70% { transform: scale(0.92) rotate(4deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+
+  @keyframes sealPulse {
+    0%, 100% { box-shadow: 0 0 24px rgba(212, 175, 55, 0.35), inset 0 0 12px rgba(212, 175, 55, 0.2); }
+    50% { box-shadow: 0 0 38px rgba(212, 175, 55, 0.65), inset 0 0 18px rgba(212, 175, 55, 0.4); }
+  }
 
   .tier-row{ display:grid; grid-template-columns:70px 1fr 220px; gap:24px; align-items:start; padding:32px; border:1px solid var(--line); border-radius:16px; margin-bottom:16px; background:var(--card-bg); cursor:pointer; transition: all 0.25s ease; }
   .tier-row:hover{ border-color:var(--white); transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,0,0,0.5); }
@@ -340,27 +545,51 @@
       </div>
     </nav>
 
-    <section class="hero">
+    <!-- TODAY'S ACTIVE FEATURED NEVERFADE HERO -->
+    <section id="neverfadeHomeSection">
+      <div class="neverfade-hero-card" id="neverfadeHeroCard">
+        <!-- Official Animated Gold Wax Seal -->
+        <div class="animated-wax-seal" id="neverfadeHeroSeal" title="OneWishes Lifetime Seal" onclick="if(currentHomepageNeverfadeSlug) navigateTo('/neverfade/' + currentHomepageNeverfadeSlug);">
+          <div class="seal-icon">✨</div>
+          <div class="seal-tag">ONEWISHES</div>
+        </div>
+
+        <div class="neverfade-hero-media-wrapper" id="neverfadeMediaWrapper">
+          <img class="neverfade-media-backdrop" id="neverfadeMediaBackdrop" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1600&q=80" alt="Backdrop Blur">
+          <div class="neverfade-media-vignette"></div>
+          <img class="neverfade-media-fg" id="neverfadeMediaFg" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1200&q=80" alt="Neverfade Wish Media">
+
+          <!-- Overlaid Content Box -->
+          <div class="neverfade-hero-overlay">
+            <div class="neverfade-hero-header-badge" id="neverfadeHeaderBadge">⭐ FEATURED NEVERFADE WISH</div>
+            
+            <div class="neverfade-typewriter-container">
+              <div class="neverfade-typewriter-text">
+                "<span id="neverfadeTypewriterText"></span><span class="typewriter-cursor" id="typewriterCursor">|</span>"
+              </div>
+            </div>
+
+            <div class="neverfade-receiver-tag">
+              FOR: <span id="neverfadeReceiverName">RECEIVER</span>
+            </div>
+
+            <div class="neverfade-handwritten">
+              by <span id="neverfadeSenderName">Sender Name</span>
+            </div>
+
+            <a href="#" id="neverfadeLinkBtn" class="btn btn-solid btn-small" style="margin-top:10px; font-weight:600; letter-spacing:0.12em; box-shadow:0 8px 24px rgba(0,0,0,0.8);">Open Full Keepsake →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero" style="padding-top:40px;">
       <div class="kicker">ONE WISH • ONCE GIVEN • NEVER FORGOTTEN</div>
       <h1>Most wishes fade in a day.<br>OneWishes is built to <em>last a lifetime</em>.</h1>
       <p>Scarcity gives value to words. Craft intentional, timeless digital keepsake wishes for the ones who matter most.</p>
       <div class="cta-row">
         <a href="/#create" onclick="scrollToSection('create'); return false;" class="btn btn-solid">✦ Craft Your Wish</a>
         <a href="/#tiers" onclick="scrollToSection('tiers'); return false;" class="btn btn-outline">Explore Tiers</a>
-      </div>
-    </section>
-
-    <!-- TODAY'S ACTIVE NEVERFADE FEATURE -->
-    <section id="neverfadeHomeSection" style="margin-bottom:60px; display:none;">
-      <div class="neverfade-feature-card">
-        <div class="badge" id="neverfadeBadge">TODAY'S NEVERFADE FEATURE</div>
-        <h2 id="neverfadeTitle">For ...</h2>
-        <div class="msg" id="neverfadeMsg">"..."</div>
-        <div id="neverfadeMediaBox" class="media-box" style="display:none;"></div>
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <span style="font-size:0.85rem; color:var(--grey-muted);" id="neverfadeSender">FROM —</span>
-          <a href="#" id="neverfadeLinkBtn" class="btn btn-solid btn-small">Open full Neverfade Wish →</a>
-        </div>
       </div>
     </section>
   </div>
@@ -1718,73 +1947,127 @@ if(createBtn){
   });
 }
 
-// Fetch Active Public Neverfade Wish for TODAY ONLY on Homepage
+let currentHomepageNeverfadeSlug = '';
+let typewriterInterval = null;
+
+function startNeverfadeTypewriter(fullText){
+  if(typewriterInterval) clearInterval(typewriterInterval);
+
+  const typewriterText = document.getElementById('neverfadeTypewriterText');
+  const cursorEl = document.getElementById('typewriterCursor');
+  if(!typewriterText) return;
+
+  typewriterText.textContent = '';
+  if(cursorEl) cursorEl.style.display = 'inline-block';
+
+  let charIndex = 0;
+  const speed = 35; // ms per char
+
+  typewriterInterval = setInterval(() => {
+    if(charIndex < fullText.length){
+      typewriterText.textContent += fullText.charAt(charIndex);
+      charIndex++;
+    } else {
+      clearInterval(typewriterInterval);
+      typewriterInterval = null;
+    }
+  }, speed);
+}
+
+// Fetch Active Public Neverfade Wish for Homepage Hero
 async function loadHomepageNeverfade(){
-  const client = initDb();
-  if(!client) return;
   const section = document.getElementById('neverfadeHomeSection');
   if(!section) return;
 
-  try{
-    let targetWish = null;
-    let targetDate = '';
+  const backdropImg = document.getElementById('neverfadeMediaBackdrop');
+  const fgImg = document.getElementById('neverfadeMediaFg');
+  const receiverNameEl = document.getElementById('neverfadeReceiverName');
+  const senderNameEl = document.getElementById('neverfadeSenderName');
+  const linkBtn = document.getElementById('neverfadeLinkBtn');
+  const badgeEl = document.getElementById('neverfadeHeaderBadge');
+  const sealEl = document.getElementById('neverfadeHeroSeal');
 
-    // Calculate today's date in local timezone YYYY-MM-DD
-    const now = new Date();
-    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+  const defaultWish = {
+    to_name: "Someone Very Special",
+    from_name: "Alex",
+    sender_username: "alex_wishes",
+    message: "In a world of noise and endless messages, I give you my one and only Neverfade Wish. Forever recorded, forever yours.",
+    media_url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1200&q=80",
+    slug: "forever"
+  };
 
-    // Check neverfade_bookings ONLY FOR TODAY'S EXACT DATE
-    const { data: todayBooking } = await client
-      .from('neverfade_bookings')
-      .select('booking_date, wish_id')
-      .eq('booking_date', todayStr)
-      .maybeSingle();
+  let activeWish = defaultWish;
+  const client = initDb();
 
-    if(todayBooking && todayBooking.wish_id){
-      const { data: w } = await client.from('wishes').select('*').eq('id', todayBooking.wish_id).maybeSingle();
-      if(w && (w.privacy === 'public' || w.user_id === (currentUser ? currentUser.id : null))){
-        targetWish = w;
-        targetDate = todayBooking.booking_date;
+  if(client){
+    try{
+      const now = new Date();
+      const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+
+      // 1. Try finding booked Neverfade wish for today
+      const { data: booking } = await client.from('neverfade_bookings').select('wish_id, booking_date').eq('booking_date', todayStr).maybeSingle();
+      if(booking && booking.wish_id){
+        const { data: w } = await client.from('wishes').select('*').eq('id', booking.wish_id).maybeSingle();
+        if(w && (w.privacy === 'public' || (currentUser && w.user_id === currentUser.id))){
+          activeWish = w;
+          if(badgeEl) badgeEl.textContent = `⭐ TODAY'S FEATURED NEVERFADE WISH · ${booking.booking_date}`;
+        }
       }
+
+      // 2. If no booked wish today, get latest public Neverfade wish
+      if(activeWish === defaultWish){
+        const { data: latestWishes } = await client
+          .from('wishes')
+          .select('*')
+          .eq('tier', 'neverfade')
+          .eq('privacy', 'public')
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if(latestWishes && latestWishes.length > 0){
+          activeWish = latestWishes[0];
+          if(badgeEl) badgeEl.textContent = '⭐ FEATURED NEVERFADE WISH';
+        }
+      }
+    }catch(err){
+      console.warn('Load homepage Neverfade error', err);
     }
-
-    if(targetWish){
-      section.style.display = 'block';
-      const badgeEl = document.getElementById('neverfadeBadge');
-      if(badgeEl) badgeEl.textContent = 'TODAY\'S NEVERFADE FEATURE — ' + targetDate;
-      
-      const titleEl = document.getElementById('neverfadeTitle');
-      if(titleEl) titleEl.textContent = 'For ' + targetWish.to_name;
-      
-      const msgEl = document.getElementById('neverfadeMsg');
-      if(msgEl) msgEl.textContent = '"' + targetWish.message + '"';
-      
-      const senderEl = document.getElementById('neverfadeSender');
-      if(senderEl) senderEl.textContent = 'FROM — ' + (targetWish.from_name || '').toUpperCase() + ' (@' + (targetWish.sender_username || 'user') + ') · 👁 ' + (targetWish.views_count || 0) + ' views';
-      
-      const mediaBox = document.getElementById('neverfadeMediaBox');
-      if(mediaBox){
-        if(targetWish.media_url){
-          mediaBox.style.display = 'block';
-          mediaBox.innerHTML = (targetWish.media_type === 'video')
-            ? `<video src="${targetWish.media_url}" controls autoplay loop muted style="width:100%; max-height:480px; object-fit:contain; background:#000; display:block; border-radius:12px; image-rendering:-webkit-optimize-contrast;"></video>`
-            : `<img src="${targetWish.media_url}" style="width:100%; max-height:480px; object-fit:cover; display:block; border-radius:12px; image-rendering:-webkit-optimize-contrast; filter:contrast(1.02) saturate(1.02);" alt="Neverfade Wish Media">`;
-        }else{ mediaBox.style.display = 'none'; }
-      }
-
-      const linkBtn = document.getElementById('neverfadeLinkBtn');
-      if(linkBtn){
-        const navUrl = '/neverfade/' + targetDate;
-        linkBtn.href = navUrl;
-        linkBtn.onclick = (e) => { e.preventDefault(); navigateTo(navUrl); };
-      }
-    }else{
-      section.style.display = 'none';
-    }
-  }catch(e){
-    console.error('Failed to load Neverfade wish for homepage', e);
-    section.style.display = 'none';
   }
+
+  currentHomepageNeverfadeSlug = activeWish.slug || activeWish.id || '';
+  if(linkBtn){
+    const targetUrl = activeWish.slug ? ('/neverfade/' + activeWish.slug) : ('/w/' + activeWish.id);
+    linkBtn.href = targetUrl;
+    linkBtn.onclick = (e) => {
+      e.preventDefault();
+      navigateTo(targetUrl);
+    };
+  }
+
+  // Set Media (Backdrop + Foreground)
+  const mediaUrl = activeWish.media_url || 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1200&q=80';
+  if(backdropImg) backdropImg.src = mediaUrl;
+  if(fgImg) fgImg.src = mediaUrl;
+
+  // Set Receiver Name (small uppercase tag)
+  if(receiverNameEl) receiverNameEl.textContent = (activeWish.to_name || 'RECIPIENT').toUpperCase();
+
+  // Set Sender Name (handwriting font signature)
+  if(senderNameEl){
+    const senderDisplay = activeWish.from_name || activeWish.sender_username || 'Sender';
+    const userHandle = activeWish.sender_username ? ` (@${activeWish.sender_username})` : '';
+    senderNameEl.textContent = senderDisplay + userHandle;
+  }
+
+  // Trigger Wax Seal Animation (re-trigger keyframe)
+  if(sealEl){
+    sealEl.style.animation = 'none';
+    sealEl.offsetHeight; // trigger reflow
+    sealEl.style.animation = 'stampDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, sealPulse 3s ease-in-out infinite 1s';
+  }
+
+  // Start Typewriter Animation for wish message over the photo
+  startNeverfadeTypewriter(activeWish.message || '');
 }
 
 async function incrementWishViews(wishId, currentViews = 0){
