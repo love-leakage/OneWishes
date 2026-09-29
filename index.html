@@ -373,12 +373,12 @@
         <div class="num">01</div>
         <div>
           <h3>Spark Wish</h3>
-          <p>For anyone, anytime. A customizable link with a message and optional photo/video.</p>
-          <div class="tier-detail">Requires sign-in. Free & unlimited.
+          <p>For someone special. A customizable link with a message and optional photo/video.</p>
+          <div class="tier-detail">Requires sign-in. Refreshes monthly — 1 Spark Wish per calendar month.
             <br><a href="#create" class="pick-link" data-tier="spark">Choose Spark →</a>
           </div>
         </div>
-        <div class="limit-col">Unlimited · Free</div>
+        <div class="limit-col">1 per month · Free</div>
       </div>
       <div class="tier-row" data-tier="golden">
         <div class="num">02</div>
@@ -435,7 +435,7 @@
         </div>
         <div id="authLoggedIn" style="display:none;">
           <div class="signed-in-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-            <span>Signed in as <strong id="userDisplayName" style="color:var(--white);"></strong> · Golden Wishes used: <strong id="goldenCount" style="color:var(--white);">0</strong>/3</span>
+            <span>Signed in as <strong id="userDisplayName" style="color:var(--white);"></strong> · Spark Wishes this month: <strong id="sparkCount" style="color:var(--white);">0</strong>/1 · Golden Wishes used: <strong id="goldenCount" style="color:var(--white);">0</strong>/3</span>
             <button class="btn btn-outline btn-small" id="signOutBtn">Sign out</button>
           </div>
           <div style="margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
@@ -465,7 +465,7 @@
         <div class="create-card" id="createCard">
           <div class="create-card-header">
             <div class="create-card-title">Craft Wish Details</div>
-            <div class="create-card-badge" id="activeTierBadge">SPARK WISH — FREE</div>
+            <div class="create-card-badge" id="activeTierBadge">SPARK WISH — 1 PER MONTH</div>
           </div>
 
           <div class="field">
@@ -1000,7 +1000,7 @@ function setActiveTier(tier){
   }
   const badge = document.getElementById('activeTierBadge');
   if(badge){
-    badge.textContent = tier === 'golden' ? 'GOLDEN WISH — 3 PER LIFETIME' : tier === 'neverfade' ? 'NEVERFADE WISH — 1 SLOT A DAY' : 'SPARK WISH — FREE';
+    badge.textContent = tier === 'golden' ? 'GOLDEN WISH — 3 PER LIFETIME' : tier === 'neverfade' ? 'NEVERFADE WISH — 1 SLOT A DAY' : 'SPARK WISH — 1 PER MONTH';
   }
   updateUrlPreview();
   if(typeof initLivePreviewListeners !== 'undefined'){
@@ -1097,6 +1097,19 @@ async function refreshAuthUI(sessionOverride = null){
       
       const { data: profile } = await client.from('profiles').select('username, golden_used, instagram_handle').eq('id', currentUser.id).single();
       currentProfile = profile;
+
+      // Calculate Spark Wishes used in current calendar month
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      const { count: sparkUsed } = await client
+        .from('wishes')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id)
+        .eq('tier', 'spark')
+        .gte('created_at', startOfMonth);
+
+      const sparkEl = document.getElementById('sparkCount');
+      if(sparkEl) sparkEl.textContent = sparkUsed || 0;
       
       document.getElementById('goldenCount').textContent = profile ? profile.golden_used : 0;
       const igInput = document.getElementById('instagramInput');
@@ -1511,6 +1524,26 @@ if(createBtn){
     const slug = customSlugVal || (tier + '-' + effectiveUsername + '-' + toName.toLowerCase().replace(/[^a-z0-9]/g, '') + '-' + Date.now().toString(36));
 
     try{
+      if(tier === 'spark'){
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const { count: sparkUsed, error: countErr } = await client
+          .from('wishes')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', currentUser.id)
+          .eq('tier', 'spark')
+          .gte('created_at', startOfMonth);
+
+        if(!countErr && sparkUsed !== null && sparkUsed >= 1){
+          createBtn.disabled = false;
+          statusEl.classList.add('err');
+          const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+          const currentMonthName = monthNames[now.getMonth()];
+          statusEl.textContent = `You have used your 1 Spark Wish for ${currentMonthName}. Spark Wishes refresh on the 1st of next month!`;
+          return;
+        }
+      }
+
       if(tier === 'golden'){
         const { data: allowed, error: claimError } = await client.rpc('claim_golden_wish');
         if(claimError || !allowed){
@@ -2071,7 +2104,7 @@ async function loadGalleryTier(tier){
     leadEl.textContent = '1 slot per date worldwide. Front-page takeover wishes.';
   } else {
     titleEl.textContent = 'Public Spark Wishes';
-    leadEl.textContent = 'Unlimited, free, shareable wishes sent by people across the globe.';
+    leadEl.textContent = 'Limited to 1 per month per user. Special monthly wishes sent across the world.';
   }
 
   try{
