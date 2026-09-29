@@ -44,7 +44,8 @@
   nav .links{ display:flex; gap:24px; font-size:0.88rem; align-items:center; flex-wrap:wrap; color:var(--grey-muted); }
   nav .links a{ border-bottom:1px solid transparent; padding-bottom:2px; cursor:pointer; transition: all 0.2s ease; text-transform:uppercase; letter-spacing:0.08em; font-size:0.8rem; }
   nav .links a:hover{ color:var(--white); border-bottom-color:var(--white); }
-  #navAuthState{ font-size:0.82rem; font-weight:600; color:var(--white); background:rgba(255,255,255,0.08); padding:5px 14px; border-radius:20px; border:1px solid rgba(255,255,255,0.25); text-transform:uppercase; letter-spacing:0.06em; }
+  #navAuthState, .nav-profile-pill{ display:inline-flex; align-items:center; gap:6px; font-size:0.82rem; font-weight:600; color:var(--white); background:rgba(255,255,255,0.08); padding:6px 16px; border-radius:20px; border:1px solid rgba(255,255,255,0.25); text-transform:none; letter-spacing:0.04em; cursor:pointer; transition: all 0.25s ease; }
+  #navAuthState:hover, .nav-profile-pill:hover{ background:var(--white); color:var(--black); border-color:var(--white); transform:translateY(-1px); }
 
   .hero{ padding:100px 0 70px; text-align:center; }
   .hero .kicker{ font-size:0.75rem; letter-spacing:0.24em; text-transform:uppercase; color:var(--grey-muted); margin-bottom:24px; opacity:0; animation: rise 0.6s ease-out 0.05s forwards; font-weight:600; }
@@ -396,11 +397,11 @@
         <div>
           <h3>Neverfade Wish</h3>
           <p>One person, one day, the entire front page.</p>
-          <div class="tier-detail">One slot exists per calendar date, worldwide. Full front page feature.
+          <div class="tier-detail">Requires sign-in. 1 per lifetime & 1 slot per date worldwide. Full front page feature.
             <br><a href="#create" class="pick-link" data-tier="neverfade">Choose Neverfade →</a>
           </div>
         </div>
-        <div class="limit-col">1 slot a day, worldwide</div>
+        <div class="limit-col">1 per lifetime · 1 slot a day</div>
       </div>
     </div>
   </section>
@@ -435,7 +436,7 @@
         </div>
         <div id="authLoggedIn" style="display:none;">
           <div class="signed-in-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-            <span>Signed in as <strong id="userDisplayName" style="color:var(--white);"></strong> · Spark Wishes this month: <strong id="sparkCount" style="color:var(--white);">0</strong>/1 · Golden Wishes used: <strong id="goldenCount" style="color:var(--white);">0</strong>/3</span>
+            <span>Signed in as <strong id="userDisplayName" style="color:var(--white);"></strong> · Spark: <strong id="sparkCount" style="color:var(--white);">0</strong>/1 · Golden: <strong id="goldenCount" style="color:var(--white);">0</strong>/3 · Neverfade: <strong id="neverfadeCount" style="color:var(--white);">0</strong>/1</span>
             <button class="btn btn-outline btn-small" id="signOutBtn">Sign out</button>
           </div>
           <div style="margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
@@ -628,6 +629,7 @@
       <div class="links">
         <a href="/" onclick="goHome(); return false;">Back to Home</a>
         <a href="/#create" onclick="scrollToSection('create'); return false;">Write a wish</a>
+        <span class="nav-profile-pill"></span>
       </div>
     </nav>
 
@@ -653,6 +655,7 @@
         <a href="/golden" onclick="navigateTo('/golden'); return false;">Golden</a>
         <a href="/neverfade" onclick="navigateTo('/neverfade'); return false;">Neverfade</a>
         <a href="/history" onclick="navigateTo('/history'); return false;" id="galleryNavHistory" style="display:none;">My History</a>
+        <span class="nav-profile-pill"></span>
       </div>
     </nav>
 
@@ -679,6 +682,7 @@
       <div class="links">
         <a href="/" onclick="goHome(); return false;">Back to Home</a>
         <a href="/history" onclick="navigateTo('/history'); return false;">My History</a>
+        <span class="nav-profile-pill"></span>
       </div>
     </nav>
 
@@ -1110,6 +1114,16 @@ async function refreshAuthUI(sessionOverride = null){
 
       const sparkEl = document.getElementById('sparkCount');
       if(sparkEl) sparkEl.textContent = sparkUsed || 0;
+
+      // Calculate Neverfade Wishes used in lifetime
+      const { count: nvUsed } = await client
+        .from('wishes')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id)
+        .eq('tier', 'neverfade');
+
+      const nvEl = document.getElementById('neverfadeCount');
+      if(nvEl) nvEl.textContent = nvUsed || 0;
       
       document.getElementById('goldenCount').textContent = profile ? profile.golden_used : 0;
       const igInput = document.getElementById('instagramInput');
@@ -1130,13 +1144,11 @@ async function refreshAuthUI(sessionOverride = null){
 
       if(profile && profile.username){
         usernameBox.style.display = 'none';
-        nav.textContent = '@' + profile.username;
         document.getElementById('userDisplayName').textContent = '@' + profile.username;
         if(navHistory) navHistory.style.display = 'inline-block';
         unlockTiers(true);
       }else{
         usernameBox.style.display = 'block';
-        nav.textContent = currentUser.email;
         document.getElementById('userDisplayName').textContent = currentUser.email;
         if(navHistory) navHistory.style.display = 'none';
         
@@ -1147,15 +1159,35 @@ async function refreshAuthUI(sessionOverride = null){
         }
         unlockTiers(false);
       }
+
+      // Update all top-right profile pills across all navbars
+      document.querySelectorAll('.nav-profile-pill, #navAuthState').forEach(el => {
+        if(profile && profile.username){
+          el.innerHTML = `👤 @${profile.username}`;
+          el.title = "View My Wish History";
+          el.onclick = (e) => { e.preventDefault(); navigateTo('/history'); };
+        } else {
+          el.innerHTML = `👤 ${currentUser.email.split('@')[0]}`;
+          el.title = "Claim your username";
+          el.onclick = (e) => { e.preventDefault(); scrollToSection('create'); };
+        }
+        el.style.display = 'inline-flex';
+      });
     }else{
       loggedOutBox.style.display = 'block';
       loggedInBox.style.display = 'none';
       usernameBox.style.display = 'none';
       if(navHistory) navHistory.style.display = 'none';
       if(navAdmin) navAdmin.style.display = 'none';
-      nav.textContent = '';
       unlockTiers(false);
       if(currentTier !== 'spark') setActiveTier('spark');
+
+      document.querySelectorAll('.nav-profile-pill, #navAuthState').forEach(el => {
+        el.innerHTML = `Sign In →`;
+        el.title = "Sign in with Google";
+        el.onclick = (e) => { e.preventDefault(); scrollToSection('create'); };
+        el.style.display = 'inline-flex';
+      });
     }
     updateUrlPreview();
   }catch(e){ console.error('Auth refresh failed', e); }
@@ -1555,6 +1587,19 @@ if(createBtn){
       }
 
       if(tier === 'neverfade'){
+        const { count: nvUsed, error: nvErr } = await client
+          .from('wishes')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', currentUser.id)
+          .eq('tier', 'neverfade');
+
+        if(!nvErr && nvUsed !== null && nvUsed >= 1){
+          createBtn.disabled = false;
+          statusEl.classList.add('err');
+          statusEl.textContent = 'You have already used your 1 Neverfade Wish for your lifetime!';
+          return;
+        }
+
         const dateVal = document.getElementById('neverfadeDate').value;
         if(!dateVal){
           createBtn.disabled = false;
@@ -1733,9 +1778,10 @@ async function incrementWishViews(wishId, currentViews = 0){
   const client = initDb();
   if(!client || !wishId) return;
   try{
-    const { error } = await client.rpc('increment_wish_views', { target_wish_id: wishId });
-    if(error){
-      await client.from('wishes').update({ views_count: currentViews + 1 }).eq('id', wishId);
+    const { error: rpcErr } = await client.rpc('increment_wish_views', { target_wish_id: wishId });
+    if(rpcErr){
+      const nextViews = (currentViews || 0) + 1;
+      await client.from('wishes').update({ views_count: nextViews }).eq('id', wishId);
     }
   }catch(e){ console.error('View increment error', e); }
 }
@@ -2052,6 +2098,7 @@ async function renderWishView(wish){
   showScreen('screen-view');
 
   incrementWishViews(wish.id, wish.views_count || 0);
+  wish.views_count = updatedViews;
 }
 
 async function toggleWishPrivacy(wishId, currentPrivacy){
