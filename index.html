@@ -24,7 +24,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='50' y='68' font-size='55' font-family='Georgia,serif' fill='%23fff' text-anchor='middle'%3E1%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Great+Vibes&family=Dancing+Script:wght@600;700&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Satisfy&family=Sacramento&family=Alex+Brush&family=Great+Vibes&family=Dancing+Script:wght@600;700&family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
 <style>
   :root{
@@ -92,38 +92,40 @@
   .section-title{ font-weight:300; font-size:clamp(1.8rem, 4vw, 2.8rem); margin-bottom:10px; color:var(--white); }
   .section-lead{ color:var(--grey-muted); max-width:560px; margin-bottom:48px; font-size:1.02rem; }
 
-  /* Homepage Featured Neverfade Hero Card (Top Placement & Upscaling Blur) */
+  /* Homepage Featured Neverfade Hero Card (Full Viewport Width & Height) */
   #neverfadeHomeSection {
-    margin-top: 24px;
+    margin-top: 10px;
     margin-bottom: 50px;
     position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
   }
 
   .neverfade-hero-card {
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 20px;
-    background: #0d0d0d;
+    border: none;
+    border-radius: 0;
+    background: #000000;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.08);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.95);
     animation: cardPop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    min-height: 85vh;
   }
 
   .neverfade-hero-media-wrapper {
     position: relative;
     width: 100%;
-    min-height: 540px;
-    max-height: 720px;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: #050505;
+    background: #000000;
   }
 
   @media (max-width: 700px) {
     .neverfade-hero-media-wrapper {
-      min-height: 460px;
+      min-height: 80vh;
     }
   }
 
@@ -134,7 +136,7 @@
     width: calc(100% + 60px);
     height: calc(100% + 60px);
     object-fit: cover;
-    filter: blur(40px) brightness(0.35) scale(1.15);
+    filter: blur(50px) brightness(0.35) scale(1.15);
     pointer-events: none;
     z-index: 1;
   }
@@ -144,18 +146,18 @@
     position: absolute;
     inset: 0;
     z-index: 2;
-    background: radial-gradient(circle at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.72) 65%, rgba(0,0,0,0.94) 100%);
+    background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 65%, rgba(0,0,0,0.96) 100%);
     pointer-events: none;
   }
 
-  /* Foreground Media - Full Image Expansion across card */
+  /* Foreground Media - Full Image Expansion across entire viewport */
   .neverfade-media-fg {
     position: absolute;
     inset: 0;
     z-index: 3;
     width: 100%;
     height: 100%;
-    min-height: 520px;
+    min-height: 85vh;
     object-fit: cover;
     display: block;
     filter: drop-shadow(0 16px 40px rgba(0,0,0,0.9));
@@ -171,8 +173,8 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 40px 24px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.65) 60%, rgba(0,0,0,0.92) 100%);
+    padding: 50px 24px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.68) 60%, rgba(0,0,0,0.94) 100%);
   }
 
   .neverfade-hero-header-badge {
@@ -181,29 +183,29 @@
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.85);
     font-weight: 700;
-    margin-bottom: 20px;
-    background: rgba(0,0,0,0.6);
+    margin-bottom: 24px;
+    background: rgba(0,0,0,0.65);
     border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 4px 14px;
+    padding: 5px 16px;
     border-radius: 20px;
     backdrop-filter: blur(8px);
   }
 
-  /* Typewriter Animated Message */
+  /* Typewriter Animated Message in Catalina Handwritten Script Font */
   .neverfade-typewriter-container {
-    max-width: 780px;
+    max-width: 860px;
     margin: 0 auto 20px;
-    min-height: 90px;
+    min-height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .neverfade-typewriter-text {
-    font-family: 'Fraunces', serif;
-    font-size: clamp(1.4rem, 4.2vw, 2.5rem);
-    font-style: italic;
-    line-height: 1.4;
+    font-family: 'Caveat', 'Satisfy', 'Sacramento', cursive;
+    font-size: clamp(2rem, 5.5vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.35;
     color: #FFFFFF;
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95);
     word-break: break-word;
@@ -233,14 +235,15 @@
     text-shadow: 0 2px 8px rgba(0,0,0,0.9);
   }
 
-  /* Handwriting Font Sender Name (Alex Brush / Great Vibes) */
+  /* Catalina Style Handwritten Font Sender Name */
   .neverfade-handwritten {
-    font-family: 'Alex Brush', 'Great Vibes', 'Dancing Script', cursive;
-    font-size: clamp(2.6rem, 6vw, 3.8rem);
+    font-family: 'Caveat', 'Satisfy', 'Sacramento', cursive;
+    font-size: clamp(3rem, 7vw, 4.5rem);
+    font-weight: 700;
     color: #fce7b0;
     text-shadow: 0 4px 22px rgba(0, 0, 0, 0.95);
     margin-top: 4px;
-    line-height: 1.05;
+    line-height: 1;
   }
 
   /* Username Subtitle directly below Calligraphic Sender Name */
@@ -251,8 +254,33 @@
     letter-spacing: 0.15em;
     color: rgba(255, 255, 255, 0.75);
     margin-top: 2px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  }
+
+  /* Floating Purple Balloon Scroll Indicator & Scroll Reveal Animations */
+  .floating-scroll-balloon {
+    position: fixed;
+    right: 24px;
+    top: 80px;
+    z-index: 9999;
+    pointer-events: none;
+    transition: transform 0.15s ease-out, opacity 0.3s ease;
+    filter: drop-shadow(0 6px 16px rgba(192, 132, 252, 0.6));
+    opacity: 0.95;
+  }
+  @media (max-width: 600px) {
+    .floating-scroll-balloon { right: 10px; }
+  }
+
+  .scroll-reveal-section {
+    opacity: 0;
+    transform: translateY(34px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .scroll-reveal-section.revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* Website Black Intro Screen & Balloon Gift Unboxing Animation */
@@ -730,25 +758,6 @@
     <!-- TODAY'S ACTIVE FEATURED NEVERFADE HERO -->
     <section id="neverfadeHomeSection">
       <div class="neverfade-hero-card" id="neverfadeHeroCard">
-        <!-- Official Animated Gold Wax Seal -->
-        <div class="animated-wax-seal" id="neverfadeHeroSeal" title="OneWishes Lifetime Seal" onclick="if(currentHomepageNeverfadeSlug) navigateTo('/neverfade/' + currentHomepageNeverfadeSlug);">
-          <svg viewBox="0 0 100 100" width="40" height="40">
-            <circle cx="50" cy="50" r="46" fill="#140f1d" stroke="#e0a96d" stroke-width="2.5"/>
-            <circle cx="28" cy="34" r="1.8" fill="#f472b6"/>
-            <circle cx="72" cy="38" r="1.8" fill="#fbbf24"/>
-            <circle cx="32" cy="62" r="1.8" fill="#60a5fa"/>
-            <circle cx="70" cy="64" r="1.8" fill="#f472b6"/>
-            <rect x="34" y="56" width="32" height="26" rx="3" fill="#a855f7" stroke="#ffffff" stroke-width="1.5"/>
-            <rect x="47" y="56" width="6" height="26" fill="#f472b6"/>
-            <rect x="30" y="50" width="40" height="8" rx="2" fill="#c084fc" stroke="#ffffff" stroke-width="1.5"/>
-            <rect x="47" y="50" width="6" height="8" fill="#f472b6"/>
-            <path d="M42 50 C34 40 45 38 48 46 C51 38 62 40 54 50 Z" fill="#f472b6" stroke="#ffffff" stroke-width="1"/>
-            <path d="M48 46 Q 52 34 48 26" fill="none" stroke="#e0a96d" stroke-width="1.5" stroke-dasharray="2 1"/>
-            <path d="M48 10 C38 10 32 18 32 24 C32 30 42 34 48 34 C54 34 64 30 64 24 C64 18 58 10 48 10 Z" fill="#e879f9" stroke="#ffffff" stroke-width="1.8"/>
-          </svg>
-          <div class="seal-tag">ONEWISHES</div>
-        </div>
-
         <div class="neverfade-hero-media-wrapper" id="neverfadeMediaWrapper">
           <img class="neverfade-media-backdrop" id="neverfadeMediaBackdrop" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1600&q=80" alt="Backdrop Blur">
           <div class="neverfade-media-vignette"></div>
@@ -779,7 +788,7 @@
       </div>
     </section>
 
-    <section class="hero" style="padding-top:40px;">
+    <section class="hero scroll-reveal-section" style="padding-top:40px;">
       <div class="kicker">ONE WISH • ONCE GIVEN • NEVER FORGOTTEN</div>
       <h1>Most wishes fade in a day.<br>OneWishes is built to <em>last a lifetime</em>.</h1>
       <p>Scarcity gives value to words. Craft intentional, timeless digital keepsake wishes for the ones who matter most.</p>
@@ -803,7 +812,7 @@
     </div>
   </div>
 
-  <section class="section" id="tiers">
+  <section class="section scroll-reveal-section" id="tiers">
     <div class="wrap">
       <div class="section-title">Three ways to say it</div>
       <div class="section-lead">Each one trades reach for weight. The rarer the wish, the more it says.</div>
@@ -2153,21 +2162,38 @@ function startNeverfadeTypewriter(fullText){
   const cursorEl = document.getElementById('typewriterCursor');
   if(!typewriterText) return;
 
+let typewriterTimeout = null;
+
+function startNeverfadeTypewriter(fullText){
+  if(typewriterInterval) clearInterval(typewriterInterval);
+  if(typewriterTimeout) clearTimeout(typewriterTimeout);
+
+  const typewriterText = document.getElementById('neverfadeTypewriterText');
+  const cursorEl = document.getElementById('typewriterCursor');
+  if(!typewriterText) return;
+
   typewriterText.textContent = '';
   if(cursorEl) cursorEl.style.display = 'inline-block';
 
   let charIndex = 0;
-  const speed = 35; // ms per char
+  const speed = 45; // smooth ms per char for handwriting pace
 
-  typewriterInterval = setInterval(() => {
+  function typeNextChar(){
     if(charIndex < fullText.length){
       typewriterText.textContent += fullText.charAt(charIndex);
       charIndex++;
+      typewriterTimeout = setTimeout(typeNextChar, speed);
     } else {
-      clearInterval(typewriterInterval);
-      typewriterInterval = null;
+      // Pause 2.8 seconds, then reset and repeat continuously
+      typewriterTimeout = setTimeout(() => {
+        typewriterText.textContent = '';
+        charIndex = 0;
+        typeNextChar();
+      }, 2800);
     }
-  }, speed);
+  }
+
+  typeNextChar();
 }
 
 // Fetch Active Public Neverfade Wish for Homepage Hero
@@ -3074,6 +3100,48 @@ function initLivePreviewListeners(){
   updatePreview();
 }
 
+function initScrollBalloonTracker(){
+  let balloon = document.getElementById('scrollFloatingBalloon');
+  if(!balloon){
+    balloon = document.createElement('div');
+    balloon.id = 'scrollFloatingBalloon';
+    balloon.className = 'floating-scroll-balloon';
+    balloon.innerHTML = `
+      <svg viewBox="0 0 100 120" width="46" height="55">
+        <path d="M50 10 C32 10 24 22 24 38 C24 54 40 68 50 68 C60 68 76 54 76 38 C76 22 68 10 50 10 Z" fill="#c084fc" stroke="#ffffff" stroke-width="2"/>
+        <path d="M36 24 Q42 16 48 18" stroke="#ffffff" stroke-width="2.5" fill="none" opacity="0.7"/>
+        <polygon points="50,68 44,74 56,74" fill="#c084fc"/>
+        <path d="M50 74 Q54 90 50 110" fill="none" stroke="#e0a96d" stroke-width="1.8" stroke-dasharray="3 2"/>
+      </svg>
+    `;
+    document.body.appendChild(balloon);
+  }
+
+  const updateScroll = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = docHeight > 0 ? Math.min(1, Math.max(0, scrollTop / docHeight)) : 0;
+
+    if(balloon){
+      const minTop = 80;
+      const maxTop = window.innerHeight - 130;
+      const currentTop = minTop + (scrollPercent * (maxTop - minTop));
+      balloon.style.top = currentTop + 'px';
+      balloon.style.transform = `rotate(${Math.sin(scrollPercent * Math.PI * 4) * 8}deg) scale(${1 + Math.sin(scrollPercent * Math.PI * 2) * 0.1})`;
+    }
+
+    document.querySelectorAll('.scroll-reveal-section').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if(rect.top < window.innerHeight * 0.88){
+        el.classList.add('revealed');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  updateScroll();
+}
+
 window.addEventListener('popstate', routeApp);
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -3081,6 +3149,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if(client){ client.auth.onAuthStateChange(() => refreshAuthUI()); }
   initThemeSelector();
   initLivePreviewListeners();
+  initScrollBalloonTracker();
   await refreshAuthUI();
   await loadHomepageNeverfade();
   await routeApp();
