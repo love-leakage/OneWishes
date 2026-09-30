@@ -286,6 +286,8 @@
   .reveal-section.is-revealed {
     opacity: 1;
     transform: translateY(0);
+  }
+
   /* Official Gold Wax Seal Stamp Badge */
   .animated-wax-seal {
     position: absolute;
@@ -2016,14 +2018,6 @@ if(createBtn){
 
 let currentHomepageNeverfadeSlug = '';
 let typewriterInterval = null;
-
-function startNeverfadeTypewriter(fullText){
-  if(typewriterInterval) clearInterval(typewriterInterval);
-
-  const typewriterText = document.getElementById('neverfadeTypewriterText');
-  const cursorEl = document.getElementById('typewriterCursor');
-  if(!typewriterText) return;
-
 let typewriterTimeout = null;
 
 function startNeverfadeTypewriter(fullText){
@@ -2966,7 +2960,15 @@ function initBalloonJourneyAnimation(){
   const balloon = document.getElementById('pageJourneyBalloon');
   const createSection = document.getElementById('create');
   const sections = document.querySelectorAll('.reveal-section');
-  if(!balloon) return;
+
+  const revealAllNow = () => {
+    sections.forEach(s => s.classList.add('is-revealed'));
+  };
+
+  if(!balloon){
+    revealAllNow();
+    return;
+  }
 
   const updateBalloonPosition = () => {
     const scrollTop = window.scrollY;
@@ -2987,21 +2989,17 @@ function initBalloonJourneyAnimation(){
 
     sections.forEach(sec => {
       const secRect = sec.getBoundingClientRect();
-      if(secRect.top < windowHeight * 0.88 || scrollTop > 30){
+      if(secRect.top < windowHeight * 0.95 || scrollTop > 20){
         sec.classList.add('is-revealed');
       }
     });
   };
 
-  setTimeout(() => {
-    updateBalloonPosition();
-    const topSec = document.getElementById('neverfadeHomeSection');
-    if(topSec) topSec.classList.add('is-revealed');
-  }, 100);
+  revealAllNow();
+  updateBalloonPosition();
 
   window.addEventListener('scroll', updateBalloonPosition, { passive: true });
   window.addEventListener('resize', updateBalloonPosition, { passive: true });
-  updateBalloonPosition();
 }
 
 window.addEventListener('popstate', routeApp);
