@@ -4,20 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ONEWISHES — This letter never arrived</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body{
-    margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:#1B1B22; color:#EFE8D8; font-family:'Inter', sans-serif; text-align:center; padding:24px;
+  *{ box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #020204;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.22) 0%, transparent 50%),
+      radial-gradient(circle at 100% 50%, rgba(212, 175, 55, 0.15) 0%, transparent 50%);
+    color: #ffffff; font-family: 'Inter', sans-serif; text-align: center; padding: 24px;
   }
-  h1{ font-family:'Fraunces', serif; font-style:italic; font-size:2rem; margin-bottom:12px; }
-  p{ color:#A3A3AE; margin-bottom:28px; }
-  a{ color:#EFE8D8; border:1px solid #EFE8D8; padding:12px 24px; text-decoration:none; border-radius:2px; }
+  .card {
+    max-width: 480px; width: 100%; padding: 48px 32px;
+    background: rgba(14, 12, 24, 0.75); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(252, 231, 176, 0.3); border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.15);
+  }
+  .kicker { font-size: 0.72rem; letter-spacing: 0.24em; text-transform: uppercase; color: #fce7b0; margin-bottom: 20px; font-weight: 700; }
+  h1 { font-family: 'Fraunces', serif; font-style: italic; font-size: clamp(2rem, 5vw, 2.8rem); margin-bottom: 14px; background: linear-gradient(135deg, #ffffff 0%, #fce7b0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  p { color: #9494a8; margin-bottom: 32px; font-size: 1.02rem; line-height: 1.6; }
+  a {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #fce7b0 0%, #d4af37 100%); color: #000000;
+    padding: 14px 32px; text-decoration: none; border-radius: 30px; font-weight: 700;
+    font-size: 0.88rem; text-transform: uppercase; letter-spacing: 0.1em;
+    box-shadow: 0 6px 24px rgba(212, 175, 55, 0.4); transition: all 0.3s ease;
+  }
+  a:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 32px rgba(212, 175, 55, 0.6); }
 </style>
 </head>
 <body>
-  <h1>This letter never arrived.</h1>
-  <p>The link may have expired, or the address was written wrong.</p>
-  <a href="/">Go back home</a>
+  <div class="card">
+    <div class="kicker">✦ 404 • WISH NOT FOUND</div>
+    <h1>This letter never arrived.</h1>
+    <p>The link may have expired, or the address was written wrong.</p>
+    <a href="/">Go back home →</a>
+  </div>
 </body>
 </html>
