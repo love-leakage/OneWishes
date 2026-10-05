@@ -2194,7 +2194,7 @@ async function loadHomepageNeverfade(){
       const now = new Date();
       const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
 
-      // 1. Try finding booked Neverfade wish for today
+      // 1. Strictly check if there is a Neverfade booking for TODAY's date (todayStr)
       const { data: booking } = await client.from('neverfade_bookings').select('wish_id, booking_date').eq('booking_date', todayStr).maybeSingle();
       if(booking && booking.wish_id){
         const { data: w } = await client.from('wishes').select('*').eq('id', booking.wish_id).maybeSingle();
@@ -2203,41 +2203,9 @@ async function loadHomepageNeverfade(){
           activeBookingDate = booking.booking_date;
           if(badgeEl) badgeEl.textContent = `⭐ TODAY'S FEATURED NEVERFADE WISH · ${booking.booking_date}`;
         }
-      }
-
-      // 2. If no booked wish today, get most recent booked Neverfade wish
-      if(activeWish === defaultWish){
-        const { data: recentBookings } = await client
-          .from('neverfade_bookings')
-          .select('wish_id, booking_date')
-          .order('booking_date', { ascending: false })
-          .limit(1);
-
-        if(recentBookings && recentBookings.length > 0 && recentBookings[0].wish_id){
-          const recBooking = recentBookings[0];
-          const { data: w } = await client.from('wishes').select('*').eq('id', recBooking.wish_id).maybeSingle();
-          if(w && (w.privacy === 'public' || (currentUser && w.user_id === currentUser.id))){
-            activeWish = w;
-            activeBookingDate = recBooking.booking_date;
-            if(badgeEl) badgeEl.textContent = `⭐ FEATURED NEVERFADE WISH · ${recBooking.booking_date}`;
-          }
-        }
-      }
-
-      // 3. Fallback to latest public Neverfade wish
-      if(activeWish === defaultWish){
-        const { data: latestWishes } = await client
-          .from('wishes')
-          .select('*')
-          .eq('tier', 'neverfade')
-          .eq('privacy', 'public')
-          .order('created_at', { ascending: false })
-          .limit(1);
-
-        if(latestWishes && latestWishes.length > 0){
-          activeWish = latestWishes[0];
-          if(badgeEl) badgeEl.textContent = '⭐ FEATURED NEVERFADE WISH';
-        }
+      } else {
+        // Today's date slot is unbooked — show default sample and indicate slot availability!
+        if(badgeEl) badgeEl.textContent = `⭐ TODAY'S SLOT AVAILABLE · BOOK NEVERFADE WISH FOR TODAY`;
       }
     }catch(err){
       console.warn('Load homepage Neverfade error', err);
