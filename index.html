@@ -649,29 +649,6 @@
 <!-- FULL BLACK INTRO CURTAIN OVERLAY -->
 <div class="site-black-curtain" id="siteBlackCurtain"></div>
 
-<!-- FLOATING BALLOON WITH GIFT BOX LOGO AUTOMATIC JOURNEY -->
-<div class="page-journey-balloon" id="pageJourneyBalloon">
-  <svg viewBox="0 0 120 150" width="72" height="90">
-    <!-- Gift Box Base at Bottom -->
-    <g class="balloon-gift-box">
-      <rect x="35" y="80" width="50" height="36" rx="4" fill="#9333ea" stroke="#ffffff" stroke-width="2"/>
-      <rect x="55" y="80" width="10" height="36" fill="#f472b6"/>
-      <rect x="30" y="72" width="60" height="11" rx="2" fill="#a855f7" stroke="#ffffff" stroke-width="2"/>
-      <rect x="55" y="72" width="10" height="11" fill="#f472b6"/>
-      <path d="M47 72 C38 60 52 58 57 68 C62 58 76 60 67 72 Z" fill="#f472b6" stroke="#ffffff" stroke-width="1.2"/>
-      <circle cx="57" cy="68" r="3" fill="#ffffff"/>
-    </g>
-    <!-- Balloon String -->
-    <path d="M57 68 Q 62 52 57 38" fill="none" stroke="#e0a96d" stroke-width="2" stroke-dasharray="3 2"/>
-    <!-- Floating Balloon at Top -->
-    <g class="balloon-top-oval">
-      <path d="M57 8 C38 8 28 20 28 34 C28 48 48 60 57 60 C66 60 86 48 86 34 C86 20 76 8 57 8 Z" fill="#c084fc" stroke="#ffffff" stroke-width="2.5"/>
-      <path d="M42 20 Q48 12 55 14" stroke="#ffffff" stroke-width="2.8" fill="none" stroke-linecap="round" opacity="0.8"/>
-      <polygon points="57,60 51,66 63,66" fill="#c084fc" stroke="#ffffff" stroke-width="1"/>
-    </g>
-  </svg>
-</div>
-
 <div class="offline-note" id="offlineNote" data-nosnippet>You're offline — reconnect to create or view wishes.</div>
 <div class="toast-notice" id="toastNotice">Copied to clipboard!</div>
 
@@ -3115,63 +3092,38 @@ function initLivePreviewListeners(){
   updatePreview();
 }
 
-function initBalloonJourneyAnimation(){
-  const balloon = document.getElementById('pageJourneyBalloon');
+function initLiquidPageIntroAnimation(){
   const blackCurtain = document.getElementById('siteBlackCurtain');
-  const createSection = document.getElementById('create');
   const sections = document.querySelectorAll('.reveal-section');
-  if(!balloon) return;
 
-  let targetY = 2400;
-  if(createSection){
-    const createRect = createSection.getBoundingClientRect();
-    targetY = Math.max(600, createRect.top + window.scrollY - 100);
-  } else {
-    targetY = Math.max(600, document.documentElement.scrollHeight - 600);
-  }
-
-  // 1. Initial Page Load / Reload: Full Black Intro Curtain & Slow Balloon Journey Down to Page End
+  // 1. Full Black Curtain Smooth Fade Out on Page Load / Reload
   setTimeout(() => {
     if(blackCurtain){
       blackCurtain.classList.add('fade-out');
     }
 
-    balloon.style.transition = 'top 4.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s ease, opacity 0.4s ease';
-    balloon.style.top = targetY + 'px';
-
-    // Staggered sequential fade-in reveal of page content sections as balloon glides down
+    // Trigger initial hero and top section entrance
     sections.forEach((sec, idx) => {
       setTimeout(() => {
         sec.classList.add('is-revealed');
-      }, 350 + (idx * 300));
+      }, 150 + (idx * 180));
     });
-  }, 120);
+  }, 100);
 
-  // 2. Interactive Scroll Tracking Handler after initial glide
-  let isInitialGlideDone = false;
-  setTimeout(() => {
-    isInitialGlideDone = true;
-  }, 4400);
+  // 2. Smooth Scroll Reveal Handler using IntersectionObserver
+  if('IntersectionObserver' in window){
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-revealed');
+        }
+      });
+    }, { threshold: 0.1 });
 
-  const handleScroll = () => {
-    if(!isInitialGlideDone) return;
-    balloon.style.transition = 'top 0.15s ease-out, transform 0.3s ease';
-    const scrollTop = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const docHeight = document.documentElement.scrollHeight - windowHeight;
-    const scrollRatio = docHeight > 0 ? Math.min(1, Math.max(0, scrollTop / docHeight)) : 0;
-    
-    const startY = 40;
-    const endY = Math.max(startY + 300, targetY);
-    const currentY = startY + (scrollRatio * (endY - startY));
-    balloon.style.top = currentY + 'px';
-
-    sections.forEach(sec => {
-      sec.classList.add('is-revealed');
-    });
-  };
-
-  window.addEventListener('scroll', handleScroll, { passive: true });
+    sections.forEach(sec => observer.observe(sec));
+  } else {
+    sections.forEach(sec => sec.classList.add('is-revealed'));
+  }
 }
 
 window.addEventListener('popstate', routeApp);
@@ -3181,7 +3133,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if(client){ client.auth.onAuthStateChange(() => refreshAuthUI()); }
   initThemeSelector();
   initLivePreviewListeners();
-  initBalloonJourneyAnimation();
+  initLiquidPageIntroAnimation();
   await refreshAuthUI();
   await loadHomepageNeverfade();
   await routeApp();
