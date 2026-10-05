@@ -803,7 +803,10 @@
         <div id="authLoggedIn" style="display:none;">
           <div class="signed-in-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
             <span>Signed in as <strong id="userDisplayName" style="color:var(--white);"></strong> · Spark: <strong id="sparkCount" style="color:var(--white);">0</strong>/1 · Golden: <strong id="goldenCount" style="color:var(--white);">0</strong>/3 · Neverfade: <strong id="neverfadeCount" style="color:var(--white);">0</strong>/1</span>
-            <button class="btn btn-outline btn-small" id="signOutBtn">Sign out</button>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <a href="/history" onclick="navigateTo('/history'); return false;" class="btn btn-solid btn-small" style="font-weight:600; padding:6px 14px;">📜 My Past Wishes</a>
+              <button class="btn btn-outline btn-small" id="signOutBtn">Sign out</button>
+            </div>
           </div>
           <div style="margin-top:12px; padding-top:12px; border-top:1px dashed var(--line); display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             <span style="font-size:0.85rem; font-weight:600; color:var(--grey-muted);">Instagram Profile:</span>
@@ -926,6 +929,20 @@
         </div>
       </div>
 
+    </div>
+  <!-- MY PAST WISHES SECTION ON HOMEPAGE (Visible when logged in) -->
+  <section class="section reveal-section" id="homeHistorySection" style="display:none; padding:48px 0; background:rgba(255,255,255,0.01);">
+    <div class="wrap">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:20px; gap:12px;">
+        <div>
+          <div class="section-title" style="margin-bottom:4px;">My Past Wishes</div>
+          <div class="section-lead" style="margin-bottom:0;">All keepsake wishes created under your account @<span id="homeHistoryUsername"></span></div>
+        </div>
+        <a href="/history" onclick="navigateTo('/history'); return false;" class="btn btn-outline btn-small" style="color:var(--white); border-color:rgba(255,255,255,0.3);">View Full History Dashboard →</a>
+      </div>
+      <div id="homeHistoryGrid" class="history-grid">
+        <div style="color:var(--grey-2);">Loading your past wishes...</div>
+      </div>
     </div>
   </section>
 
@@ -1556,6 +1573,7 @@ async function refreshAuthUI(sessionOverride = null){
       });
     }
     updateUrlPreview();
+    loadHomepageHistory();
   }catch(e){ console.error('Auth refresh failed', e); }
 }
 
@@ -2718,6 +2736,65 @@ async function loadHistoryData(){
       `;
     }).join('');
   }catch(e){ grid.innerHTML = 'Could not load history.'; }
+}
+
+// Load Homepage History Grid
+async function loadHomepageHistory(){
+  const section = document.getElementById('homeHistorySection');
+  const grid = document.getElementById('homeHistoryGrid');
+  const usernameEl = document.getElementById('homeHistoryUsername');
+  if(!section || !grid) return;
+
+  if(!currentUser || !currentProfile || !currentProfile.username){
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  if(usernameEl) usernameEl.textContent = currentProfile.username;
+
+  const client = initDb();
+  if(!client) return;
+
+  try {
+    const { data: wishes } = await client
+      .from('wishes')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+
+    if(!wishes || !wishes.length){
+      grid.innerHTML = '<div style="color:var(--grey-2); padding:24px; text-align:center; background:rgba(255,255,255,0.02); border:1px dashed var(--line); border-radius:8px;">You haven\'t created any wishes yet. Craft your first wish above!</div>';
+      return;
+    }
+
+    grid.innerHTML = wishes.map(w => {
+      const link = (w.tier === 'neverfade') ? `/neverfade/${w.slug}` : `/${w.slug}`;
+      const escapedMsg = (w.message || '').replace(/"/g, '&quot;').replace(/'/g, "\\'");
+      const escapedFrom = (w.from_name || '').replace(/'/g, "\\'");
+      const escapedTo = (w.to_name || '').replace(/'/g, "\\'");
+      return `
+        <div class="history-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:18px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span class="tier-tag" style="background:rgba(212,175,55,0.15); color:#d4af37; border:1px solid rgba(212,175,55,0.4); padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">${w.tier.toUpperCase()} WISH</span>
+              <span style="font-size:0.75rem; color:var(--grey-2);">👁 ${w.views_count || 0} · ❤️ ${w.likes_count || 0}</span>
+            </div>
+            <h4 style="font-size:1.05rem; margin-bottom:6px; color:var(--white);">For ${w.to_name}</h4>
+            <p style="font-size:0.88rem; color:rgba(255,255,255,0.8); line-height:1.4; margin-bottom:12px;">"${w.message}"</p>
+            <div style="font-size:0.78rem; color:var(--grey-2); margin-bottom:14px;">Wisher: <strong>${w.from_name}</strong> (@${w.sender_username}) · ${w.privacy === 'private' ? '🔒 Private' : '🌐 Public'}</div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:auto;">
+            <a href="${link}" onclick="navigateTo('${link}'); return false;" class="btn btn-outline btn-small" style="flex:1; text-align:center; padding:6px 10px; font-size:0.82rem;">View Wish →</a>
+            <button class="btn btn-outline btn-small" onclick="toggleWishPrivacy('${w.id}', '${w.privacy}')" style="padding:6px 10px; font-size:0.82rem;">${w.privacy === 'private' ? '🌐 Make Public' : '🔒 Private'}</button>
+            <button class="btn btn-outline btn-small" onclick="openEditModal('${w.id}', '${escapedFrom}', '${escapedTo}', '${escapedMsg}', '${w.privacy}')" style="padding:6px 8px; font-size:0.82rem;">✏️ Edit</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    console.error('Homepage history load error', e);
+  }
 }
 
 // Edit & Delete Wish Handlers
