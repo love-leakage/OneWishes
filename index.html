@@ -235,15 +235,33 @@
     text-shadow: 0 2px 8px rgba(0,0,0,0.9);
   }
 
+  .neverfade-sender-box {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .neverfade-by-normal {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.75);
+    font-style: normal;
+    text-transform: lowercase;
+    letter-spacing: 0.08em;
+  }
+
   /* Catalina Style Handwritten Font Sender Name */
   .neverfade-handwritten {
     font-family: 'Caveat', 'Satisfy', 'Sacramento', cursive;
-    font-size: clamp(3rem, 7vw, 4.5rem);
+    font-size: clamp(2.8rem, 6.5vw, 4.2rem);
     font-weight: 700;
     color: #fce7b0;
     text-shadow: 0 4px 22px rgba(0, 0, 0, 0.95);
-    margin-top: 4px;
     line-height: 1;
+    display: inline-block;
   }
 
   /* Username Subtitle directly below Calligraphic Sender Name */
@@ -258,16 +276,36 @@
     text-shadow: 0 2px 8px rgba(0,0,0,0.9);
   }
 
+  /* Full Black Intro Curtain Overlay */
+  .site-black-curtain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    z-index: 99998;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 3.2s cubic-bezier(0.25, 1, 0.4, 1);
+  }
+
+  .site-black-curtain.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 3.2s cubic-bezier(0.25, 1, 0.4, 1), visibility 0s 3.2s;
+  }
+
   /* Automatic Traveling Balloon & Section Reveal Animation */
   .page-journey-balloon {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     top: 30px;
-    z-index: 9000;
+    z-index: 99999;
     pointer-events: none;
-    transition: top 2.2s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s ease, opacity 0.4s ease;
-    filter: drop-shadow(0 10px 28px rgba(168, 85, 247, 0.75));
+    transition: top 4.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s ease, opacity 0.4s ease;
+    filter: drop-shadow(0 10px 28px rgba(168, 85, 247, 0.85));
     animation: balloonWiggle 4s ease-in-out infinite;
   }
 
@@ -570,6 +608,9 @@
 </head>
 <body>
 
+<!-- FULL BLACK INTRO CURTAIN OVERLAY -->
+<div class="site-black-curtain" id="siteBlackCurtain"></div>
+
 <!-- FLOATING BALLOON WITH GIFT BOX LOGO AUTOMATIC JOURNEY -->
 <div class="page-journey-balloon" id="pageJourneyBalloon">
   <svg viewBox="0 0 120 150" width="72" height="90">
@@ -653,7 +694,10 @@
             </div>
 
             <div style="margin-top:4px;">
-              <div class="neverfade-handwritten">by <span id="neverfadeSenderName">Sender Name</span></div>
+              <div class="neverfade-sender-box">
+                <span class="neverfade-by-normal">by</span>
+                <span class="neverfade-handwritten" id="neverfadeSenderName">Sender Name</span>
+              </div>
               <div class="neverfade-sender-username-sub" id="neverfadeSenderHandle">@username</div>
             </div>
 
@@ -2086,6 +2130,7 @@ async function loadHomepageNeverfade(){
   };
 
   let activeWish = defaultWish;
+  let activeBookingDate = null;
   const client = initDb();
 
   if(client){
@@ -2099,11 +2144,31 @@ async function loadHomepageNeverfade(){
         const { data: w } = await client.from('wishes').select('*').eq('id', booking.wish_id).maybeSingle();
         if(w && (w.privacy === 'public' || (currentUser && w.user_id === currentUser.id))){
           activeWish = w;
+          activeBookingDate = booking.booking_date;
           if(badgeEl) badgeEl.textContent = `⭐ TODAY'S FEATURED NEVERFADE WISH · ${booking.booking_date}`;
         }
       }
 
-      // 2. If no booked wish today, get latest public Neverfade wish
+      // 2. If no booked wish today, get most recent booked Neverfade wish
+      if(activeWish === defaultWish){
+        const { data: recentBookings } = await client
+          .from('neverfade_bookings')
+          .select('wish_id, booking_date')
+          .order('booking_date', { ascending: false })
+          .limit(1);
+
+        if(recentBookings && recentBookings.length > 0 && recentBookings[0].wish_id){
+          const recBooking = recentBookings[0];
+          const { data: w } = await client.from('wishes').select('*').eq('id', recBooking.wish_id).maybeSingle();
+          if(w && (w.privacy === 'public' || (currentUser && w.user_id === currentUser.id))){
+            activeWish = w;
+            activeBookingDate = recBooking.booking_date;
+            if(badgeEl) badgeEl.textContent = `⭐ FEATURED NEVERFADE WISH · ${recBooking.booking_date}`;
+          }
+        }
+      }
+
+      // 3. Fallback to latest public Neverfade wish
       if(activeWish === defaultWish){
         const { data: latestWishes } = await client
           .from('wishes')
@@ -2123,9 +2188,9 @@ async function loadHomepageNeverfade(){
     }
   }
 
-  currentHomepageNeverfadeSlug = activeWish.slug || activeWish.id || '';
+  currentHomepageNeverfadeSlug = activeBookingDate || activeWish.slug || activeWish.id || '';
   if(linkBtn){
-    const targetUrl = activeWish.slug ? ('/neverfade/' + activeWish.slug) : ('/w/' + activeWish.id);
+    const targetUrl = activeBookingDate ? ('/neverfade/' + activeBookingDate) : (activeWish.slug ? ('/neverfade/' + activeWish.slug) : ('/w/' + activeWish.id));
     linkBtn.href = targetUrl;
     linkBtn.onclick = (e) => {
       e.preventDefault();
@@ -2969,30 +3034,44 @@ function initLivePreviewListeners(){
 
 function initBalloonJourneyAnimation(){
   const balloon = document.getElementById('pageJourneyBalloon');
+  const blackCurtain = document.getElementById('siteBlackCurtain');
   const createSection = document.getElementById('create');
   const sections = document.querySelectorAll('.reveal-section');
   if(!balloon) return;
 
-  let targetY = 2200;
+  let targetY = 2400;
   if(createSection){
     const createRect = createSection.getBoundingClientRect();
-    targetY = Math.max(500, createRect.top + window.scrollY - 80);
+    targetY = Math.max(600, createRect.top + window.scrollY - 100);
+  } else {
+    targetY = Math.max(600, document.documentElement.scrollHeight - 600);
   }
 
-  // 1. Automatic Journey Glide on Page Open
+  // 1. Initial Page Load / Reload: Full Black Intro Curtain & Slow Balloon Journey Down to Page End
   setTimeout(() => {
+    if(blackCurtain){
+      blackCurtain.classList.add('fade-out');
+    }
+
+    balloon.style.transition = 'top 4.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s ease, opacity 0.4s ease';
     balloon.style.top = targetY + 'px';
 
-    // Staggered sequential fade-in reveal of page sections as balloon glides down
+    // Staggered sequential fade-in reveal of page content sections as balloon glides down
     sections.forEach((sec, idx) => {
       setTimeout(() => {
         sec.classList.add('is-revealed');
-      }, 200 + (idx * 300));
+      }, 350 + (idx * 300));
     });
-  }, 150);
+  }, 120);
 
-  // 2. Interactive Scroll Tracking Handler
+  // 2. Interactive Scroll Tracking Handler after initial glide
+  let isInitialGlideDone = false;
+  setTimeout(() => {
+    isInitialGlideDone = true;
+  }, 4400);
+
   const handleScroll = () => {
+    if(!isInitialGlideDone) return;
     balloon.style.transition = 'top 0.15s ease-out, transform 0.3s ease';
     const scrollTop = window.scrollY;
     const windowHeight = window.innerHeight;
