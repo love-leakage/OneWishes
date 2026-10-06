@@ -142,9 +142,176 @@
   .hero-actions {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 16px;
     flex-wrap: wrap;
+  }
+  @media (max-width: 900px) {
+    .hero-actions { justify-content: center; }
+  }
+
+  /* ===== HERO GRID & YOSEMITE ANIMATED WIDGET ===== */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: center;
+    padding: 60px 0 40px;
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+  }
+
+  .yosemite-widget-wrapper {
+    perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .yosemite-widget {
+    width: 100%;
+    max-width: 360px;
+    height: 500px;
+    background: linear-gradient(180deg, #442454 0%, #251433 45%, #0e0714 100%);
+    border-radius: 32px;
+    border: 1px solid rgba(228, 192, 103, 0.35);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 50px rgba(228, 192, 103, 0.15);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+    user-select: none;
+  }
+  .yosemite-widget:hover {
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(228, 192, 103, 0.3);
+  }
+
+  .yw-header {
+    position: relative;
+    z-index: 10;
+    padding: 38px 28px 0;
+    text-align: center;
+    transform: translateZ(40px);
+  }
+  .yw-kicker {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.95;
+  }
+  .yw-title {
+    font-family: 'Fraunces', serif;
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+    text-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  }
+  .yw-desc {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.45;
+    margin-bottom: 22px;
+    padding: 0 6px;
+  }
+
+  .yw-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .yw-btn:hover {
+    background: var(--gold);
+    color: #000;
+    border-color: var(--gold);
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(228, 192, 103, 0.4);
+  }
+  .yw-btn-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+  }
+  .yw-btn:hover .yw-btn-icon {
+    background: #000;
+    color: var(--gold);
+  }
+
+  /* Vector Scene Layers */
+  .yw-scene {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    pointer-events: none;
+  }
+  .yw-aura {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(228, 192, 103, 0.4) 0%, rgba(228, 192, 103, 0) 70%);
+    border-radius: 50%;
+    animation: ywPulse 4s ease-in-out infinite alternate;
+  }
+  @keyframes ywPulse {
+    0% { transform: translateX(-50%) scale(0.85); opacity: 0.5; }
+    100% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+  }
+
+  .yw-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    bottom: 0;
+  }
+
+  .yw-tree-sway {
+    transform-origin: bottom center;
+    animation: ywSway 6s ease-in-out infinite alternate;
+  }
+  @keyframes ywSway {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(2deg); }
+  }
+
+  .yw-star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: ywFloat 6s linear infinite;
+  }
+  @keyframes ywFloat {
+    0% { transform: translateY(0); opacity: 0; }
+    50% { opacity: 0.9; }
+    100% { transform: translateY(-120px); opacity: 0; }
   }
 
   /* ===== CARDS & TIERS ===== */
@@ -376,13 +543,61 @@
     
     <!-- HOME SCREEN -->
     <div id="screen-home" class="screen active">
-      <section class="hero">
-        <span class="hero-tag">Artificial Scarcity Wish Platform</span>
-        <h1>A wish worth sending.</h1>
-        <p>OneWishes limits how many people you can wish, on purpose — so the ones you do wish know exactly what it cost you.</p>
-        <div class="hero-actions">
-          <a href="#create" onclick="scrollToSection('create')" class="btn btn-gold">Write a Wish →</a>
-          <a href="/gallery" onclick="navigateTo('/gallery'); return false;" class="btn btn-outline">Explore Wishes</a>
+      <section class="hero-grid">
+        <div style="text-align:left;">
+          <span class="hero-tag">Artificial Scarcity Wish Platform</span>
+          <h1>A wish worth sending.</h1>
+          <p style="margin:0 0 32px 0;">OneWishes limits how many people you can wish, on purpose — so the ones you do wish know exactly what it cost you.</p>
+          <div class="hero-actions">
+            <a href="#create" onclick="scrollToSection('create')" class="btn btn-gold">Write a Wish →</a>
+            <a href="/gallery" onclick="navigateTo('/gallery'); return false;" class="btn btn-outline">Explore Wishes</a>
+          </div>
+        </div>
+
+        <!-- YOSEMITE STYLE INTERACTIVE ANIMATED WIDGET -->
+        <div class="yosemite-widget-wrapper">
+          <div class="yosemite-widget" id="yosemiteWidget" onclick="scrollToSection('create')">
+            <!-- Floating Stars -->
+            <div class="yw-star" style="width:2px; height:2px; top:40%; left:20%; animation-delay:0s;"></div>
+            <div class="yw-star" style="width:3px; height:3px; top:50%; left:75%; animation-delay:2s;"></div>
+            <div class="yw-star" style="width:2px; height:2px; top:35%; left:60%; animation-delay:4s;"></div>
+
+            <!-- Header Content -->
+            <div class="yw-header">
+              <div class="yw-kicker">DISCOVER ONEWISHES</div>
+              <div class="yw-title">Yosemite</div>
+              <div class="yw-desc">Embark on an immersive hike through the breathtaking hills of Yosemite.</div>
+              <div class="yw-btn">
+                <span class="yw-btn-icon">▶</span>
+                <span>Start Experience</span>
+              </div>
+            </div>
+
+            <!-- Vector Mountain & Tree Scene -->
+            <div class="yw-scene">
+              <div class="yw-aura"></div>
+              <svg class="yw-svg" viewBox="0 0 360 300" preserveAspectRatio="none">
+                <!-- Distant Mountain Ranges -->
+                <path d="M0 300 L0 180 C50 140 100 160 150 120 C200 150 260 110 320 170 L360 150 L360 300 Z" fill="#2d173d"/>
+                <path d="M0 300 L0 210 C80 170 140 220 220 160 C280 180 330 160 360 200 L360 300 Z" fill="#200e2e"/>
+
+                <!-- Pine Forest Midground -->
+                <g class="yw-tree-sway">
+                  <polygon points="20,300 0,160 40,300" fill="#14071e"/>
+                  <polygon points="45,300 25,180 65,300" fill="#1a0b27"/>
+                  <polygon points="70,300 50,195 90,300" fill="#14071e"/>
+
+                  <polygon points="340,300 360,150 320,300" fill="#14071e"/>
+                  <polygon points="315,300 335,170 295,300" fill="#1a0b27"/>
+                  <polygon points="290,300 310,190 270,300" fill="#14071e"/>
+                </g>
+
+                <!-- Warm Sunset Valley Floor -->
+                <path d="M0 300 L0 260 Q 180 230 360 260 L360 300 Z" fill="#f8b195" opacity="0.25"/>
+                <path d="M0 300 L0 275 Q 180 250 360 275 L360 300 Z" fill="#f8b195" opacity="0.4"/>
+              </svg>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -587,7 +802,27 @@
     setupAuthListener();
     handleRouting();
     updatePreview();
+    initYosemiteWidget();
   });
+
+  // Yosemite Widget 3D Parallax Tilt
+  function initYosemiteWidget() {
+    const card = document.getElementById('yosemiteWidget');
+    if(!card) return;
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -14;
+      const rotateY = ((x - centerX) / centerX) * 14;
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    });
+  }
 
   // Auth Handling
   function setupAuthListener() {
