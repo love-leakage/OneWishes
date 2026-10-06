@@ -1,9 +1,9 @@
 -- ==========================================
--- ONEWISHES - COMPLETE DATABASE SCHEMA UPGRADE
--- Execute this script in Supabase SQL Editor
+-- ONEWISHES - FRESH DATABASE SCHEMA & DATA RESET
+-- Execute this script in Supabase SQL Editor to clear all data & rebuild tables
 -- ==========================================
 
--- 1. CLEANUP (Drop existing objects if any)
+-- 1. DROP EXISTING TABLES & FUNCTIONS (COMPLETE DATA RESET)
 DROP FUNCTION IF EXISTS public.claim_golden_wish() CASCADE;
 DROP FUNCTION IF EXISTS public.increment_wish_views(UUID) CASCADE;
 DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
@@ -51,7 +51,7 @@ CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 4. WISHES TABLE (Stores Spark, Golden, Neverfade wishes with Media, Privacy & Views Count)
+-- 4. WISHES TABLE (Stores Spark, Golden, Neverfade wishes with Media, Privacy & Views/Likes)
 CREATE TABLE public.wishes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -116,7 +116,6 @@ BEGIN
         RETURN FALSE;
     END IF;
 
-    -- Lock the user's profile row
     SELECT golden_used INTO current_used
     FROM public.profiles
     WHERE id = auth.uid()
