@@ -22,8 +22,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing toEmail parameter' });
   }
 
-  const defaultKey = Buffer.from('cmVfZVdydnhGNmFfRGFXOHZOY0dMc016WGNrQ3pwMnN2Q0tD', 'base64').toString('utf-8');
-  const RESEND_API_KEY = process.env.RESEND_API_KEY || defaultKey;
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  if (!RESEND_API_KEY) {
+    return res.status(500).json({ error: 'RESEND_API_KEY environment variable is not configured.' });
+  }
 
   try {
     let subject = '';
