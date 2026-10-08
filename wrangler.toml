@@ -5,6 +5,11 @@ compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 preview_urls = true
 
+routes = [
+  { pattern = "onewishes.com", custom_domain = true },
+  { pattern = "www.onewishes.com", custom_domain = true }
+]
+
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
