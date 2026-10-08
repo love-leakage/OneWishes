@@ -17,13 +17,13 @@
 - Maintain responsive behavior at the 860px breakpoint.
 - Include loading and error states for anything that talks to Supabase.
 
-## Security
-- Never put a Supabase *service role* key or any secret key in this file —
-  only the publishable/anon key belongs here.
-- Any new table needs an explicit RLS policy before going live — no table
-  should be created "open" by default.
-- Scarcity rules (Golden Wish count, Spotlight date) must be enforced with
-  database constraints, never client-side only.
+## Security & API Key Governance
+- **Zero Hardcoded Secrets**: NEVER hardcode API keys, secret tokens, private keys, or passwords anywhere in source code or Git commits — whether in plain text or obfuscated (e.g. base64, hex, XOR).
+- **Server Environment Variables Only**: All server-side API keys (e.g. `RESEND_API_KEY`, `R2_SECRET_ACCESS_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) MUST strictly be read from environment variables (`process.env.KEY_NAME`).
+- **Client-Side Limits**: Only public/publishable keys (such as Supabase Anon Key) protected by Row Level Security (RLS) policies are permitted in client-side code (`index.html`).
+- **Git Safeguards**: All `.env*` files containing credentials must be listed in `.gitignore` and never committed to version control.
+- **Database RLS Enforcement**: Any new table needs explicit RLS policies before going live — no table should be created open by default.
+- **Server-Side Scarcity Enforcement**: Scarcity rules (Golden Wish count, Spotlight date) must be enforced with database constraints/RPC, never client-side only.
 
 ## Infra
 - Keep every service (Supabase, Vercel, Cloudflare R2) on free tier unless
