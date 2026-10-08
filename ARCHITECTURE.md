@@ -1,52 +1,39 @@
-# Architecture
+# Architecture Overview
+
+For the detailed Tamil/English Master Blueprint, see [PROJECT_BLUEPRINT.md](file:///c:/Users/acer/Downloads/files/PROJECT_BLUEPRINT.md).
 
 ## Frontend
-Single static `index.html` (HTML/CSS/vanilla JS) — no framework, no build
-step. Chosen for simplicity and free static hosting.
+Next.js (React App Router) with Tailwind CSS and Framer Motion for smooth micro-animations.
 
-## Backend
-None (serverless) — the frontend talks directly to Supabase using the
-publishable/anon key, protected by Row Level Security (RLS) policies.
+## Serverless Backend & API Routes
+Next.js Serverless API Routes (`/api/*`) deployed on Vercel / Cloudflare Pages Edge network.
 
-## Database
-Supabase (PostgreSQL), project `onewishes`, region ap-south-1 (Mumbai).
+## Database & Auth
+Supabase (PostgreSQL), project `onewishes`, with Supabase Auth (Email OTP Magic Link & Google OAuth) and Row Level Security (RLS).
 
 ## File Storage
-Cloudflare R2 (photos/video for wishes) — chosen over Supabase Storage to
-keep media traffic off Supabase's free-tier bandwidth limit, and over AWS S3
-for zero egress fees.
+Cloudflare R2 Object Storage (`onewishes-media`) — zero egress fees for uploaded images and media.
 
-## Authentication
-Not yet implemented. Required before Golden Wish limits can be enforced
-per-identity rather than per-browser. Planned: Supabase Auth with phone OTP.
+## Transactional Emails
+Resend API (`welcome@onewishes.com`) integrated into serverless endpoint `/api/send-email.js` for automated welcome and wish notification emails.
 
-## Hosting / Deployment
-Vercel, deployed directly (not yet connected to GitHub — see DECISIONS.md).
+## Payment Gateway
+Razorpay SDK integration for UPI, Credit/Debit Cards, and Netbanking for Spotlight date bookings and premium features.
 
-## Domain
-onewishes.com (purchased via Hostinger, DNS to be pointed at Vercel).
+## Hosting & DNS
+Vercel / Cloudflare Pages connected to GitHub `main` branch with auto-deploy to custom domain `onewishes.com`.
 
 ## Data Flow
 ```
 User's browser
-   → index.html (static, served by Vercel)
-   → Supabase client (JS, anon key)
-       → PostgreSQL (wishes table, RLS-protected)
-   → Cloudflare R2 (media uploads, once added)
+   → Next.js Frontend (Tailwind + Framer Motion)
+   → Serverless API Routes (/api/*)
+       → Supabase (PostgreSQL + RLS + Auth)
+       → Cloudflare R2 (Media Storage)
+       → Resend API (Emails)
+       → Razorpay API (Payments)
 ```
 
-## Key Tables
-- `wishes` — id, tier, from_name, to_name, message, created_at
-  - RLS: anyone can INSERT, anyone can SELECT by id (needed for public
-    shareable links)
-- `spotlight_bookings` (planned) — date (UNIQUE), wish_id
-- `profiles` (planned, needs auth) — id, phone, golden_used (int, max 3)
-
-## Architectural Rules
-- No secrets in frontend code beyond the Supabase *publishable* key, which
-  is safe by design (protected by RLS, not a secret).
-- Scarcity limits (Golden Wish count, Spotlight date uniqueness) must be
-  enforced by database constraints/atomic SQL, never by client-side JS or
-  localStorage alone.
-- Keep the site a single static file for as long as possible — only
-  introduce a framework/build step if a feature genuinely requires it.
+## Key Architectural Rules
+- Zero hardcoded secrets in frontend or backend code. All API keys (`RESEND_API_KEY`, `R2_SECRET_ACCESS_KEY`) must strictly come from environment variables.
+- Scarcity rules (Golden Wish count max 3, Spotlight date uniqueness 1 per day) must be enforced server-side via PostgreSQL constraints & RPC functions.
