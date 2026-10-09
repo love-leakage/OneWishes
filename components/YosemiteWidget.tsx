@@ -51,58 +51,56 @@ export const YosemiteWidget: React.FC<{ onStartClick?: () => void }> = ({ onStar
         }}
         whileHover={{ scale: 1.03 }}
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-        className="relative w-full max-w-[360px] h-[500px] rounded-[32px] overflow-hidden border border-indigo-500/30 bg-gradient-to-b from-[#442454] via-[#251433] to-[#0e0714] shadow-2xl shadow-purple-950/60 cursor-pointer group"
+        className="relative w-full max-w-[360px] h-[500px] bg-black border border-white shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] cursor-pointer group overflow-hidden"
       >
-        {/* Floating Stars */}
-        <div className="absolute top-[30%] left-[20%] w-1 h-1 bg-white rounded-full animate-ping opacity-75" />
-        <div className="absolute top-[45%] left-[75%] w-1.5 h-1.5 bg-amber-300 rounded-full animate-pulse" />
-        <div className="absolute top-[25%] left-[65%] w-1 h-1 bg-purple-300 rounded-full animate-bounce" />
+        {/* Floating Particles */}
+        <div className="absolute top-[30%] left-[20%] w-1 h-1 bg-white animate-ping opacity-75" />
+        <div className="absolute top-[45%] left-[75%] w-1.5 h-1.5 bg-gray-400 animate-pulse" />
+        <div className="absolute top-[25%] left-[65%] w-1 h-1 bg-white animate-bounce" />
 
         {/* Content Header */}
         <div className="relative z-10 pt-10 px-7 text-center translate-z-10">
-          <span className="block text-[11px] font-bold tracking-[0.22em] text-amber-400 uppercase mb-2">
+          <span className="block text-[11px] font-bold tracking-widest text-gray-500 uppercase mb-4">
             DISCOVER ONEWISHES
           </span>
-          <h2 className="font-serif text-4xl font-semibold text-white leading-tight mb-2 tracking-tight drop-shadow-md">
+          <h2 className="font-serif text-4xl font-bold text-white leading-tight mb-4 tracking-tighter uppercase">
             Yosemite
           </h2>
-          <p className="text-xs text-slate-300/80 leading-relaxed mb-6 px-2">
+          <p className="text-xs text-gray-400 leading-relaxed mb-8 px-2 uppercase tracking-widest">
             Embark on an immersive hike through the breathtaking hills of Yosemite.
           </p>
 
-          <button className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white font-semibold text-xs tracking-wider shadow-lg hover:bg-amber-400 hover:text-black hover:border-amber-400 transition-all group-hover:scale-105">
-            <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] group-hover:bg-black group-hover:text-amber-400">
-              <Play className="w-3 h-3 fill-current ml-0.5" />
-            </span>
+          <button className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition-all group-hover:scale-105">
+            <Play className="w-4 h-4 fill-current" />
             <span>Start Experience</span>
           </button>
         </div>
 
         {/* Vector Mountain & Tree Scene */}
-        <div className="absolute bottom-0 left-0 w-full h-[60%] pointer-events-none">
+        <div className="absolute bottom-0 left-0 w-full h-[60%] pointer-events-none grayscale opacity-80">
           {/* Radial Sun Aura */}
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-52 h-52 bg-gradient-to-r from-amber-500/30 to-rose-500/20 rounded-full blur-2xl animate-pulse" />
+          <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-52 h-52 bg-white/10 rounded-full blur-2xl animate-pulse" />
 
           {/* SVG Vector Layer */}
-          <svg className="w-full h-full absolute bottom-0 block" viewBox="0 0 360 300" preserveAspectRatio="none">
+          <svg className="w-full h-full absolute bottom-0 block grayscale" viewBox="0 0 360 300" preserveAspectRatio="none">
             {/* Distant Mountain Ranges */}
-            <path d="M0 300 L0 180 C50 140 100 160 150 120 C200 150 260 110 320 170 L360 150 L360 300 Z" fill="#2d173d" />
-            <path d="M0 300 L0 210 C80 170 140 220 220 160 C280 180 330 160 360 200 L360 300 Z" fill="#200e2e" />
+            <path d="M0 300 L0 180 C50 140 100 160 150 120 C200 150 260 110 320 170 L360 150 L360 300 Z" fill="#222222" />
+            <path d="M0 300 L0 210 C80 170 140 220 220 160 C280 180 330 160 360 200 L360 300 Z" fill="#111111" />
 
             {/* Pine Forest Midground */}
             <g className="origin-bottom animate-pulse">
-              <polygon points="20,300 0,160 40,300" fill="#14071e" />
-              <polygon points="45,300 25,180 65,300" fill="#1a0b27" />
-              <polygon points="70,300 50,195 90,300" fill="#14071e" />
+              <polygon points="20,300 0,160 40,300" fill="#333333" />
+              <polygon points="45,300 25,180 65,300" fill="#444444" />
+              <polygon points="70,300 50,195 90,300" fill="#333333" />
 
-              <polygon points="340,300 360,150 320,300" fill="#14071e" />
-              <polygon points="315,300 335,170 295,300" fill="#1a0b27" />
-              <polygon points="290,300 310,190 270,300" fill="#14071e" />
+              <polygon points="340,300 360,150 320,300" fill="#333333" />
+              <polygon points="315,300 335,170 295,300" fill="#444444" />
+              <polygon points="290,300 310,190 270,300" fill="#333333" />
             </g>
 
-            {/* Warm Sunset Valley Floor */}
-            <path d="M0 300 L0 260 Q 180 230 360 260 L360 300 Z" fill="#f8b195" fillOpacity="0.25" />
-            <path d="M0 300 L0 275 Q 180 250 360 275 L360 300 Z" fill="#f8b195" fillOpacity="0.4" />
+            {/* Ground */}
+            <path d="M0 300 L0 260 Q 180 230 360 260 L360 300 Z" fill="#ffffff" fillOpacity="0.1" />
+            <path d="M0 300 L0 275 Q 180 250 360 275 L360 300 Z" fill="#ffffff" fillOpacity="0.2" />
           </svg>
         </div>
       </motion.div>

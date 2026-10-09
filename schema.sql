@@ -7,6 +7,7 @@
 DROP FUNCTION IF EXISTS public.claim_golden_wish() CASCADE;
 DROP FUNCTION IF EXISTS public.increment_wish_views(UUID) CASCADE;
 DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
+DROP TABLE IF EXISTS public.onewish_bookings CASCADE;
 DROP TABLE IF EXISTS public.neverfade_bookings CASCADE;
 DROP TABLE IF EXISTS public.spotlight_bookings CASCADE;
 DROP TABLE IF EXISTS public.wishes CASCADE;
@@ -18,6 +19,7 @@ CREATE TABLE public.profiles (
     email TEXT,
     username TEXT UNIQUE,
     instagram_handle TEXT,
+    avatar_url TEXT,
     golden_used INTEGER NOT NULL DEFAULT 0 CHECK (golden_used >= 0 AND golden_used <= 3),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -40,8 +42,8 @@ CREATE POLICY "Users can insert own profile"
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, email, golden_used)
-    VALUES (NEW.id, NEW.email, 0)
+    INSERT INTO public.profiles (id, email, avatar_url, golden_used)
+    VALUES (NEW.id, NEW.email, NEW.raw_user_meta_data->>'avatar_url', 0)
     ON CONFLICT (id) DO NOTHING;
     RETURN NEW;
 END;
@@ -51,12 +53,12 @@ CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 4. WISHES TABLE (Stores Spark, Golden, Neverfade wishes with Media, Privacy & Views/Likes)
+-- 4. WISHES TABLE (Stores Golden, Onewish wishes with Media, Privacy & Views/Likes)
 CREATE TABLE public.wishes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     sender_username TEXT NOT NULL,
-    tier TEXT NOT NULL CHECK (tier IN ('spark', 'golden', 'neverfade')),
+    tier TEXT NOT NULL CHECK (tier IN ('golden', 'onewish')),
     from_name TEXT NOT NULL,
     to_name TEXT NOT NULL,
     message TEXT NOT NULL,
@@ -87,8 +89,8 @@ CREATE POLICY "Users can delete own wishes"
     ON public.wishes FOR DELETE
     USING (auth.uid() = user_id);
 
--- 5. NEVERFADE BOOKINGS TABLE (Atomic 1-slot-per-day enforcement)
-CREATE TABLE public.neverfade_bookings (
+-- 5. ONEWISH BOOKINGS TABLE (Atomic 1-slot-per-day enforcement)
+CREATE TABLE public.onewish_bookings (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     booking_date DATE NOT NULL UNIQUE,
     wish_id UUID NOT NULL REFERENCES public.wishes(id) ON DELETE CASCADE,
@@ -96,14 +98,14 @@ CREATE TABLE public.neverfade_bookings (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE public.neverfade_bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.onewish_bookings ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public can view neverfade bookings"
-    ON public.neverfade_bookings FOR SELECT
+CREATE POLICY "Public can view onewish bookings"
+    ON public.onewish_bookings FOR SELECT
     USING (true);
 
-CREATE POLICY "Authenticated users can book neverfade date"
-    ON public.neverfade_bookings FOR INSERT
+CREATE POLICY "Authenticated users can book onewish date"
+    ON public.onewish_bookings FOR INSERT
     WITH CHECK (auth.uid() = user_id);
 
 -- 6. ATOMIC GOLDEN WISH CLAIM RPC
@@ -142,3 +144,4 @@ BEGIN
     WHERE id = target_wish_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+

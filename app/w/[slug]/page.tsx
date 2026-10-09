@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { Heart, Share2, Sparkles, ArrowRight } from 'lucide-react';
+import { Heart, Share2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface Wish {
@@ -60,7 +60,7 @@ export default function ViewWishPage() {
 
   if (loading) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-32 text-center text-slate-400 text-sm">
+      <div className="max-w-xl mx-auto px-4 py-32 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
         Unsealing wish letter...
       </div>
     );
@@ -69,69 +69,69 @@ export default function ViewWishPage() {
   if (!wish) {
     return (
       <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-        <h2 className="font-serif text-3xl font-bold text-white">This letter never arrived</h2>
-        <p className="text-slate-400 text-sm">The wish link may have expired or was typed incorrectly.</p>
-        <Link href="/" className="inline-block px-6 py-3 rounded-xl bg-amber-400 text-black font-bold text-xs">
-          Return to Home →
+        <h2 className="font-serif text-4xl font-bold text-white uppercase tracking-tighter">This letter never arrived</h2>
+        <p className="text-gray-400 text-sm uppercase tracking-widest">The wish link may have expired or was typed incorrectly.</p>
+        <Link href="/" className="inline-block px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors">
+          Return to Home
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16 space-y-8">
+    <div className="max-w-3xl mx-auto px-4 py-24 space-y-12">
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="p-8 sm:p-12 rounded-3xl bg-[#0f172a] border border-amber-500/30 shadow-2xl space-y-8 relative overflow-hidden"
+        className="p-10 sm:p-16 border border-white bg-black shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] space-y-10 relative overflow-hidden"
       >
-        <div className="flex items-center justify-between">
-          <div className="text-xs font-bold tracking-widest text-amber-400 uppercase">
+        <div className="flex items-center justify-between border-b border-white/20 pb-6">
+          <div className="text-sm font-bold tracking-widest text-gray-400 uppercase">
             TO: {wish.to_name.toUpperCase()}
           </div>
-          <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-amber-300 text-[10px] font-bold uppercase tracking-wider">
-            {wish.tier} Wish
+          <span className="px-4 py-1.5 bg-white text-black text-[10px] font-bold uppercase tracking-widest">
+            {wish.tier}
           </span>
         </div>
 
-        <p className="font-serif text-2xl sm:text-3xl text-white leading-relaxed italic">
+        <p className="font-serif text-2xl sm:text-4xl text-white leading-loose uppercase italic tracking-wide">
           "{wish.message}"
         </p>
 
         {wish.media_url && (
-          <div className="rounded-2xl overflow-hidden border border-slate-800">
-            <img src={wish.media_url} alt="Wish Media" className="w-full h-auto max-h-[400px] object-cover" />
+          <div className="border border-white/20 p-2">
+            <img src={wish.media_url} alt="Wish Media" className="w-full h-auto max-h-[500px] object-cover grayscale" />
           </div>
         )}
 
-        <div className="pt-6 border-t border-slate-800 flex items-center justify-between">
-          <div className="text-sm text-slate-300 italic">— With love, {wish.from_name}</div>
+        <div className="pt-8 mt-8 border-t border-white/20 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="text-sm text-white font-bold uppercase tracking-widest">FROM: {wish.from_name}</div>
 
           <button
             onClick={handleLike}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-rose-500/50 text-rose-400 text-xs font-semibold transition-all"
+            className="flex items-center gap-3 px-6 py-3 border border-white/20 hover:border-white hover:bg-white hover:text-black text-white text-xs font-bold uppercase tracking-widest transition-all"
           >
             <Heart className="w-4 h-4 fill-current" />
-            <span>{likes}</span>
+            <span>{likes} LIKES</span>
           </button>
         </div>
       </motion.div>
 
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-12">
         <button
           onClick={handleCopyLink}
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white font-semibold text-xs hover:border-slate-700 transition-colors"
+          className="inline-flex items-center gap-3 px-8 py-4 border border-white/20 hover:border-white text-white font-bold text-xs uppercase tracking-widest transition-colors w-full sm:w-auto justify-center"
         >
-          <Share2 className="w-4 h-4 text-amber-400" />
-          <span>{copied ? 'Link Copied!' : 'Copy Wish Link'}</span>
+          <Share2 className="w-4 h-4 text-white" />
+          <span>{copied ? 'LINK COPIED' : 'COPY LINK'}</span>
         </button>
 
         <Link
           href="/#create-section"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold text-xs hover:scale-105 transition-transform"
+          className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors w-full sm:w-auto"
         >
-          <span>Write Your Own Wish</span>
+          <span>Write Your Own</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

@@ -44,9 +44,8 @@ export default async function handler(req, res) {
           <div style="border-top:1px solid #e0e0e0; margin:24px 0; padding-top:20px;">
             <h3 style="font-size:14px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em; color:#5c5c58;">Your Wish Allowance:</h3>
             <ul style="font-size:14px; color:#0a0a0a; line-height:1.8; padding-left:20px;">
-              <li><strong>Spark Wish:</strong> Unlimited & Free</li>
               <li><strong>Golden Wish:</strong> 3 per lifetime (for the people who defined your life)</li>
-              <li><strong>Neverfade Wish:</strong> 1 slot per date worldwide</li>
+              <li><strong>Onewish:</strong> 1 slot per date worldwide</li>
             </ul>
           </div>
           
@@ -54,12 +53,12 @@ export default async function handler(req, res) {
         </div>
       `;
     } else if (type === 'wish') {
-      subject = `Your ${(tier || 'Spark').toUpperCase()} Wish for ${toName || 'someone special'} is live!`;
+      subject = `Your ${(tier || 'Golden').toUpperCase()} Wish for ${toName || 'someone special'} is live!`;
       html = `
         <div style="font-family:'Inter',Arial,sans-serif; max-width:540px; margin:0 auto; padding:32px; border:2px solid #0a0a0a; background:#fafaf8; color:#0a0a0a;">
           <h1 style="font-family:Georgia,serif; font-size:26px; font-weight:900; margin-bottom:12px; letter-spacing:-0.02em;">ONEWISHES</h1>
           <p style="font-size:16px; color:#5c5c58; line-height:1.6;">Hello <strong>${fromName || 'Wisher'}</strong>,</p>
-          <p style="font-size:15px; color:#0a0a0a; line-height:1.6;">Your <strong>${(tier || 'Spark').toUpperCase()}</strong> wish for <strong>${toName || 'your loved one'}</strong> is live on OneWishes!</p>
+          <p style="font-size:15px; color:#0a0a0a; line-height:1.6;">Your <strong>${(tier || 'Golden').toUpperCase()}</strong> wish for <strong>${toName || 'your loved one'}</strong> is live on OneWishes!</p>
           <div style="margin:24px 0; padding:16px; background:#ffffff; border:1px solid #e0e0e0; word-break:break-all;">
             <a href="${link || 'https://onewishes.com'}" style="color:#0a0a0a; font-weight:600; font-size:15px;">${link || 'https://onewishes.com'}</a>
           </div>

@@ -38,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
-      <body className="bg-[#020617] text-white flex flex-col min-h-screen">
+      <body className="bg-black text-white flex flex-col min-h-screen selection:bg-white selection:text-black">
         <Navbar />
         <main className="flex-1">
           {children}
