@@ -13,6 +13,7 @@ export default function HomePage() {
   const [message, setMessage] = useState('');
   const [fromName, setFromName] = useState('');
   const [mediaUrl, setMediaUrl] = useState('');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaType, setMediaType] = useState<'image' | 'video' | null>(null);
   const [privacy, setPrivacy] = useState('public');
   const [bookingDate, setBookingDate] = useState('');
@@ -65,6 +66,29 @@ export default function HomePage() {
       }
     }
 
+    let finalMediaUrl = mediaUrl || null;
+
+    if (mediaFile) {
+      setStatusMsg('Uploading media to Cloudflare R2...');
+      const formData = new FormData();
+      formData.append('file', mediaFile);
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const resData = await res.json();
+        if (resData.url) {
+          finalMediaUrl = resData.url;
+        } else {
+          setStatusMsg('Media upload failed.');
+          return;
+        }
+      } catch (err) {
+        setStatusMsg('Media upload error.');
+        return;
+      }
+    }
+
+    setStatusMsg('Saving your wish...');
+
     const slug = Math.random().toString(36).substring(2, 9);
     const wishData = {
       user_id: session.user.id,
@@ -74,7 +98,7 @@ export default function HomePage() {
       to_name: toName || (toUsername ? '' : 'Someone Special'),
       to_username: toUsername ? toUsername.replace('@', '') : null,
       message: message || 'May your path be clear...',
-      media_url: mediaUrl || null,
+      media_url: finalMediaUrl,
       media_type: mediaType,
       privacy,
       slug,
@@ -109,6 +133,7 @@ export default function HomePage() {
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setMediaFile(file);
       const url = URL.createObjectURL(file);
       setMediaUrl(url);
       setMediaType(file.type.startsWith('video/') ? 'video' : 'image');
