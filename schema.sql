@@ -61,6 +61,7 @@ CREATE TABLE public.wishes (
     tier TEXT NOT NULL CHECK (tier IN ('golden', 'onewish')),
     from_name TEXT NOT NULL,
     to_name TEXT NOT NULL,
+    to_username TEXT,
     message TEXT NOT NULL,
     media_url TEXT,
     media_type TEXT CHECK (media_type IN ('image', 'video', null)),

@@ -48,3 +48,16 @@
 ## Phase 6: Rebrand
 - [x] Decide final name: ONEWISHES (domain: onewishes.com)
 - [x] Update all UI copy, title tags, auxiliary files, and docs to ONEWISHES
+
+## Phase 7: UI Overhaul & Profile System
+- [ ] UI Redesign: Implement Kinetic Typography & Text Masking style. Use only the logo's object for branding and animate it.
+- [ ] User Onboarding: First-time sign-in requires users to create a unique username.
+- [ ] User Profile UI: Show ONLY the profile image initially, NO name.
+- [ ] Instagram Integration: Allow users to link their Instagram profile in their OneWishes profile. Add redirects to Instagram on clicking.
+- [ ] Wish Creation (Sender): Allow sending wishes using the receiver's unique username or name.
+- [ ] Media Support: Add image and video support to wishes, making them visible in the preview.
+- [ ] Onewish Link Generation: Onewish links must include the booked date (e.g. `onewishes.com/[booked-date]`).
+- [ ] Onewish Homepage Display: The homepage must exclusively display the Onewish of the current day.
+- [ ] Likes: Add a like option directly when clicking on a wish.
+- [ ] Profile Redirects: Clicking a receiver or sender username anywhere redirects to `onewishes.com/[username]`.
+- [ ] Golden Wish Link: Golden wish links must format as `onewishes.com/golden/[username]`.

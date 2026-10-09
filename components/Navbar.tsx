@@ -77,16 +77,15 @@ export const Navbar = () => {
         <div className="hidden md:flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/20 bg-white/5">
+              <Link href={`/${user.user_metadata?.username || user.email?.split('@')[0]}`} className="block border border-white/20 p-1 rounded-full hover:border-white transition-all">
                 {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full" />
+                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-8 h-8 rounded-full grayscale hover:grayscale-0 transition-all" />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center font-bold text-xs">
-                    {user.email?.charAt(0).toUpperCase()}
+                  <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-xs uppercase">
+                    {(user.user_metadata?.username || user.email?.charAt(0))?.substring(0, 1)}
                   </div>
                 )}
-                <span className="text-sm font-medium text-white">{user.user_metadata?.full_name || user.email?.split('@')[0]}</span>
-              </div>
+              </Link>
               <button onClick={handleLogout} className="text-gray-400 hover:text-white transition-colors" title="Log Out">
                 <LogOut className="w-5 h-5" />
               </button>
@@ -125,12 +124,15 @@ export const Navbar = () => {
           ))}
           {user ? (
             <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                {user.user_metadata?.avatar_url && (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-8 h-8 rounded-full" />
+              <Link href={`/${user.user_metadata?.username || user.email?.split('@')[0]}`} className="block border border-white/20 p-1 rounded-full hover:border-white transition-all">
+                {user.user_metadata?.avatar_url ? (
+                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-10 h-10 rounded-full grayscale hover:grayscale-0 transition-all" />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold text-xs uppercase">
+                    {(user.user_metadata?.username || user.email?.charAt(0))?.substring(0, 1)}
+                  </div>
                 )}
-                <span className="text-white font-medium">{user.user_metadata?.full_name || user.email}</span>
-              </div>
+              </Link>
               <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="text-gray-400 hover:text-white">
                 <LogOut className="w-6 h-6" />
               </button>
