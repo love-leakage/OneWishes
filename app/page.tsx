@@ -70,15 +70,19 @@ export default function HomePage() {
 
     if (mediaFile) {
       setStatusMsg('Uploading media to Cloudflare R2...');
-      const formData = new FormData();
-      formData.append('file', mediaFile);
       try {
-        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const res = await fetch(`/api/upload?filename=${encodeURIComponent(mediaFile.name)}&type=${encodeURIComponent(mediaFile.type)}`, {
+          method: 'POST',
+          body: mediaFile,
+          headers: {
+            'Content-Type': mediaFile.type
+          }
+        });
         const resData = await res.json();
         if (resData.url) {
           finalMediaUrl = resData.url;
         } else {
-          setStatusMsg('Media upload failed.');
+          setStatusMsg(`Media upload failed: ${resData.error || 'Unknown error'}`);
           return;
         }
       } catch (err) {

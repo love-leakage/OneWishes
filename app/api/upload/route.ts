@@ -12,23 +12,24 @@ const S3 = new S3Client({
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const file = formData.get('file') as File;
+    const filename = req.nextUrl.searchParams.get('filename') || 'upload.png';
+    const contentType = req.nextUrl.searchParams.get('type') || 'application/octet-stream';
+    
+    // Read raw body to avoid OpenNext formData fs.readFile error
+    const buffer = Buffer.from(await req.arrayBuffer());
 
-    if (!file) {
+    if (buffer.length === 0) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
-
-    const buffer = Buffer.from(await file.arrayBuffer());
     
-    const ext = file.name.split('.').pop() || 'png';
+    const ext = filename.split('.').pop() || 'png';
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
     
     await S3.send(new PutObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME!,
       Key: fileName,
       Body: buffer,
-      ContentType: file.type,
+      ContentType: contentType,
     }));
 
     const publicUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${fileName}`;
@@ -37,6 +38,6 @@ export async function POST(req: NextRequest) {
 
   } catch (error: any) {
     console.error('R2 Upload Error:', error);
-    return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
+    return NextResponse.json({ error: error.message || String(error) }, { status: 500 });
   }
 }
