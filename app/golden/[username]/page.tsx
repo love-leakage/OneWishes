@@ -21,7 +21,7 @@ export default function GoldenWishPage() {
       const { data } = await supabase
         .from('wishes')
         .select('*')
-        .eq('to_username', username)
+        .or(`to_username.eq.${username},slug.eq.${username}`)
         .eq('tier', 'golden')
         .order('created_at', { ascending: false })
         .limit(1)

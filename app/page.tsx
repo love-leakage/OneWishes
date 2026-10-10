@@ -113,9 +113,15 @@ export default function HomePage() {
 
     if (selectedTier === 'onewish') {
       const dateVal = bookingDate || new Date().toISOString().split('T')[0];
-      await supabase.from('onewish_bookings').insert([
+      const { error: bookingErr } = await supabase.from('onewish_bookings').insert([
         { booking_date: dateVal, wish_id: data.id, user_id: session.user.id }
       ]);
+      
+      if (bookingErr) {
+        await supabase.from('wishes').delete().eq('id', data.id);
+        setStatusMsg('Sorry, this date is already booked! Choose another date.');
+        return;
+      }
     }
 
     setStatusMsg('Wish sealed successfully! Redirecting...');

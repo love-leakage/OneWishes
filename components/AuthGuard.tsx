@@ -85,6 +85,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    if (!instagram.trim()) {
+      setError('Instagram username is required');
+      return;
+    }
+
     setSaving(true);
     setError('');
 
@@ -149,7 +154,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-widest mb-2">Instagram (Optional)</label>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-2">Instagram Username *</label>
               <div className="relative">
                 <span className="absolute left-4 top-4 text-gray-500 font-bold">@</span>
                 <input
