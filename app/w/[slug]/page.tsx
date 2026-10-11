@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Heart, Share2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { JarLoader } from '@/components/JarLoader';
 
 interface Wish {
   id: string;
@@ -86,8 +87,8 @@ export default function ViewWishPage() {
 
   if (loading) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-32 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
-        Unsealing wish letter...
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <JarLoader text="ONEWISHES" subtext="Unsealing wish letter..." />
       </div>
     );
   }

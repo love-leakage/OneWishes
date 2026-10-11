@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { Heart, Instagram } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { JarLoader } from '@/components/JarLoader';
 
 export default function DynamicRootPage() {
   const params = useParams();
@@ -75,8 +76,8 @@ export default function DynamicRootPage() {
 
   if (loading) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-32 text-center text-gray-500 font-bold uppercase tracking-widest text-sm">
-        Loading...
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <JarLoader text="ONEWISHES" subtext="Opening wish envelope..." />
       </div>
     );
   }

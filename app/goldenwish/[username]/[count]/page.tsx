@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { JarLoader } from '@/components/JarLoader';
 
 export default function GoldenWishPage() {
   const params = useParams();
@@ -37,7 +38,11 @@ export default function GoldenWishPage() {
   }, [username, countIndex]);
 
   if (loading) {
-    return <div className="py-32 text-center text-gray-500 uppercase tracking-widest text-xs font-bold">Loading Golden Wish...</div>;
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <JarLoader text="GOLDEN WISH" subtext={`Retrieving wish for @${username}...`} />
+      </div>
+    );
   }
 
   if (!wish) {

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Heart } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { JarLoader } from '@/components/JarLoader';
 
 export default function HomePage() {
   const [selectedTier, setSelectedTier] = useState<'golden' | 'onewish'>('golden');
@@ -18,6 +19,7 @@ export default function HomePage() {
   const [privacy, setPrivacy] = useState('public');
   const [bookingDate, setBookingDate] = useState('');
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Today's Onewish State
   const [todayOnewish, setTodayOnewish] = useState<any>(null);
@@ -76,10 +78,12 @@ export default function HomePage() {
 
   const handleWishSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     setStatusMsg('Sealing your wish...');
 
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
+      setIsSubmitting(false);
       await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href }});
       return;
     }
@@ -96,6 +100,7 @@ export default function HomePage() {
     if (selectedTier === 'golden') {
       const { data: claimed, error: rpcErr } = await supabase.rpc('claim_golden_wish');
       if (rpcErr || !claimed) {
+        setIsSubmitting(false);
         setStatusMsg('You have used all 3 lifetime Golden wishes.');
         return;
       }
@@ -117,10 +122,12 @@ export default function HomePage() {
         if (resData.url) {
           finalMediaUrl = resData.url;
         } else {
+          setIsSubmitting(false);
           setStatusMsg(`Media upload failed: ${resData.error || 'Unknown error'}`);
           return;
         }
       } catch (err) {
+        setIsSubmitting(false);
         setStatusMsg('Media upload error.');
         return;
       }
@@ -132,6 +139,7 @@ export default function HomePage() {
     const cleanToUsername = toUsername ? toUsername.trim().replace(/^@/, '').toLowerCase() : null;
 
     if (selectedTier === 'golden' && !cleanToUsername && !toName.trim()) {
+      setIsSubmitting(false);
       setStatusMsg('Please provide a Recipient Username for Golden Wish.');
       return;
     }
@@ -153,6 +161,7 @@ export default function HomePage() {
     const { data, error } = await supabase.from('wishes').insert([wishData]).select().single();
 
     if (error) {
+      setIsSubmitting(false);
       setStatusMsg('Error creating wish: ' + error.message);
       return;
     }
@@ -164,6 +173,7 @@ export default function HomePage() {
       ]);
       
       if (bookingErr) {
+        setIsSubmitting(false);
         await supabase.from('wishes').delete().eq('id', data.id);
         setStatusMsg('Sorry, this date is already booked! Choose another date.');
         return;
@@ -530,6 +540,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {isSubmitting && (
+        <JarLoader fullScreen text="ONEWISHES" subtext={statusMsg || 'Sealing your wish...'} size="lg" />
+      )}
     </div>
   );
 }
