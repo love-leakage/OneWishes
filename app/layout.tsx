@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: 'ONEWISHES — A wish worth sending',
   description: 'OneWishes limits how many people you can wish, on purpose — so the ones you do wish know exactly what it cost you.',
   icons: {
-    icon: '/icon.svg',
+    icon: '/logo.png',
   },
   openGraph: {
     title: 'ONEWISHES — A wish worth sending',
