@@ -9,21 +9,24 @@
   }
 
   body {
-    @apply bg-black text-white font-sans min-h-screen antialiased selection:bg-white selection:text-black;
+    background-color: #141f1b;
+    color: #f3eee3;
+    @apply font-sans min-h-screen antialiased selection:bg-[#72897e] selection:text-white;
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar matching logo theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #141f1b;
 }
 ::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: #2a3d35;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #666666;
+  background: #425e52;
 }
 

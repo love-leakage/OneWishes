@@ -39,7 +39,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
-      <body className="bg-black text-white flex flex-col min-h-screen selection:bg-white selection:text-black">
+      <body className="bg-[#141f1b] text-[#f3eee3] flex flex-col min-h-screen selection:bg-[#72897e] selection:text-white">
         <AuthGuard>
           <Navbar />
           <main className="flex-1">
