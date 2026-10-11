@@ -193,7 +193,17 @@ export default function DynamicRootPage() {
                 key={w.id}
                 className="p-8 bg-[#1a2621] border border-[#2a3d35] hover:border-[#72897e] transition-all flex flex-col justify-between group shadow-[4px_4px_0px_0px_rgba(114,137,126,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(114,137,126,0.3)] min-h-[300px] relative"
               >
-                <div className="space-y-6 cursor-pointer" onClick={() => window.location.href = `/w/${w.slug}`}>
+                <div 
+                  className="space-y-6 cursor-pointer" 
+                  onClick={() => {
+                    if (w.tier === 'onewish') {
+                      const d = w.created_at ? w.created_at.split('T')[0] : '';
+                      window.location.href = d ? `/${d}` : '/onewish';
+                    } else {
+                      window.location.href = `/goldenwish/${w.to_username || id}/1`;
+                    }
+                  }}
+                >
                   <div className="flex items-center justify-between border-b border-[#2a3d35] pb-4">
                     <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
                       w.tier === 'golden' ? 'bg-[#e4c067] text-[#141f1b]' : 'bg-[#72897e] text-white'

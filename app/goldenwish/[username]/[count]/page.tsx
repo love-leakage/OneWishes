@@ -16,14 +16,13 @@ export default function GoldenWishPage() {
   const [wish, setWish] = useState<any>(null);
 
   useEffect(() => {
-    if (!username) return;
-
     async function loadData() {
+      const cleanUser = username.toLowerCase().replace(/^@/, '');
       // Find golden wishes sent TO this username or matching slug
       const { data } = await supabase
         .from('wishes')
         .select('*')
-        .or(`to_username.eq.${username},slug.eq.${username}`)
+        .or(`to_username.ilike.${cleanUser},slug.eq.${cleanUser}`)
         .eq('tier', 'golden')
         .order('created_at', { ascending: true });
       

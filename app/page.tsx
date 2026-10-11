@@ -129,13 +129,20 @@ export default function HomePage() {
     setStatusMsg('Saving your wish...');
 
     const slug = Math.random().toString(36).substring(2, 9);
+    const cleanToUsername = toUsername ? toUsername.trim().replace(/^@/, '').toLowerCase() : null;
+
+    if (selectedTier === 'golden' && !cleanToUsername && !toName.trim()) {
+      setStatusMsg('Please provide a Recipient Username for Golden Wish.');
+      return;
+    }
+
     const wishData = {
       user_id: session.user.id,
       sender_username: senderUsername,
       tier: selectedTier,
       from_name: fromName || `@${senderUsername}`,
-      to_name: toName || (toUsername ? '' : 'Someone Special'),
-      to_username: toUsername ? toUsername.replace('@', '') : null,
+      to_name: toName || (cleanToUsername ? '' : 'Someone Special'),
+      to_username: cleanToUsername,
       message: message || 'May your path be clear...',
       media_url: finalMediaUrl,
       media_type: mediaType,
@@ -161,16 +168,15 @@ export default function HomePage() {
         setStatusMsg('Sorry, this date is already booked! Choose another date.');
         return;
       }
-    }
 
-    setStatusMsg('Wish sealed successfully! Redirecting...');
-    
-    let redirectUrl = '/';
-    if (selectedTier === 'onewish') {
-      const finalDate = bookingDate || new Date().toISOString().split('T')[0];
-      redirectUrl = `/${finalDate}`;
+      setStatusMsg('Wish sealed! Redirecting...');
+      setTimeout(() => {
+        window.location.href = `/${dateVal}`;
+      }, 500);
+      return;
     } else {
-      const targetUser = toUsername ? toUsername.replace('@', '') : slug;
+      // Golden Wish: website + goldenwish + username + wish count
+      const targetUser = cleanToUsername || (toName ? toName.toLowerCase().replace(/[^a-z0-9_]/g, '') : slug);
       const { count } = await supabase
         .from('wishes')
         .select('*', { count: 'exact', head: true })
@@ -178,12 +184,12 @@ export default function HomePage() {
         .eq('tier', 'golden');
       
       const wishNum = count && count > 0 ? count : 1;
-      redirectUrl = `/goldenwish/${targetUser}/${wishNum}`;
+      setStatusMsg('Wish sealed! Redirecting...');
+      setTimeout(() => {
+        window.location.href = `/goldenwish/${targetUser}/${wishNum}`;
+      }, 500);
+      return;
     }
-
-    setTimeout(() => {
-      window.location.href = redirectUrl;
-    }, 800);
   };
 
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -403,7 +409,7 @@ export default function HomePage() {
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-widest text-[#f3eee3] mb-2">
-                  Recipient Username (Optional)
+                  {selectedTier === 'golden' ? 'Recipient Username * (For /goldenwish/username/count)' : 'Recipient Username (Optional)'}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-4 text-[#72897e] font-bold">@</span>
@@ -412,6 +418,7 @@ export default function HomePage() {
                     value={toUsername}
                     onChange={(e) => setToUsername(e.target.value)}
                     placeholder="USERNAME"
+                    required={selectedTier === 'golden'}
                     className="w-full pl-8 pr-4 py-4 bg-[#121b18] border border-[#2a3d35] text-[#f3eee3] placeholder-[#425e52] focus:outline-none focus:border-[#72897e] transition-colors uppercase tracking-widest"
                   />
                 </div>

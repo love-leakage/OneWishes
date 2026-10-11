@@ -94,12 +94,17 @@ export default function GalleryPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredWishes.map((w) => (
-            <Link
-              key={w.id}
-              href={`/w/${w.slug}`}
-              className="p-8 bg-[#1a2621] border border-[#2a3d35] hover:border-[#72897e] transition-all flex flex-col justify-between group shadow-[4px_4px_0px_0px_rgba(114,137,126,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(114,137,126,0.3)] min-h-[300px]"
-            >
+          {filteredWishes.map((w) => {
+            const wishHref = w.tier === 'onewish' 
+              ? (w.created_at ? `/${w.created_at.split('T')[0]}` : '/onewish')
+              : `/goldenwish/${(w as any).to_username || w.slug}/1`;
+
+            return (
+              <Link
+                key={w.id}
+                href={wishHref}
+                className="p-8 bg-[#1a2621] border border-[#2a3d35] hover:border-[#72897e] transition-all flex flex-col justify-between group shadow-[4px_4px_0px_0px_rgba(114,137,126,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(114,137,126,0.3)] min-h-[300px]"
+              >
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-[#2a3d35] pb-4">
                   <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
@@ -125,7 +130,8 @@ export default function GalleryPage() {
                 FROM: {w.from_name}
               </div>
             </Link>
-          ))}
+          );
+        })}
         </div>
       )}
     </div>
