@@ -59,7 +59,7 @@ export default function TermsOfService() {
             4. Contact
           </h2>
           <p>
-            For support or questions regarding these terms, contact <span className="text-[#f3eee3] font-bold">support@onewishes.com</span>.
+            For support or questions regarding these terms, contact <span className="text-[#f3eee3] font-bold">rylyoga@gmail.com</span>.
           </p>
         </section>
       </div>

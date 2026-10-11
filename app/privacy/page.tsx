@@ -60,7 +60,7 @@ export default function PrivacyPolicy() {
           </h2>
           <p>
             If you have questions about this policy or your account data, please reach out to us at{' '}
-            <span className="text-[#f3eee3] font-bold">support@onewishes.com</span>.
+            <span className="text-[#f3eee3] font-bold">rylyoga@gmail.com</span>.
           </p>
         </section>
       </div>
