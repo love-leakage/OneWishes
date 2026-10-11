@@ -18,8 +18,8 @@ export const Navbar = () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
       if (session?.user) {
-        const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-        setProfile(prof);
+        const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+        setProfile(prof || null);
       } else {
         setProfile(null);
       }
@@ -30,14 +30,25 @@ export const Navbar = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user || null);
       if (session?.user) {
-        const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-        setProfile(prof);
+        const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+        setProfile(prof || null);
       } else {
         setProfile(null);
       }
     });
 
-    return () => subscription.unsubscribe();
+    const handleProfileUpdate = (e: any) => {
+      if (e.detail) {
+        setProfile(e.detail);
+      }
+    };
+
+    window.addEventListener('onewishes:profile-updated', handleProfileUpdate);
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('onewishes:profile-updated', handleProfileUpdate);
+    };
   }, []);
 
   const handleGoogleLogin = async () => {
@@ -93,18 +104,30 @@ export const Navbar = () => {
         {/* Auth */}
         <div className="hidden md:flex items-center gap-4">
           {user ? (
-            <div className="flex items-center gap-4">
-              <Link href={`/${profile?.username || user.user_metadata?.username || user.email?.split('@')[0]}`} className="block border border-[#2a3d35] p-1 rounded-full hover:border-[#72897e] transition-all">
+            <div className="flex items-center gap-3">
+              <Link 
+                href={`/${profile?.username || ''}`} 
+                className="flex items-center gap-2 border border-[#2a3d35] py-1.5 px-3 rounded-full hover:border-[#72897e] bg-[#1a2621]/80 transition-all group"
+              >
                 {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-8 h-8 rounded-full grayscale hover:grayscale-0 transition-all" />
+                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-[#f3eee3] text-[#141f1b] flex items-center justify-center font-bold text-xs uppercase">
-                    {(user.user_metadata?.username || user.email?.charAt(0))?.substring(0, 1)}
+                  <div className="w-6 h-6 rounded-full bg-[#f3eee3] text-[#141f1b] flex items-center justify-center font-bold text-[10px] uppercase">
+                    {(profile?.username || user.email?.charAt(0))?.substring(0, 1)}
                   </div>
                 )}
+                {profile?.username ? (
+                  <span className="text-xs font-bold tracking-wider uppercase text-[#f3eee3] group-hover:text-white">
+                    @{profile.username}
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-[#e4c067]">
+                    Set Handle
+                  </span>
+                )}
               </Link>
-              <button onClick={handleLogout} className="text-[#a6b6ad] hover:text-[#f3eee3] transition-colors" title="Log Out">
-                <LogOut className="w-5 h-5" />
+              <button onClick={handleLogout} className="text-[#a6b6ad] hover:text-[#f3eee3] p-1.5 transition-colors" title="Log Out">
+                <LogOut className="w-4 h-4" />
               </button>
             </div>
           ) : (
@@ -141,17 +164,30 @@ export const Navbar = () => {
           ))}
           {user ? (
             <div className="pt-4 border-t border-[#2a3d35] flex items-center justify-between">
-              <Link href={`/${profile?.username || user.user_metadata?.username || user.email?.split('@')[0]}`} className="block border border-[#2a3d35] p-1 rounded-full hover:border-[#72897e] transition-all">
+              <Link 
+                href={`/${profile?.username || ''}`} 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 border border-[#2a3d35] py-1.5 px-3 rounded-full hover:border-[#72897e] bg-[#1a2621] transition-all"
+              >
                 {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-10 h-10 rounded-full grayscale hover:grayscale-0 transition-all" />
+                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-7 h-7 rounded-full grayscale hover:grayscale-0 transition-all" />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-[#f3eee3] text-[#141f1b] flex items-center justify-center font-bold text-xs uppercase">
-                    {(user.user_metadata?.username || user.email?.charAt(0))?.substring(0, 1)}
+                  <div className="w-7 h-7 rounded-full bg-[#f3eee3] text-[#141f1b] flex items-center justify-center font-bold text-xs uppercase">
+                    {(profile?.username || user.email?.charAt(0))?.substring(0, 1)}
                   </div>
                 )}
+                {profile?.username ? (
+                  <span className="text-xs font-bold tracking-wider uppercase text-[#f3eee3]">
+                    @{profile.username}
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-[#e4c067]">
+                    Set Handle
+                  </span>
+                )}
               </Link>
-              <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="text-[#a6b6ad] hover:text-[#f3eee3]">
-                <LogOut className="w-6 h-6" />
+              <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="text-[#a6b6ad] hover:text-[#f3eee3] p-2">
+                <LogOut className="w-5 h-5" />
               </button>
             </div>
           ) : (

@@ -21,6 +21,7 @@ export default function HomePage() {
 
   // Today's Onewish State
   const [todayOnewish, setTodayOnewish] = useState<any>(null);
+  const [currentUserProfile, setCurrentUserProfile] = useState<any>(null);
 
   useEffect(() => {
     async function loadTodayOnewish() {
@@ -41,6 +42,31 @@ export default function HomePage() {
       }
     }
     loadTodayOnewish();
+
+    async function checkCurrentProfile() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', session.user.id)
+          .maybeSingle();
+        if (prof?.username) {
+          setCurrentUserProfile(prof);
+          setFromName((prev) => prev || `@${prof.username}`);
+        }
+      }
+    }
+    checkCurrentProfile();
+
+    const handleProfileUpdate = (e: any) => {
+      if (e.detail?.username) {
+        setCurrentUserProfile(e.detail);
+        setFromName((prev) => prev || `@${e.detail.username}`);
+      }
+    };
+    window.addEventListener('onewishes:profile-updated', handleProfileUpdate);
+    return () => window.removeEventListener('onewishes:profile-updated', handleProfileUpdate);
   }, []);
 
 
@@ -57,6 +83,15 @@ export default function HomePage() {
       await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href }});
       return;
     }
+
+    // Ensure sender's verified unique profile username is used
+    const { data: userProf } = await supabase
+      .from('profiles')
+      .select('username')
+      .eq('id', session.user.id)
+      .maybeSingle();
+
+    const senderUsername = userProf?.username || session.user.email?.split('@')[0] || 'user';
 
     if (selectedTier === 'golden') {
       const { data: claimed, error: rpcErr } = await supabase.rpc('claim_golden_wish');
@@ -96,9 +131,9 @@ export default function HomePage() {
     const slug = Math.random().toString(36).substring(2, 9);
     const wishData = {
       user_id: session.user.id,
-      sender_username: session.user.email?.split('@')[0] || 'user',
+      sender_username: senderUsername,
       tier: selectedTier,
-      from_name: fromName || 'Wisher',
+      from_name: fromName || `@${senderUsername}`,
       to_name: toName || (toUsername ? '' : 'Someone Special'),
       to_username: toUsername ? toUsername.replace('@', '') : null,
       message: message || 'May your path be clear...',
@@ -409,14 +444,19 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#f3eee3] mb-2">
-                  Your Signature
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#f3eee3] mb-2 flex items-center justify-between">
+                  <span>Your Signature</span>
+                  {currentUserProfile?.username && (
+                    <span className="text-[10px] text-[#72897e] font-normal tracking-wider">
+                      Verified as @{currentUserProfile.username}
+                    </span>
+                  )}
                 </label>
                 <input
                   type="text"
                   value={fromName}
                   onChange={(e) => setFromName(e.target.value)}
-                  placeholder="E.G. ALEX"
+                  placeholder={currentUserProfile?.username ? `@${currentUserProfile.username}` : "E.G. ALEX"}
                   required
                   className="w-full px-4 py-4 bg-[#121b18] border border-[#2a3d35] text-[#f3eee3] placeholder-[#425e52] focus:outline-none focus:border-[#72897e] transition-colors uppercase tracking-widest"
                 />
