@@ -6,6 +6,9 @@ import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { JarLoader } from '@/components/JarLoader';
+import { WishLikeButton } from '@/components/WishLikeButton';
+import { WishMediaGallery } from '@/components/WishMediaGallery';
+import { sounds } from '@/lib/sounds';
 
 export default function GoldenWishPage() {
   const params = useParams();
@@ -31,6 +34,7 @@ export default function GoldenWishPage() {
         // Select the wish based on index, or default to the first/latest
         const selected = data[countIndex] || data[0];
         setWish(selected);
+        sounds.playChime();
       }
       setLoading(false);
     }
@@ -83,19 +87,14 @@ export default function GoldenWishPage() {
         </p>
 
         {wish.media_url && (
-          <div className="border border-[#e4c067]/30 p-2 bg-[#121b18]">
-            {wish.media_type === 'video' ? (
-              <video src={wish.media_url} autoPlay loop muted playsInline className="w-full h-auto max-h-[500px] object-cover" />
-            ) : (
-              <img src={wish.media_url} alt="Wish Media" className="w-full h-auto max-h-[500px] object-cover" />
-            )}
-          </div>
+          <WishMediaGallery mediaUrl={wish.media_url} mediaType={wish.media_type} />
         )}
 
         <div className="pt-8 mt-8 border-t border-[#2a3d35] flex flex-col sm:flex-row items-center justify-between gap-6">
           <Link href={`/${wish.sender_username}`} className="text-sm text-[#f3eee3] font-bold uppercase tracking-widest hover:text-[#e4c067] transition-colors">
             FROM: @{wish.sender_username}
           </Link>
+          <WishLikeButton wishId={wish.id} initialLikes={wish.likes_count} showText />
         </div>
       </motion.div>
     </div>

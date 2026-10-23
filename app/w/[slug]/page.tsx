@@ -4,9 +4,12 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { Heart, Share2, ArrowRight } from 'lucide-react';
+import { Share2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { JarLoader } from '@/components/JarLoader';
+import { WishLikeButton } from '@/components/WishLikeButton';
+import { WishMediaGallery } from '@/components/WishMediaGallery';
+import { sounds } from '@/lib/sounds';
 
 interface Wish {
   id: string;
@@ -16,6 +19,7 @@ interface Wish {
   to_name: string;
   message: string;
   media_url?: string;
+  media_type?: string;
   slug: string;
   likes_count: number;
 }
@@ -25,7 +29,6 @@ export default function ViewWishPage() {
   const slug = params?.slug as string;
 
   const [wish, setWish] = useState<Wish | null>(null);
-  const [likes, setLikes] = useState(0);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
@@ -64,7 +67,7 @@ export default function ViewWishPage() {
         }
 
         setWish(data);
-        setLikes(data.likes_count || 0);
+        sounds.playChime();
         supabase.rpc('increment_wish_views', { target_wish_id: data.id });
       }
       setLoading(false);
@@ -72,16 +75,10 @@ export default function ViewWishPage() {
     fetchWish();
   }, [slug]);
 
-  const handleLike = async () => {
-    if (!wish) return;
-    const newLikes = likes + 1;
-    setLikes(newLikes);
-    await supabase.from('wishes').update({ likes_count: newLikes }).eq('id', wish.id);
-  };
-
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
+    sounds.playChime();
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -129,21 +126,13 @@ export default function ViewWishPage() {
         </p>
 
         {wish.media_url && (
-          <div className="border border-[#2a3d35] p-2 bg-[#121b18]">
-            <img src={wish.media_url} alt="Wish Media" className="w-full h-auto max-h-[500px] object-cover" />
-          </div>
+          <WishMediaGallery mediaUrl={wish.media_url} mediaType={wish.media_type} />
         )}
 
         <div className="pt-8 mt-8 border-t border-[#2a3d35] flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="text-sm text-[#f3eee3] font-bold uppercase tracking-widest">FROM: {wish.from_name}</div>
 
-          <button
-            onClick={handleLike}
-            className="flex items-center gap-3 px-6 py-3 border border-[#2a3d35] hover:border-[#c67d63] text-[#c67d63] text-xs font-bold uppercase tracking-widest transition-all bg-[#121b18]"
-          >
-            <Heart className="w-4 h-4 fill-current" />
-            <span>{likes} LIKES</span>
-          </button>
+          <WishLikeButton wishId={wish.id} initialLikes={wish.likes_count} showText />
         </div>
       </motion.div>
 

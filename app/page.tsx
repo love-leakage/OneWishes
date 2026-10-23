@@ -3,9 +3,18 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Heart } from 'lucide-react';
+import { ArrowRight, Heart, X, Image as ImageIcon, Film, Upload } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { JarLoader } from '@/components/JarLoader';
+import { WishLikeButton } from '@/components/WishLikeButton';
+import { WishMediaGallery } from '@/components/WishMediaGallery';
+import { sounds } from '@/lib/sounds';
+
+interface MediaPreview {
+  file: File;
+  previewUrl: string;
+  type: 'image' | 'video';
+}
 
 export default function HomePage() {
   const [selectedTier, setSelectedTier] = useState<'golden' | 'onewish'>('golden');
@@ -13,9 +22,7 @@ export default function HomePage() {
   const [toUsername, setToUsername] = useState('');
   const [message, setMessage] = useState('');
   const [fromName, setFromName] = useState('');
-  const [mediaUrl, setMediaUrl] = useState('');
-  const [mediaFile, setMediaFile] = useState<File | null>(null);
-  const [mediaType, setMediaType] = useState<'image' | 'video' | null>(null);
+  const [mediaList, setMediaList] = useState<MediaPreview[]>([]);
   const [privacy, setPrivacy] = useState('public');
   const [bookingDate, setBookingDate] = useState('');
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
@@ -106,34 +113,43 @@ export default function HomePage() {
       }
     }
 
-    let finalMediaUrl = mediaUrl || null;
+    let finalMediaUrl: string | null = null;
+    let finalMediaType: 'image' | 'video' | null = null;
 
-    if (mediaFile) {
-      setStatusMsg('Uploading media to Cloudflare R2...');
+    if (mediaList.length > 0) {
+      setStatusMsg(`Sealing & uploading ${mediaList.length} media ${mediaList.length > 1 ? 'files' : 'file'}...`);
       try {
-        const res = await fetch(`/api/upload?filename=${encodeURIComponent(mediaFile.name)}&type=${encodeURIComponent(mediaFile.type)}`, {
-          method: 'POST',
-          body: mediaFile,
-          headers: {
-            'Content-Type': mediaFile.type
+        const uploadPromises = mediaList.map(async (item) => {
+          const res = await fetch(`/api/upload?filename=${encodeURIComponent(item.file.name)}&type=${encodeURIComponent(item.file.type)}`, {
+            method: 'POST',
+            body: item.file,
+            headers: {
+              'Content-Type': item.file.type
+            }
+          });
+          const resData = await res.json();
+          if (!resData.url) {
+            throw new Error(resData.error || 'Failed to upload media file');
           }
+          return { url: resData.url, type: item.type };
         });
-        const resData = await res.json();
-        if (resData.url) {
-          finalMediaUrl = resData.url;
+
+        const uploadedItems = await Promise.all(uploadPromises);
+        if (uploadedItems.length === 1) {
+          finalMediaUrl = uploadedItems[0].url;
+          finalMediaType = uploadedItems[0].type;
         } else {
-          setIsSubmitting(false);
-          setStatusMsg(`Media upload failed: ${resData.error || 'Unknown error'}`);
-          return;
+          finalMediaUrl = JSON.stringify(uploadedItems);
+          finalMediaType = uploadedItems.some(u => u.type === 'video') ? 'video' : 'image';
         }
-      } catch (err) {
+      } catch (err: any) {
         setIsSubmitting(false);
-        setStatusMsg('Media upload error.');
+        setStatusMsg(`Media upload failed: ${err.message || 'Network error'}`);
         return;
       }
     }
 
-    setStatusMsg('Saving your wish...');
+    setStatusMsg('Saving your wish in the vault...');
 
     const slug = Math.random().toString(36).substring(2, 9);
     const cleanToUsername = toUsername ? toUsername.trim().replace(/^@/, '').toLowerCase() : null;
@@ -153,7 +169,7 @@ export default function HomePage() {
       to_username: cleanToUsername,
       message: message || 'May your path be clear...',
       media_url: finalMediaUrl,
-      media_type: mediaType,
+      media_type: finalMediaType,
       privacy,
       slug,
     };
@@ -165,6 +181,9 @@ export default function HomePage() {
       setStatusMsg('Error creating wish: ' + error.message);
       return;
     }
+
+    // Play subtle celestial seal sound
+    sounds.playSeal();
 
     if (selectedTier === 'onewish') {
       const dateVal = bookingDate || new Date().toISOString().split('T')[0];
@@ -203,13 +222,34 @@ export default function HomePage() {
   };
 
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setMediaFile(file);
-      const url = URL.createObjectURL(file);
-      setMediaUrl(url);
-      setMediaType(file.type.startsWith('video/') ? 'video' : 'image');
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const currentVideos = mediaList.filter(m => m.type === 'video').length;
+    const newVideos = files.filter(f => f.type.startsWith('video/')).length;
+
+    if (currentVideos + newVideos > 1) {
+      setStatusMsg('Only 1 video is allowed per wish (along with up to 4 photos).');
+      return;
     }
+
+    if (mediaList.length + files.length > 5) {
+      setStatusMsg('Maximum 5 media items allowed (e.g. 5 photos, or 1 video + 4 photos).');
+      return;
+    }
+
+    const newPreviews: MediaPreview[] = files.map(file => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+      type: file.type.startsWith('video/') ? 'video' : 'image',
+    }));
+
+    setMediaList(prev => [...prev, ...newPreviews].slice(0, 5));
+    setStatusMsg(null);
+  };
+
+  const removeMediaItem = (idx: number) => {
+    setMediaList(prev => prev.filter((_, i) => i !== idx));
   };
 
   return (
@@ -272,13 +312,7 @@ export default function HomePage() {
                   </div>
                   
                   {todayOnewish.media_url && (
-                    <div className="border border-[#2a3d35] p-2 bg-[#121b18]">
-                      {todayOnewish.media_type === 'video' ? (
-                        <video src={todayOnewish.media_url} autoPlay loop muted playsInline className="w-full h-auto max-h-[300px] object-cover" />
-                      ) : (
-                        <img src={todayOnewish.media_url} alt="Media" className="w-full h-auto max-h-[300px] object-cover" />
-                      )}
-                    </div>
+                    <WishMediaGallery mediaUrl={todayOnewish.media_url} mediaType={todayOnewish.media_type} />
                   )}
 
                   <p className="font-serif text-2xl md:text-3xl text-[#f3eee3] leading-loose uppercase italic tracking-wide">
@@ -287,16 +321,7 @@ export default function HomePage() {
 
                   <div className="pt-6 mt-6 border-t border-[#2a3d35] flex justify-between items-center text-xs font-bold uppercase tracking-widest">
                     <Link href={`/${todayOnewish.sender_username}`} className="text-[#f3eee3] hover:text-[#72897e]">FROM: @{todayOnewish.sender_username}</Link>
-                    <button 
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        setTodayOnewish({ ...todayOnewish, likes_count: todayOnewish.likes_count + 1 });
-                        await supabase.from('wishes').update({ likes_count: todayOnewish.likes_count + 1 }).eq('id', todayOnewish.id);
-                      }}
-                      className="flex items-center gap-2 text-[#c67d63] hover:scale-110 transition-transform"
-                    >
-                      <Heart className="w-4 h-4 fill-current" /> {todayOnewish.likes_count}
-                    </button>
+                    <WishLikeButton wishId={todayOnewish.id} initialLikes={todayOnewish.likes_count} showText />
                   </div>
                 </div>
               </div>
@@ -435,15 +460,61 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#f3eee3] mb-2">
-                  Attach Media (Image / Video)
-                </label>
-                <input
-                  type="file"
-                  accept="image/*,video/*"
-                  onChange={handleMediaUpload}
-                  className="w-full px-4 py-3 bg-[#121b18] border border-[#2a3d35] text-[#f3eee3] focus:outline-none focus:border-[#72897e] transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-xs file:font-bold file:uppercase file:bg-[#72897e] file:text-white hover:file:bg-[#869f93]"
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-widest text-[#f3eee3]">
+                    Attach Media <span className="text-[#a6b6ad] font-normal">(Up to 5 photos, or 1 video + photos)</span>
+                  </label>
+                  <span className="text-[10px] font-mono font-bold text-[#e4c067]">
+                    {mediaList.length}/5 SELECTED
+                  </span>
+                </div>
+
+                {mediaList.length < 5 && (
+                  <label className="flex flex-col items-center justify-center border border-dashed border-[#2a3d35] hover:border-[#72897e] bg-[#121b18] p-5 cursor-pointer transition-all group">
+                    <div className="flex items-center gap-3 text-[#a6b6ad] group-hover:text-[#f3eee3] transition-colors">
+                      <Upload className="w-4 h-4 text-[#72897e]" />
+                      <span className="text-xs uppercase font-bold tracking-widest">
+                        Choose Photos or Video (Max 5)
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-[#72897e] mt-1 uppercase tracking-wider">
+                      Supports JPG, PNG, WEBP, MP4, WEBM
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*,video/*"
+                      multiple
+                      onChange={handleMediaUpload}
+                      className="hidden"
+                    />
+                  </label>
+                )}
+
+                {/* Selected Media Thumbnails Grid */}
+                {mediaList.length > 0 && (
+                  <div className="grid grid-cols-5 gap-2 mt-3">
+                    {mediaList.map((item, idx) => (
+                      <div key={idx} className="relative aspect-square border border-[#2a3d35] bg-[#1a2621] overflow-hidden group">
+                        {item.type === 'video' ? (
+                          <div className="w-full h-full flex flex-col items-center justify-center bg-black/60 text-[#e4c067]">
+                            <Film className="w-5 h-5 mb-1" />
+                            <span className="text-[8px] font-bold uppercase tracking-wider">Video</span>
+                          </div>
+                        ) : (
+                          <img src={item.previewUrl} alt={`Upload ${idx + 1}`} className="w-full h-full object-cover" />
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeMediaItem(idx)}
+                          className="absolute top-1 right-1 p-1 bg-black/80 hover:bg-red-900/80 text-white rounded-full transition-colors opacity-90 hover:opacity-100"
+                          title="Remove item"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -515,13 +586,11 @@ export default function HomePage() {
                   TO: {toName ? toName.toUpperCase() : (toUsername ? `@${toUsername}` : 'MAYA')}
                 </div>
                 
-                {mediaUrl && (
-                  <div className="mb-8 border border-[#2a3d35] p-2 bg-[#121b18] relative overflow-hidden">
-                    {mediaType === 'video' ? (
-                      <video src={mediaUrl} autoPlay loop muted playsInline className="w-full max-h-[300px] object-cover" />
-                    ) : (
-                      <img src={mediaUrl} alt="Preview" className="w-full max-h-[300px] object-cover" />
-                    )}
+                {mediaList.length > 0 && (
+                  <div className="mb-8">
+                    <WishMediaGallery
+                      mediaUrl={JSON.stringify(mediaList.map((m) => ({ url: m.previewUrl, type: m.type })))}
+                    />
                   </div>
                 )}
 

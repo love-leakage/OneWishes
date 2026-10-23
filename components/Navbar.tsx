@@ -5,13 +5,24 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-import { Menu, X, LogOut, Shield } from 'lucide-react';
+import { Menu, X, LogOut, Shield, Volume2, VolumeX } from 'lucide-react';
+import { sounds } from '@/lib/sounds';
 
 export const Navbar = () => {
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
+
+  useEffect(() => {
+    setSoundOn(sounds.isEnabled());
+    const handleSoundToggle = (e: any) => {
+      setSoundOn(e.detail);
+    };
+    window.addEventListener('onewishes:sound-toggle', handleSoundToggle);
+    return () => window.removeEventListener('onewishes:sound-toggle', handleSoundToggle);
+  }, []);
 
   useEffect(() => {
     async function loadUser() {
@@ -101,8 +112,17 @@ export const Navbar = () => {
           })}
         </nav>
 
-        {/* Auth */}
+        {/* Auth & Sound */}
         <div className="hidden md:flex items-center gap-4">
+          {/* Sound Toggle */}
+          <button
+            onClick={() => sounds.toggle()}
+            title={soundOn ? 'Sound On' : 'Sound Muted'}
+            className="p-2 border border-[#2a3d35] rounded-full text-[#a6b6ad] hover:text-[#f3eee3] hover:border-[#72897e] bg-[#1a2621]/60 transition-all"
+          >
+            {soundOn ? <Volume2 className="w-4 h-4 text-[#e4c067]" /> : <VolumeX className="w-4 h-4" />}
+          </button>
+
           {user ? (
             <div className="flex items-center gap-3">
               <Link 
@@ -140,13 +160,22 @@ export const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-[#f3eee3]"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile Toggle & Sound */}
+        <div className="md:hidden flex items-center gap-2">
+          <button
+            onClick={() => sounds.toggle()}
+            title={soundOn ? 'Sound On' : 'Sound Muted'}
+            className="p-2 border border-[#2a3d35] rounded-full text-[#a6b6ad] hover:text-[#f3eee3]"
+          >
+            {soundOn ? <Volume2 className="w-4 h-4 text-[#e4c067]" /> : <VolumeX className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-[#f3eee3] p-1"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
