@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "cf:build": "opennextjs-cloudflare build",
+    "cf:build": "opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion",
     "cf:preview": "opennextjs-cloudflare preview",
-    "cf:deploy": "npm run build && opennextjs-cloudflare build && wrangler deploy",
+    "cf:deploy": "npm run build && opennextjs-cloudflare build --dangerouslyUseUnsupportedNextVersion && wrangler deploy",
     "start": "next start",
     "lint": "next lint"
   },
