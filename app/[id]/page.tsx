@@ -47,12 +47,14 @@ export default function DynamicRootPage() {
   };
 
   const initialCachedProf = getCachedProfile();
+  const initialCachedReceived = getCachedWishes('received');
 
   const [loading, setLoading] = useState<boolean>(() => !initialCachedProf);
+  const [loadingWishes, setLoadingWishes] = useState<boolean>(() => initialCachedReceived.length === 0);
   const [isDate, setIsDate] = useState<boolean>(isDateParam);
   const [profile, setProfile] = useState<any>(initialCachedProf);
   const [onewish, setOnewish] = useState<any>(null);
-  const [receivedWishes, setReceivedWishes] = useState<any[]>(() => getCachedWishes('received'));
+  const [receivedWishes, setReceivedWishes] = useState<any[]>(() => initialCachedReceived);
   const [sentWishes, setSentWishes] = useState<any[]>(() => getCachedWishes('sent'));
   const [activeTab, setActiveTab] = useState<'received' | 'sent'>('received');
   const [copied, setCopied] = useState(false);
@@ -150,6 +152,7 @@ export default function DynamicRootPage() {
         console.error('Error fetching profile:', err);
       } finally {
         setLoading(false);
+        setLoadingWishes(false);
       }
     }
 
@@ -391,7 +394,11 @@ export default function DynamicRootPage() {
         </div>
 
         {/* Wishes Grid */}
-        {activeWishesList.length === 0 ? (
+        {loadingWishes && activeWishesList.length === 0 ? (
+          <div className="py-20 flex items-center justify-center">
+            <JarLoader text="ONEWISHES" subtext="Unsealing wishes..." size="sm" />
+          </div>
+        ) : activeWishesList.length === 0 ? (
           <div className="text-center py-16 space-y-4 bg-[#1a2621]/40 border border-[#2a3d35] p-8">
             <p className="text-sm text-[#a6b6ad] uppercase tracking-widest font-bold">
               {activeTab === 'received'

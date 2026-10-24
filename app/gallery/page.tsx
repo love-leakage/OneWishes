@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { Search, Heart } from 'lucide-react';
+import { JarLoader } from '@/components/JarLoader';
 
 interface Wish {
   id: string;
@@ -87,7 +88,9 @@ export default function GalleryPage() {
 
       {/* Grid */}
       {loading ? (
-        <div className="text-[#a6b6ad] text-center py-20 text-sm uppercase tracking-widest font-bold">Loading public wishes...</div>
+        <div className="py-24 flex items-center justify-center">
+          <JarLoader text="GALLERY" subtext="Unsealing public keepsakes..." size="lg" />
+        </div>
       ) : filteredWishes.length === 0 ? (
         <div className="text-[#a6b6ad] text-center py-20 text-sm uppercase tracking-widest font-bold">
           No public wishes match your search. Be the first to create one!

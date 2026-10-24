@@ -31,42 +31,49 @@ export default function HomePage() {
   // Today's Onewish State
   const [todayOnewish, setTodayOnewish] = useState<any>(null);
   const [currentUserProfile, setCurrentUserProfile] = useState<any>(null);
+  const [contentLoading, setContentLoading] = useState(true);
 
   useEffect(() => {
-    async function loadTodayOnewish() {
-      const today = new Date().toISOString().split('T')[0];
-      const { data: booking } = await supabase
-        .from('onewish_bookings')
-        .select('wish_id')
-        .eq('booking_date', today)
-        .single();
-        
-      if (booking) {
-        const { data: wish } = await supabase
-          .from('wishes')
-          .select('*')
-          .eq('id', booking.wish_id)
-          .single();
-        setTodayOnewish(wish);
-      }
-    }
-    loadTodayOnewish();
+    async function loadInitialData() {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        const [bookingRes, sessionRes] = await Promise.all([
+          supabase
+            .from('onewish_bookings')
+            .select('wish_id')
+            .eq('booking_date', today)
+            .maybeSingle(),
+          supabase.auth.getSession(),
+        ]);
 
-    async function checkCurrentProfile() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data: prof } = await supabase
-          .from('profiles')
-          .select('username')
-          .eq('id', session.user.id)
-          .maybeSingle();
-        if (prof?.username) {
-          setCurrentUserProfile(prof);
-          setFromName((prev) => prev || `@${prof.username}`);
+        if (bookingRes.data?.wish_id) {
+          const { data: wish } = await supabase
+            .from('wishes')
+            .select('*')
+            .eq('id', bookingRes.data.wish_id)
+            .single();
+          setTodayOnewish(wish);
         }
+
+        if (sessionRes.data?.session?.user) {
+          const { data: prof } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', sessionRes.data.session.user.id)
+            .maybeSingle();
+          if (prof?.username) {
+            setCurrentUserProfile(prof);
+            setFromName((prev) => prev || `@${prof.username}`);
+          }
+        }
+      } catch (e) {
+        console.error('Home load error:', e);
+      } finally {
+        setContentLoading(false);
       }
     }
-    checkCurrentProfile();
+
+    loadInitialData();
 
     const handleProfileUpdate = (e: any) => {
       if (e.detail?.username) {
@@ -251,6 +258,14 @@ export default function HomePage() {
   const removeMediaItem = (idx: number) => {
     setMediaList(prev => prev.filter((_, i) => i !== idx));
   };
+
+  if (contentLoading) {
+    return (
+      <div className="min-h-[75vh] flex items-center justify-center">
+        <JarLoader text="ONEWISHES" subtext="Unsealing memories..." size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 pt-16 pb-24">
