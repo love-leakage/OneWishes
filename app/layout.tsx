@@ -47,6 +47,14 @@ const siteNameSchema = {
   name: 'OneWishes',
   alternateName: ['onewishes', 'One Wishes'],
   url: 'https://onewishes.com/',
+  publisher: {
+    '@type': 'Organization',
+    name: 'OneWishes',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://onewishes.com/icon-192.png',
+    },
+  },
 };
 
 export default function RootLayout({
