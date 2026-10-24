@@ -153,36 +153,16 @@ export function WishMediaGallery({
           ) : (
             <motion.div
               key={`img-${current.url}-${activeIndex}`}
-              initial={{ opacity: 0, scale: 1.0 }}
-              animate={
-                items.length > 1
-                  ? {
-                      opacity: 1,
-                      scale: [1, 1.05],
-                    }
-                  : {
-                      opacity: 1,
-                      scale: [1, 1.04, 1],
-                    }
-              }
-              exit={{ opacity: 0, scale: 0.97 }}
-              transition={
-                items.length > 1
-                  ? {
-                      opacity: { duration: 0.5 },
-                      scale: { duration: slideDuration / 1000, ease: 'easeOut' },
-                    }
-                  : {
-                      opacity: { duration: 0.5 },
-                      scale: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
-                    }
-              }
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
               className="w-full h-full flex items-center justify-center overflow-hidden"
             >
               <img
                 src={current.url}
                 alt="Wish media"
-                className={`w-full ${maxHeight} object-contain`}
+                className={`w-full ${maxHeight} object-contain animate-kenburns`}
               />
             </motion.div>
           )}

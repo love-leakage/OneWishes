@@ -4,7 +4,6 @@ import './globals.css';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { AuthGuard } from '@/components/AuthGuard';
-import { InitialPageLoader } from '@/components/InitialPageLoader';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -69,7 +68,6 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#141f1b] text-[#f3eee3] flex flex-col min-h-screen selection:bg-[#72897e] selection:text-white">
-        <InitialPageLoader />
         <AuthGuard>
           <Navbar />
           <main className="flex-1">

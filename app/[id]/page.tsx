@@ -58,24 +58,24 @@ export default function DynamicRootPage() {
         const { data: prof } = await supabase
           .from('profiles')
           .select('*')
-          .eq('username', cleanUser)
+          .ilike('username', cleanUser)
           .maybeSingle();
 
         if (prof) {
           setProfile(prof);
           
-          // Load wishes received by this user
+          // Load wishes received by this user (case-insensitive)
           const { data: received } = await supabase
             .from('wishes')
             .select('*')
-            .eq('to_username', cleanUser)
+            .ilike('to_username', cleanUser)
             .order('created_at', { ascending: false });
 
-          // Load wishes sent by this user
+          // Load wishes sent by this user (match either username or permanent user_id)
           const { data: sent } = await supabase
             .from('wishes')
             .select('*')
-            .eq('sender_username', cleanUser)
+            .or(`sender_username.ilike.${cleanUser},user_id.eq.${prof.id}`)
             .order('created_at', { ascending: false });
 
           setReceivedWishes(received || []);

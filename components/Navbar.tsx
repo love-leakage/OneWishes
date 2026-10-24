@@ -25,14 +25,26 @@ export const Navbar = () => {
   }, []);
 
   useEffect(() => {
+    // Immediate hydration from cache so avatar and username display instantly
+    try {
+      const cached = localStorage.getItem('onewishes_cached_profile');
+      if (cached) {
+        setProfile(JSON.parse(cached));
+      }
+    } catch (e) {}
+
     async function loadUser() {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
       if (session?.user) {
         const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
         setProfile(prof || null);
+        if (prof) {
+          localStorage.setItem('onewishes_cached_profile', JSON.stringify(prof));
+        }
       } else {
         setProfile(null);
+        localStorage.removeItem('onewishes_cached_profile');
       }
     }
     
@@ -43,14 +55,19 @@ export const Navbar = () => {
       if (session?.user) {
         const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
         setProfile(prof || null);
+        if (prof) {
+          localStorage.setItem('onewishes_cached_profile', JSON.stringify(prof));
+        }
       } else {
         setProfile(null);
+        localStorage.removeItem('onewishes_cached_profile');
       }
     });
 
     const handleProfileUpdate = (e: any) => {
       if (e.detail) {
         setProfile(e.detail);
+        localStorage.setItem('onewishes_cached_profile', JSON.stringify(e.detail));
       }
     };
 
@@ -126,7 +143,7 @@ export const Navbar = () => {
           {user ? (
             <div className="flex items-center gap-3">
               <Link 
-                href={`/${profile?.username || ''}`} 
+                href={profile?.username ? `/${profile.username}` : '/profile'} 
                 className="flex items-center gap-2 border border-[#2a3d35] py-1.5 px-3 rounded-full hover:border-[#72897e] bg-[#1a2621]/80 transition-all group"
               >
                 {user.user_metadata?.avatar_url ? (
@@ -194,7 +211,7 @@ export const Navbar = () => {
           {user ? (
             <div className="pt-4 border-t border-[#2a3d35] flex items-center justify-between">
               <Link 
-                href={`/${profile?.username || ''}`} 
+                href={profile?.username ? `/${profile.username}` : '/profile'} 
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2 border border-[#2a3d35] py-1.5 px-3 rounded-full hover:border-[#72897e] bg-[#1a2621] transition-all"
               >
