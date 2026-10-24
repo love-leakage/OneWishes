@@ -14,80 +14,147 @@ import { sounds } from '@/lib/sounds';
 export default function DynamicRootPage() {
   const params = useParams();
   const id = params?.id as string;
+  const cleanUser = id ? id.toLowerCase().replace(/^@/, '') : '';
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  const isDateParam = dateRegex.test(cleanUser);
 
-  const [loading, setLoading] = useState(true);
-  const [isDate, setIsDate] = useState(false);
-  const [profile, setProfile] = useState<any>(null);
+  // Synchronous cache lookup for instant 0ms load!
+  const getCachedProfile = () => {
+    if (typeof window === 'undefined' || isDateParam || !cleanUser) return null;
+    try {
+      // 1. Check logged-in user profile in localStorage
+      const userCached = localStorage.getItem('onewishes_cached_profile');
+      if (userCached) {
+        const parsed = JSON.parse(userCached);
+        if (parsed?.username && parsed.username.toLowerCase() === cleanUser) {
+          return parsed;
+        }
+      }
+      // 2. Check session cache for other users
+      const sessionCached = sessionStorage.getItem(`onewishes_prof_${cleanUser}`);
+      if (sessionCached) return JSON.parse(sessionCached);
+    } catch (e) {}
+    return null;
+  };
+
+  const getCachedWishes = (key: 'received' | 'sent') => {
+    if (typeof window === 'undefined' || isDateParam || !cleanUser) return [];
+    try {
+      const cached = sessionStorage.getItem(`onewishes_${key}_${cleanUser}`);
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return [];
+  };
+
+  const initialCachedProf = getCachedProfile();
+
+  const [loading, setLoading] = useState<boolean>(() => !initialCachedProf);
+  const [isDate, setIsDate] = useState<boolean>(isDateParam);
+  const [profile, setProfile] = useState<any>(initialCachedProf);
   const [onewish, setOnewish] = useState<any>(null);
-  const [receivedWishes, setReceivedWishes] = useState<any[]>([]);
-  const [sentWishes, setSentWishes] = useState<any[]>([]);
+  const [receivedWishes, setReceivedWishes] = useState<any[]>(() => getCachedWishes('received'));
+  const [sentWishes, setSentWishes] = useState<any[]>(() => getCachedWishes('sent'));
   const [activeTab, setActiveTab] = useState<'received' | 'sent'>('received');
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!id) return;
+    if (!cleanUser) return;
 
     async function loadData() {
-      setLoading(true);
-
-      // Check if ID is a date YYYY-MM-DD
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-      
-      if (dateRegex.test(id)) {
+      if (isDateParam) {
         setIsDate(true);
-        // Load the Onewish for this date
         const { data: booking } = await supabase
           .from('onewish_bookings')
           .select('wish_id')
-          .eq('booking_date', id)
-          .single();
+          .eq('booking_date', cleanUser)
+          .maybeSingle();
 
-        if (booking) {
+        if (booking?.wish_id) {
           const { data: wish } = await supabase
             .from('wishes')
             .select('*')
             .eq('id', booking.wish_id)
             .single();
-          
           setOnewish(wish);
         }
-      } else {
-        // It's a username, load profile
-        setIsDate(false);
-        const cleanUser = id.toLowerCase().replace(/^@/, '');
-        const { data: prof } = await supabase
-          .from('profiles')
-          .select('*')
-          .ilike('username', cleanUser)
-          .maybeSingle();
+        setLoading(false);
+        return;
+      }
 
-        if (prof) {
-          setProfile(prof);
-          
-          // Load wishes received by this user (case-insensitive)
-          const { data: received } = await supabase
+      setIsDate(false);
+
+      // PARALLEL PROMISE.ALL EXECUTION: Everything runs at the same time in 1 roundtrip
+      try {
+        const [profRes, receivedRes, sentRes] = await Promise.all([
+          supabase
+            .from('profiles')
+            .select('*')
+            .ilike('username', cleanUser)
+            .maybeSingle(),
+          supabase
             .from('wishes')
             .select('*')
             .ilike('to_username', cleanUser)
-            .order('created_at', { ascending: false });
-
-          // Load wishes sent by this user (match either username or permanent user_id)
-          const { data: sent } = await supabase
+            .order('created_at', { ascending: false }),
+          supabase
             .from('wishes')
             .select('*')
-            .or(`sender_username.ilike.${cleanUser},user_id.eq.${prof.id}`)
-            .order('created_at', { ascending: false });
+            .ilike('sender_username', cleanUser)
+            .order('created_at', { ascending: false }),
+        ]);
 
-          setReceivedWishes(received || []);
-          setSentWishes(sent || []);
+        if (profRes.data) {
+          setProfile(profRes.data);
+
+          // Update cache for instantaneous subsequent visits
+          try {
+            sessionStorage.setItem(`onewishes_prof_${cleanUser}`, JSON.stringify(profRes.data));
+            const userCached = localStorage.getItem('onewishes_cached_profile');
+            if (userCached) {
+              const parsed = JSON.parse(userCached);
+              if (parsed?.id === profRes.data.id) {
+                localStorage.setItem('onewishes_cached_profile', JSON.stringify(profRes.data));
+              }
+            }
+          } catch (e) {}
+
+          let finalSent = sentRes.data || [];
+
+          // Also check if user sent wishes under different username with their user_id
+          if (profRes.data.id) {
+            const { data: userSent } = await supabase
+              .from('wishes')
+              .select('*')
+              .eq('user_id', profRes.data.id)
+              .order('created_at', { ascending: false });
+
+            if (userSent && userSent.length > 0) {
+              const map = new Map();
+              finalSent.forEach((w) => map.set(w.id, w));
+              userSent.forEach((w) => map.set(w.id, w));
+              finalSent = Array.from(map.values()).sort(
+                (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+              );
+            }
+          }
+
+          setReceivedWishes(receivedRes.data || []);
+          setSentWishes(finalSent);
+
+          try {
+            sessionStorage.setItem(`onewishes_received_${cleanUser}`, JSON.stringify(receivedRes.data || []));
+            sessionStorage.setItem(`onewishes_sent_${cleanUser}`, JSON.stringify(finalSent));
+          } catch (e) {}
         }
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     loadData();
-  }, [id]);
+  }, [cleanUser, isDateParam]);
 
   const handleShareProfile = async () => {
     const url = typeof window !== 'undefined' ? window.location.href : '';

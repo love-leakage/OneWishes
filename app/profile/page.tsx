@@ -10,30 +10,25 @@ export default function ProfileRedirectPage() {
   const [status, setStatus] = useState('Opening your profile...');
 
   useEffect(() => {
-    async function resolveProfile() {
-      // 1. Check local cache first for instant navigation
-      try {
-        const cached = localStorage.getItem('onewishes_cached_profile');
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed?.username) {
-            router.replace(`/${parsed.username}`);
-            return;
-          }
+    // 1. Instant cache redirect without waiting for network calls
+    try {
+      const cached = localStorage.getItem('onewishes_cached_profile');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.username) {
+          router.replace(`/${parsed.username}`);
+          return;
         }
-      } catch (e) {}
+      }
+    } catch (e) {}
 
-      // 2. Fetch Supabase session
+    async function resolveProfile() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        setStatus('Please sign in to view your profile...');
-        setTimeout(() => {
-          router.replace('/');
-        }, 1200);
+        router.replace('/');
         return;
       }
 
-      // 3. Fetch profile record
       const { data: prof } = await supabase
         .from('profiles')
         .select('username')
@@ -44,8 +39,6 @@ export default function ProfileRedirectPage() {
         localStorage.setItem('onewishes_cached_profile', JSON.stringify(prof));
         router.replace(`/${prof.username}`);
       } else {
-        // User logged in but hasn't set username yet -> return home so AuthGuard opens handle modal
-        setStatus('Setting up your profile...');
         router.replace('/');
       }
     }
