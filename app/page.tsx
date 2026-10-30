@@ -409,6 +409,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== PHILOSOPHY / A NOTE ON OUR NAME ===== */}
+      <section className="py-8 border-t border-[#2a3d35]">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-3xl mx-auto p-8 sm:p-12 border border-[#72897e]/40 bg-[#1a2621]/70 backdrop-blur-sm text-center space-y-6 shadow-[6px_6px_0px_0px_rgba(114,137,126,0.15)] relative overflow-hidden"
+        >
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#141f1b] border border-[#2a3d35] rounded-full text-[11px] font-bold uppercase tracking-widest text-[#e4c067]">
+            ✦ A Note On Our Name
+          </div>
+
+          <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#f3eee3] uppercase tracking-tight leading-snug">
+            "Grammar says <span className="italic text-[#a6b6ad]">One Wish</span>. <br className="hidden sm:block" />
+            Feelings don't follow grammar."
+          </h2>
+
+          <p className="text-sm sm:text-base text-[#a6b6ad] leading-relaxed max-w-xl mx-auto">
+            Yes, we might have broken English rules with our name. But in a world full of temporary stories and disposable texts, we built this with one truth:
+          </p>
+
+          <p className="text-base sm:text-lg font-serif italic text-[#e4c067] tracking-wide max-w-xl mx-auto leading-relaxed">
+            "We made a mistake in our name — but don't make the mistake of leaving your memories unsaid."
+          </p>
+
+          <div className="pt-4 border-t border-[#2a3d35]/60 text-[11px] uppercase tracking-widest text-[#72897e] font-mono font-bold">
+            When ONE person WISHES with all their heart, it lasts forever.
+          </div>
+        </motion.div>
+      </section>
+
       {/* ===== CREATE WISH FORM & PREVIEW ===== */}
       <section id="create-section" className="pt-24 scroll-mt-24 border-t border-[#2a3d35]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
