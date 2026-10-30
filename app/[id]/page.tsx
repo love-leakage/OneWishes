@@ -280,22 +280,24 @@ export default function DynamicRootPage() {
         </div>
 
         {/* Golden Wish Scarcity Badges */}
-        <div className="flex flex-col items-center gap-3 p-5 bg-[#0c0d0d] border border-[#e4c067]/30 rounded-2xl max-w-md w-full shadow-[0_0_24px_rgba(0,0,0,0.6)]">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-[#e4c067] flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>LIFETIME GOLDEN CREDITS</span>
-            <span className="px-2.5 py-0.5 bg-[#e4c067]/15 border border-[#e4c067]/40 rounded-full text-[10px]">
+        <div className="flex flex-col items-center gap-3 p-4 sm:p-5 bg-[#0c0d0d] border border-[#e4c067]/30 rounded-2xl max-w-md w-full shadow-[0_0_24px_rgba(0,0,0,0.6)]">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-[#e4c067] flex flex-wrap items-center justify-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>LIFETIME GOLDEN CREDITS</span>
+            </div>
+            <span className="px-2 py-0.5 bg-[#e4c067]/15 border border-[#e4c067]/40 rounded-full text-[10px]">
               {goldenRemaining} / 3 AVAILABLE
             </span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="grid grid-cols-3 gap-2 w-full">
             {[1, 2, 3].map((slot) => {
               const isUsed = slot <= goldenUsed;
               return (
                 <div
                   key={slot}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[11px] font-bold uppercase tracking-wider transition-all ${
+                  className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 py-2 px-1 sm:px-3 rounded-xl sm:rounded-full border text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all text-center ${
                     isUsed
                       ? 'border-[#1a1d1b] bg-[#070808] text-[#6e7d75] opacity-50'
                       : 'border-[#e4c067] bg-[#e4c067]/10 text-[#e4c067] shadow-[0_0_12px_rgba(228,192,103,0.2)]'
@@ -310,59 +312,59 @@ export default function DynamicRootPage() {
         </div>
 
         {/* Social Links & Sharing Actions */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2.5 sm:gap-3 w-full max-w-md mx-auto pt-2">
           {profile.instagram_handle && (
             <a
               href={`https://instagram.com/${profile.instagram_handle}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/60 rounded-full text-xs font-bold uppercase tracking-widest text-[#a1b0a8] hover:text-[#f5f2eb] transition-all"
+              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/60 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#a1b0a8] hover:text-[#f5f2eb] transition-all truncate"
             >
-              <Instagram className="w-4 h-4 text-[#e4c067]" />
-              @{profile.instagram_handle}
+              <Instagram className="w-3.5 h-3.5 text-[#e4c067] shrink-0" />
+              <span className="truncate">@{profile.instagram_handle}</span>
             </a>
           )}
 
           <button
             onClick={handleShareProfile}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#f5f2eb] hover:bg-white text-[#050505] rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-sm"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#f5f2eb] hover:bg-white text-[#050505] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all shadow-sm truncate"
           >
-            {copied ? <Check className="w-4 h-4 text-green-700" /> : <Share2 className="w-4 h-4" />}
-            <span>{copied ? 'Link Copied!' : 'Share Profile'}</span>
+            {copied ? <Check className="w-3.5 h-3.5 text-green-700 shrink-0" /> : <Share2 className="w-3.5 h-3.5 shrink-0" />}
+            <span>{copied ? 'Copied!' : 'Share'}</span>
           </button>
 
           <a
             href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Send a rare, everlasting wish to @${profile.username} on OneWishes: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#8da095] rounded-full text-xs font-bold uppercase tracking-widest text-[#a1b0a8] hover:text-[#f5f2eb] transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#8da095] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#a1b0a8] hover:text-[#f5f2eb] transition-all truncate"
           >
-            <MessageCircle className="w-4 h-4 text-green-500" />
+            <MessageCircle className="w-3.5 h-3.5 text-green-500 shrink-0" />
             <span>WhatsApp</span>
           </a>
 
           <Link
             href={`/?to=${profile.username}#create-section`}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#e4c067] hover:bg-[#ebd38d] text-[#050505] rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(228,192,103,0.2)]"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#e4c067] hover:bg-[#ebd38d] text-[#050505] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_16px_rgba(228,192,103,0.2)] truncate"
           >
-            <Send className="w-3.5 h-3.5" />
+            <Send className="w-3.5 h-3.5 shrink-0" />
             <span>Send Wish</span>
           </Link>
         </div>
       </div>
 
-      {/* Tabs: Received vs Sent Wishes */}
+      {/* Tabs: Received vs Sent Wishes (Responsive Grid to prevent mobile line-wrapping) */}
       <div className="space-y-8">
-        <div className="flex items-center justify-center border-b border-[#1a1d1b]">
+        <div className="w-full max-w-md mx-auto grid grid-cols-2 border-b border-[#1a1d1b]">
           <button
             onClick={() => setActiveTab('received')}
-            className={`pb-4 px-8 text-sm font-bold uppercase tracking-widest transition-all relative ${
+            className={`pb-3 sm:pb-4 px-2 sm:px-6 text-xs sm:text-sm font-bold uppercase tracking-wider sm:tracking-widest transition-all relative text-center ${
               activeTab === 'received'
                 ? 'text-[#f5f2eb]'
                 : 'text-[#6e7d75] hover:text-[#a1b0a8]'
             }`}
           >
-            <span>Received Wishes ({receivedWishes.length})</span>
+            <span>Received ({receivedWishes.length})</span>
             {activeTab === 'received' && (
               <motion.div
                 layoutId="tab-underline"
@@ -373,13 +375,13 @@ export default function DynamicRootPage() {
 
           <button
             onClick={() => setActiveTab('sent')}
-            className={`pb-4 px-8 text-sm font-bold uppercase tracking-widest transition-all relative ${
+            className={`pb-3 sm:pb-4 px-2 sm:px-6 text-xs sm:text-sm font-bold uppercase tracking-wider sm:tracking-widest transition-all relative text-center ${
               activeTab === 'sent'
                 ? 'text-[#f5f2eb]'
                 : 'text-[#6e7d75] hover:text-[#a1b0a8]'
             }`}
           >
-            <span>Sent Wishes ({sentWishes.length})</span>
+            <span>Sent ({sentWishes.length})</span>
             {activeTab === 'sent' && (
               <motion.div
                 layoutId="tab-underline"
@@ -410,52 +412,59 @@ export default function DynamicRootPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {activeWishesList.map((w) => (
-              <div
-                key={w.id}
-                className="p-8 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/40 transition-all flex flex-col justify-between group shadow-[0_0_24px_rgba(0,0,0,0.4)] hover:shadow-[0_0_32px_rgba(228,192,103,0.1)] min-h-[320px] relative"
-              >
-                <div 
-                  className="space-y-6 cursor-pointer" 
-                  onClick={() => {
-                    if (w.tier === 'onewish') {
-                      const d = w.created_at ? w.created_at.split('T')[0] : '';
-                      window.location.href = d ? `/${d}` : '/onewish';
-                    } else {
-                      window.location.href = `/goldenwish/${w.to_username || profile.username}/1`;
-                    }
-                  }}
+            {activeWishesList.map((w) => {
+              const wishHref = w.tier === 'onewish'
+                ? (w.created_at ? `/${w.created_at.split('T')[0]}` : '/onewish')
+                : `/goldenwish/${w.to_username || profile.username}/1`;
+
+              return (
+                <div
+                  key={w.id}
+                  className="p-6 sm:p-8 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/40 transition-all flex flex-col justify-between group shadow-[0_0_24px_rgba(0,0,0,0.4)] hover:shadow-[0_0_32px_rgba(228,192,103,0.1)] min-h-[320px] relative"
                 >
-                  <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-4">
-                    <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
-                      w.tier === 'golden' ? 'bg-[#e4c067] text-[#050505]' : 'bg-[#8da095] text-[#050505]'
-                    }`}>
-                      {w.tier}
-                    </span>
-                    <span className="text-[10px] font-mono text-[#8da095]">
-                      {new Date(w.created_at).toLocaleDateString()}
-                    </span>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-4">
+                      <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
+                        w.tier === 'golden' ? 'bg-[#e4c067] text-[#050505]' : 'bg-[#8da095] text-[#050505]'
+                      }`}>
+                        {w.tier}
+                      </span>
+                      <span className="text-[10px] font-mono text-[#8da095]">
+                        {new Date(w.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    {w.media_url && (
+                      <div>
+                        <WishMediaGallery mediaUrl={w.media_url} mediaType={w.media_type} maxHeight="max-h-[220px]" />
+                      </div>
+                    )}
+
+                    <Link href={wishHref} className="block group-hover:text-[#e4c067] transition-colors">
+                      <p className="text-sm text-[#f5f2eb] leading-relaxed line-clamp-4 font-serif italic uppercase">
+                        "{w.message}"
+                      </p>
+                    </Link>
                   </div>
 
-                  {w.media_url && (
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <WishMediaGallery mediaUrl={w.media_url} mediaType={w.media_type} maxHeight="max-h-[220px]" />
+                  <div className="pt-6 mt-6 border-t border-[#1a1d1b] flex flex-wrap gap-2 justify-between items-center text-xs font-bold uppercase tracking-widest z-10">
+                    <span className="text-[#a1b0a8] truncate max-w-[140px] sm:max-w-[180px]">
+                      {activeTab === 'received' ? `FROM: @${w.sender_username}` : `TO: @${w.to_username || 'Recipient'}`}
+                    </span>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <Link
+                        href={wishHref}
+                        className="text-[11px] text-[#e4c067] hover:underline flex items-center gap-1 font-mono"
+                      >
+                        <span>View</span>
+                        <span>→</span>
+                      </Link>
+                      <WishLikeButton wishId={w.id} initialLikes={w.likes_count} showText />
                     </div>
-                  )}
-
-                  <p className="text-sm text-[#f5f2eb] leading-relaxed line-clamp-4 font-serif italic uppercase">
-                    "{w.message}"
-                  </p>
+                  </div>
                 </div>
-
-                <div className="pt-6 mt-6 border-t border-[#1a1d1b] flex justify-between items-center text-xs font-bold uppercase tracking-widest z-10">
-                  <span className="text-[#a1b0a8]">
-                    {activeTab === 'received' ? `FROM: @${w.sender_username}` : `TO: @${w.to_username || 'Recipient'}`}
-                  </span>
-                  <WishLikeButton wishId={w.id} initialLikes={w.likes_count} showText />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

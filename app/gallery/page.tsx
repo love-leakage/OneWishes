@@ -19,21 +19,34 @@ interface Wish {
 }
 
 export default function GalleryPage() {
-  const [wishes, setWishes] = useState<Wish[]>([]);
+  const [wishes, setWishes] = useState<Wish[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const cached = sessionStorage.getItem('onewishes_gallery_cache');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [search, setSearch] = useState('');
   const [tierFilter, setTierFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => wishes.length === 0);
 
   useEffect(() => {
     async function loadGallery() {
-      setLoading(true);
+      if (wishes.length === 0) setLoading(true);
       const { data } = await supabase
         .from('wishes')
         .select('*')
         .eq('privacy', 'public')
         .order('created_at', { ascending: false });
 
-      setWishes(data || []);
+      if (data) {
+        setWishes(data);
+        try {
+          sessionStorage.setItem('onewishes_gallery_cache', JSON.stringify(data));
+        } catch (e) {}
+      }
       setLoading(false);
     }
     loadGallery();

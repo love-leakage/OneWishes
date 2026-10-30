@@ -28,31 +28,67 @@ export default function HomePage() {
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Today's Onewish State
-  const [todayOnewish, setTodayOnewish] = useState<any>(null);
-  const [currentUserProfile, setCurrentUserProfile] = useState<any>(null);
-  const [contentLoading, setContentLoading] = useState(true);
+  // Today's Onewish State (Instant hydration from sessionStorage)
+  const [todayOnewish, setTodayOnewish] = useState<any>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const cached = sessionStorage.getItem(`onewishes_today_${today}`);
+      return cached ? JSON.parse(cached) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const [currentUserProfile, setCurrentUserProfile] = useState<any>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const cached = localStorage.getItem('onewishes_cached_profile');
+      return cached ? JSON.parse(cached) : null;
+    } catch (e) {
+      return null;
+    }
+  });
 
   useEffect(() => {
+    // If profile already in local storage, initialize fromName immediately
+    if (currentUserProfile?.username) {
+      setFromName((prev) => prev || `@${currentUserProfile.username}`);
+    }
+
     async function loadInitialData() {
       try {
         const today = new Date().toISOString().split('T')[0];
         const [bookingRes, sessionRes] = await Promise.all([
           supabase
             .from('onewish_bookings')
-            .select('wish_id')
+            .select('wish_id, wishes (*)')
             .eq('booking_date', today)
             .maybeSingle(),
           supabase.auth.getSession(),
         ]);
 
         if (bookingRes.data?.wish_id) {
-          const { data: wish } = await supabase
-            .from('wishes')
-            .select('*')
-            .eq('id', bookingRes.data.wish_id)
-            .single();
-          setTodayOnewish(wish);
+          const wish = (bookingRes.data as any).wishes;
+          if (wish) {
+            setTodayOnewish(wish);
+            try {
+              sessionStorage.setItem(`onewishes_today_${today}`, JSON.stringify(wish));
+            } catch (e) {}
+          } else {
+            // Fallback lookup if join isn't configured
+            const { data: directWish } = await supabase
+              .from('wishes')
+              .select('*')
+              .eq('id', bookingRes.data.wish_id)
+              .maybeSingle();
+            if (directWish) {
+              setTodayOnewish(directWish);
+              try {
+                sessionStorage.setItem(`onewishes_today_${today}`, JSON.stringify(directWish));
+              } catch (e) {}
+            }
+          }
         }
 
         if (sessionRes.data?.session?.user) {
@@ -64,12 +100,13 @@ export default function HomePage() {
           if (prof?.username) {
             setCurrentUserProfile(prof);
             setFromName((prev) => prev || `@${prof.username}`);
+            try {
+              localStorage.setItem('onewishes_cached_profile', JSON.stringify(prof));
+            } catch (e) {}
           }
         }
       } catch (e) {
         console.error('Home load error:', e);
-      } finally {
-        setContentLoading(false);
       }
     }
 
@@ -258,14 +295,6 @@ export default function HomePage() {
   const removeMediaItem = (idx: number) => {
     setMediaList(prev => prev.filter((_, i) => i !== idx));
   };
-
-  if (contentLoading) {
-    return (
-      <div className="min-h-[75vh] flex items-center justify-center">
-        <JarLoader text="ONEWISHES" subtext="Unsealing memories..." size="lg" />
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 pt-16 pb-24">
