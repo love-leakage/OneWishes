@@ -52,9 +52,9 @@ export default function GoldenWishPage() {
   if (!wish) {
     return (
       <div className="py-32 text-center space-y-6">
-        <h1 className="font-serif text-3xl font-bold uppercase text-[#f3eee3]">No Golden Wish Found</h1>
-        <p className="text-[#a6b6ad]">The user @{username} hasn't received a Golden Wish yet.</p>
-        <Link href="/" className="inline-block px-8 py-4 bg-[#e4c067] text-[#141f1b] font-bold uppercase tracking-widest text-xs hover:bg-[#edd48d] transition-colors shadow-[4px_4px_0px_0px_rgba(228,192,103,0.3)]">
+        <h1 className="font-serif text-3xl font-bold uppercase text-[#f5f2eb]">No Golden Wish Found</h1>
+        <p className="text-[#a1b0a8]">The user @{username} hasn't received a Golden Wish yet.</p>
+        <Link href="/" className="inline-block px-8 py-4 bg-[#e4c067] text-[#050505] font-bold uppercase tracking-widest text-xs hover:bg-[#edd48d] transition-colors shadow-lg">
           Return Home
         </Link>
       </div>
@@ -65,24 +65,24 @@ export default function GoldenWishPage() {
     <div className="max-w-3xl mx-auto px-4 py-24 space-y-12">
       <div className="text-center space-y-4">
         <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-[#e4c067]">THE GOLDEN WISH</h1>
-        <p className="text-[#a6b6ad] font-bold tracking-widest uppercase text-xs">3 Per Lifetime. Never fades.</p>
+        <p className="text-[#a1b0a8] font-bold tracking-widest uppercase text-xs">3 Per Lifetime. Never fades.</p>
       </div>
       
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="p-10 sm:p-16 border border-[#e4c067]/40 bg-[#1a2621] shadow-[8px_8px_0px_0px_rgba(228,192,103,0.2)] space-y-10 relative overflow-hidden"
+        className="p-10 sm:p-16 border border-[#e4c067]/40 bg-[#0c0d0d] shadow-2xl space-y-10 relative overflow-hidden"
       >
-        <div className="flex items-center justify-between border-b border-[#2a3d35] pb-6">
-          <Link href={`/${wish.to_username}`} className="text-sm font-bold tracking-widest text-[#a6b6ad] uppercase hover:text-[#f3eee3] transition-colors">
+        <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-6">
+          <Link href={`/${wish.to_username}`} className="text-sm font-bold tracking-widest text-[#a1b0a8] uppercase hover:text-[#f5f2eb] transition-colors">
             TO: {wish.to_name.toUpperCase()} (@{wish.to_username})
           </Link>
-          <span className="px-4 py-1.5 bg-[#e4c067] text-[#141f1b] text-[10px] font-bold uppercase tracking-widest">
+          <span className="px-4 py-1.5 bg-[#e4c067] text-[#050505] text-[10px] font-bold uppercase tracking-widest">
             GOLDEN
           </span>
         </div>
 
-        <p className="font-serif text-2xl sm:text-4xl text-[#f3eee3] leading-loose uppercase italic tracking-wide">
+        <p className="font-serif text-2xl sm:text-4xl text-[#f5f2eb] leading-loose uppercase italic tracking-wide">
           "{wish.message}"
         </p>
 
@@ -90,8 +90,8 @@ export default function GoldenWishPage() {
           <WishMediaGallery mediaUrl={wish.media_url} mediaType={wish.media_type} />
         )}
 
-        <div className="pt-8 mt-8 border-t border-[#2a3d35] flex flex-col sm:flex-row items-center justify-between gap-6">
-          <Link href={`/${wish.sender_username}`} className="text-sm text-[#f3eee3] font-bold uppercase tracking-widest hover:text-[#e4c067] transition-colors">
+        <div className="pt-8 mt-8 border-t border-[#1a1d1b] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <Link href={`/${wish.sender_username}`} className="text-sm text-[#f5f2eb] font-bold uppercase tracking-widest hover:text-[#e4c067] transition-colors">
             FROM: @{wish.sender_username}
           </Link>
           <WishLikeButton wishId={wish.id} initialLikes={wish.likes_count} showText />

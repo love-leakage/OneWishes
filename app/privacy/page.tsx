@@ -9,14 +9,14 @@ export const metadata = {
 export default function PrivacyPolicy() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-10">
-      <div className="space-y-4 border-b border-[#2a3d35] pb-8">
-        <Link href="/" className="text-xs uppercase font-bold tracking-widest text-[#72897e] hover:text-[#f3eee3]">
+      <div className="space-y-4 border-b border-[#1a1d1b] pb-8">
+        <Link href="/" className="text-xs uppercase font-bold tracking-widest text-[#e4c067] hover:text-[#f5f2eb]">
           ← Back to OneWishes
         </Link>
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tight text-[#f3eee3]">
+        <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tight text-[#f5f2eb]">
           Privacy Policy
         </h1>
-        <p className="text-xs uppercase tracking-widest text-[#a6b6ad]">
+        <p className="text-xs uppercase tracking-widest text-[#a1b0a8]">
           Last Updated: October 2024
         </p>
       </div>

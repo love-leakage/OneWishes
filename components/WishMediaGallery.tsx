@@ -91,7 +91,7 @@ export function WishMediaGallery({
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`relative border border-[#2a3d35] bg-[#121b18] overflow-hidden group select-none ${className}`}
+      className={`relative border border-[#1a1d1b] bg-[#070808] overflow-hidden group select-none ${className}`}
     >
       {/* Story-style Progress Bars on top if multiple items */}
       {items.length > 1 && (
@@ -112,7 +112,7 @@ export function WishMediaGallery({
                     duration: slideDuration / 1000,
                     ease: 'linear',
                   }}
-                  className="h-full bg-gradient-to-r from-[#e4c067] to-[#f3eee3]"
+                  className="h-full bg-gradient-to-r from-[#e4c067] to-[#f5f2eb]"
                 />
               ) : (
                 <div className="h-full w-0 bg-transparent" />
@@ -123,7 +123,7 @@ export function WishMediaGallery({
       )}
 
       {/* Media Canvas with Animated Transitions & Ken Burns Motion */}
-      <div className={`relative w-full flex items-center justify-center bg-black/40 ${maxHeight} overflow-hidden min-h-[260px]`}>
+      <div className={`relative w-full flex items-center justify-center bg-black/60 ${maxHeight} overflow-hidden min-h-[260px]`}>
         <AnimatePresence mode="wait">
           {current.type === 'video' ? (
             <motion.div
@@ -175,14 +175,14 @@ export function WishMediaGallery({
           {/* Previous / Next buttons */}
           <button
             onClick={handlePrev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-[#141f1b]/80 hover:bg-[#141f1b] text-[#f3eee3] border border-[#2a3d35] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-[#0c0d0d]/90 hover:bg-[#050505] text-[#f5f2eb] border border-[#1a1d1b] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
             aria-label="Previous media"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-[#141f1b]/80 hover:bg-[#141f1b] text-[#f3eee3] border border-[#2a3d35] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-[#0c0d0d]/90 hover:bg-[#050505] text-[#f5f2eb] border border-[#1a1d1b] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
             aria-label="Next media"
           >
             <ChevronRight className="w-4 h-4" />
@@ -192,13 +192,13 @@ export function WishMediaGallery({
           <div className="absolute bottom-3 left-0 right-0 flex items-center justify-between px-4 z-20 pointer-events-none">
             <button
               onClick={togglePlay}
-              className="p-1.5 bg-[#141f1b]/85 backdrop-blur-sm border border-[#2a3d35] rounded-full text-[#a6b6ad] hover:text-[#e4c067] transition-colors pointer-events-auto shadow-md"
+              className="p-1.5 bg-[#0c0d0d]/90 backdrop-blur-sm border border-[#1a1d1b] rounded-full text-[#a1b0a8] hover:text-[#e4c067] transition-colors pointer-events-auto shadow-md"
               title={isPlaying ? 'Pause auto-slide' : 'Play auto-slide'}
             >
               {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
             </button>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#141f1b]/85 backdrop-blur-sm border border-[#2a3d35] rounded-full pointer-events-auto shadow-md">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#0c0d0d]/90 backdrop-blur-sm border border-[#1a1d1b] rounded-full pointer-events-auto shadow-md">
               {items.map((_, idx) => (
                 <button
                   key={idx}
@@ -215,7 +215,7 @@ export function WishMediaGallery({
                   aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
-              <span className="text-[10px] text-[#a6b6ad] font-mono ml-1.5 font-bold">
+              <span className="text-[10px] text-[#a1b0a8] font-mono ml-1.5 font-bold">
                 {activeIndex + 1}/{items.length}
               </span>
             </div>

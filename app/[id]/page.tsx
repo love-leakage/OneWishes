@@ -193,9 +193,9 @@ export default function DynamicRootPage() {
     if (!onewish) {
       return (
         <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-          <h2 className="font-serif text-4xl font-bold text-[#f3eee3] uppercase tracking-tighter">No Onewish Found</h2>
-          <p className="text-[#a6b6ad] text-sm uppercase tracking-widest">There is no Onewish booked for {id}.</p>
-          <Link href="/onewish" className="inline-block px-8 py-4 bg-[#f3eee3] text-[#141f1b] font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors">
+          <h2 className="font-serif text-4xl font-bold text-[#f5f2eb] uppercase tracking-tighter">No Onewish Found</h2>
+          <p className="text-[#a1b0a8] text-sm uppercase tracking-widest">There is no Onewish booked for {id}.</p>
+          <Link href="/onewish" className="inline-block px-8 py-4 bg-[#f5f2eb] text-[#050505] font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors">
             Book this date
           </Link>
         </div>
@@ -205,25 +205,21 @@ export default function DynamicRootPage() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-24 space-y-12">
         <div className="text-center space-y-4">
-          <h1 className="font-serif text-5xl font-bold uppercase tracking-tighter text-[#f3eee3]">THE ONEWISH</h1>
-          <p className="text-[#72897e] font-bold tracking-widest uppercase text-sm">{id}</p>
+          <h1 className="font-serif text-5xl font-bold uppercase tracking-tighter text-[#f5f2eb]">THE ONEWISH</h1>
+          <p className="text-[#e4c067] font-bold tracking-widest uppercase text-sm font-mono">{id}</p>
         </div>
         
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="p-10 sm:p-16 border border-[#72897e]/40 bg-[#1a2621] shadow-[8px_8px_0px_0px_rgba(114,137,126,0.2)] space-y-10 relative overflow-hidden"
-        >
-          <div className="flex items-center justify-between border-b border-[#2a3d35] pb-6">
-            <Link href={`/${onewish.to_username}`} className="text-sm font-bold tracking-widest text-[#a6b6ad] uppercase hover:text-[#f3eee3] transition-colors">
+        <div className="p-10 sm:p-16 border border-[#1a1d1b] bg-[#0c0d0d] shadow-[0_0_32px_rgba(0,0,0,0.8)] space-y-10 relative overflow-hidden">
+          <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-6">
+            <Link href={`/${onewish.to_username}`} className="text-sm font-bold tracking-widest text-[#a1b0a8] uppercase hover:text-[#f5f2eb] transition-colors">
               TO: {onewish.to_name.toUpperCase()} {onewish.to_username ? `(@${onewish.to_username})` : ''}
             </Link>
-            <span className="px-4 py-1.5 bg-[#72897e] text-white text-[10px] font-bold uppercase tracking-widest">
+            <span className="px-4 py-1.5 bg-[#8da095] text-[#050505] text-[10px] font-bold uppercase tracking-widest">
               ONEWISH
             </span>
           </div>
 
-          <p className="font-serif text-2xl sm:text-4xl text-[#f3eee3] leading-loose uppercase italic tracking-wide">
+          <p className="font-serif text-2xl sm:text-4xl text-[#f5f2eb] leading-loose uppercase italic tracking-wide">
             "{onewish.message}"
           </p>
 
@@ -231,13 +227,13 @@ export default function DynamicRootPage() {
             <WishMediaGallery mediaUrl={onewish.media_url} mediaType={onewish.media_type} />
           )}
 
-          <div className="pt-8 mt-8 border-t border-[#2a3d35] flex flex-col sm:flex-row items-center justify-between gap-6">
-            <Link href={`/${onewish.sender_username}`} className="text-sm text-[#f3eee3] font-bold uppercase tracking-widest hover:text-[#72897e] transition-colors">
+          <div className="pt-8 mt-8 border-t border-[#1a1d1b] flex flex-col sm:flex-row items-center justify-between gap-6">
+            <Link href={`/${onewish.sender_username}`} className="text-sm text-[#f5f2eb] font-bold uppercase tracking-widest hover:text-[#e4c067] transition-colors">
               FROM: @{onewish.sender_username}
             </Link>
             <WishLikeButton wishId={onewish.id} initialLikes={onewish.likes_count} showText />
           </div>
-        </motion.div>
+        </div>
       </div>
     );
   }
@@ -246,9 +242,9 @@ export default function DynamicRootPage() {
   if (!profile) {
     return (
       <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-        <h2 className="font-serif text-4xl font-bold text-[#f3eee3] uppercase tracking-tighter">Profile Not Found</h2>
-        <p className="text-[#a6b6ad] text-sm uppercase tracking-widest">The user @{id} does not exist.</p>
-        <Link href="/" className="inline-block px-8 py-4 bg-[#f3eee3] text-[#141f1b] font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors shadow-[4px_4px_0px_0px_rgba(114,137,126,0.3)]">
+        <h2 className="font-serif text-4xl font-bold text-[#f5f2eb] uppercase tracking-tighter">Profile Not Found</h2>
+        <p className="text-[#a1b0a8] text-sm uppercase tracking-widest">The user @{id} does not exist.</p>
+        <Link href="/" className="inline-block px-8 py-4 bg-[#f5f2eb] text-[#050505] font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors shadow-[4px_4px_0px_0px_rgba(228,192,103,0.3)]">
           Return to Home
         </Link>
       </div>
@@ -264,31 +260,31 @@ export default function DynamicRootPage() {
     <div className="max-w-4xl mx-auto px-4 py-20 space-y-16">
       {/* Profile Header */}
       <div className="flex flex-col items-center text-center space-y-6">
-        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#72897e] p-1 overflow-hidden bg-[#1a2621] shadow-[0_0_24px_rgba(114,137,126,0.25)]">
+        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#e4c067]/40 p-1 overflow-hidden bg-[#0c0d0d] shadow-[0_0_24px_rgba(228,192,103,0.15)]">
           {profile.avatar_url ? (
             <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover rounded-full" />
           ) : (
-            <div className="w-full h-full bg-[#f3eee3] text-[#141f1b] flex items-center justify-center font-serif text-5xl font-bold uppercase">
+            <div className="w-full h-full bg-[#f5f2eb] text-[#050505] flex items-center justify-center font-serif text-5xl font-bold uppercase">
               {profile.username.charAt(0)}
             </div>
           )}
         </div>
         
         <div className="space-y-2">
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-[#f3eee3]">
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-[#f5f2eb]">
             @{profile.username}
           </h1>
-          <p className="text-xs uppercase tracking-widest text-[#a6b6ad]">
+          <p className="text-xs uppercase tracking-widest text-[#a1b0a8]">
             Verified OneWishes Citizen
           </p>
         </div>
 
         {/* Golden Wish Scarcity Badges */}
-        <div className="flex flex-col items-center gap-3 p-5 bg-[#1a2621] border border-[#e4c067]/30 rounded-2xl max-w-md w-full shadow-[4px_4px_0px_0px_rgba(228,192,103,0.15)]">
+        <div className="flex flex-col items-center gap-3 p-5 bg-[#0c0d0d] border border-[#e4c067]/30 rounded-2xl max-w-md w-full shadow-[0_0_24px_rgba(0,0,0,0.6)]">
           <div className="text-[11px] font-bold uppercase tracking-widest text-[#e4c067] flex items-center gap-2">
             <Sparkles className="w-3.5 h-3.5" />
             <span>LIFETIME GOLDEN CREDITS</span>
-            <span className="px-2.5 py-0.5 bg-[#e4c067]/20 border border-[#e4c067]/40 rounded-full text-[10px]">
+            <span className="px-2.5 py-0.5 bg-[#e4c067]/15 border border-[#e4c067]/40 rounded-full text-[10px]">
               {goldenRemaining} / 3 AVAILABLE
             </span>
           </div>
@@ -301,8 +297,8 @@ export default function DynamicRootPage() {
                   key={slot}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[11px] font-bold uppercase tracking-wider transition-all ${
                     isUsed
-                      ? 'border-[#2a3d35] bg-[#121b18] text-[#72897e] opacity-60'
-                      : 'border-[#e4c067] bg-[#e4c067]/10 text-[#e4c067] shadow-[0_0_12px_rgba(228,192,103,0.25)]'
+                      ? 'border-[#1a1d1b] bg-[#070808] text-[#6e7d75] opacity-50'
+                      : 'border-[#e4c067] bg-[#e4c067]/10 text-[#e4c067] shadow-[0_0_12px_rgba(228,192,103,0.2)]'
                   }`}
                 >
                   <span>✦ Wish {slot}</span>
@@ -320,7 +316,7 @@ export default function DynamicRootPage() {
               href={`https://instagram.com/${profile.instagram_handle}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#1a2621] border border-[#2a3d35] hover:border-[#72897e] rounded-full text-xs font-bold uppercase tracking-widest text-[#a6b6ad] hover:text-[#f3eee3] transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/60 rounded-full text-xs font-bold uppercase tracking-widest text-[#a1b0a8] hover:text-[#f5f2eb] transition-all"
             >
               <Instagram className="w-4 h-4 text-[#e4c067]" />
               @{profile.instagram_handle}
@@ -329,7 +325,7 @@ export default function DynamicRootPage() {
 
           <button
             onClick={handleShareProfile}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#f3eee3] hover:bg-white text-[#141f1b] rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#f5f2eb] hover:bg-white text-[#050505] rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-sm"
           >
             {copied ? <Check className="w-4 h-4 text-green-700" /> : <Share2 className="w-4 h-4" />}
             <span>{copied ? 'Link Copied!' : 'Share Profile'}</span>
@@ -339,7 +335,7 @@ export default function DynamicRootPage() {
             href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Send a rare, everlasting wish to @${profile.username} on OneWishes: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#1a2621] border border-[#2a3d35] hover:border-[#72897e] rounded-full text-xs font-bold uppercase tracking-widest text-[#a6b6ad] hover:text-[#f3eee3] transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#8da095] rounded-full text-xs font-bold uppercase tracking-widest text-[#a1b0a8] hover:text-[#f5f2eb] transition-all"
           >
             <MessageCircle className="w-4 h-4 text-green-500" />
             <span>WhatsApp</span>
@@ -347,7 +343,7 @@ export default function DynamicRootPage() {
 
           <Link
             href={`/?to=${profile.username}#create-section`}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#e4c067] hover:bg-[#ebd38d] text-[#141f1b] rounded-full text-xs font-bold uppercase tracking-widest transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#e4c067] hover:bg-[#ebd38d] text-[#050505] rounded-full text-xs font-bold uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(228,192,103,0.2)]"
           >
             <Send className="w-3.5 h-3.5" />
             <span>Send Wish</span>
@@ -357,13 +353,13 @@ export default function DynamicRootPage() {
 
       {/* Tabs: Received vs Sent Wishes */}
       <div className="space-y-8">
-        <div className="flex items-center justify-center border-b border-[#2a3d35]">
+        <div className="flex items-center justify-center border-b border-[#1a1d1b]">
           <button
             onClick={() => setActiveTab('received')}
             className={`pb-4 px-8 text-sm font-bold uppercase tracking-widest transition-all relative ${
               activeTab === 'received'
-                ? 'text-[#f3eee3]'
-                : 'text-[#72897e] hover:text-[#a6b6ad]'
+                ? 'text-[#f5f2eb]'
+                : 'text-[#6e7d75] hover:text-[#a1b0a8]'
             }`}
           >
             <span>Received Wishes ({receivedWishes.length})</span>
@@ -379,15 +375,15 @@ export default function DynamicRootPage() {
             onClick={() => setActiveTab('sent')}
             className={`pb-4 px-8 text-sm font-bold uppercase tracking-widest transition-all relative ${
               activeTab === 'sent'
-                ? 'text-[#f3eee3]'
-                : 'text-[#72897e] hover:text-[#a6b6ad]'
+                ? 'text-[#f5f2eb]'
+                : 'text-[#6e7d75] hover:text-[#a1b0a8]'
             }`}
           >
             <span>Sent Wishes ({sentWishes.length})</span>
             {activeTab === 'sent' && (
               <motion.div
                 layoutId="tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#72897e]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#8da095]"
               />
             )}
           </button>
@@ -399,15 +395,15 @@ export default function DynamicRootPage() {
             <JarLoader text="ONEWISHES" subtext="Unsealing wishes..." size="sm" />
           </div>
         ) : activeWishesList.length === 0 ? (
-          <div className="text-center py-16 space-y-4 bg-[#1a2621]/40 border border-[#2a3d35] p-8">
-            <p className="text-sm text-[#a6b6ad] uppercase tracking-widest font-bold">
+          <div className="text-center py-16 space-y-4 bg-[#0c0d0d] border border-[#1a1d1b] p-8">
+            <p className="text-sm text-[#a1b0a8] uppercase tracking-widest font-bold">
               {activeTab === 'received'
                 ? `No wishes received yet for @${profile.username}.`
                 : `@${profile.username} has not sent any wishes yet.`}
             </p>
             <Link
               href="/#create-section"
-              className="inline-block px-6 py-3 bg-[#f3eee3] text-[#141f1b] font-bold text-xs uppercase tracking-widest hover:bg-white transition-all shadow-[2px_2px_0px_0px_rgba(114,137,126,0.3)]"
+              className="inline-block px-6 py-3 bg-[#f5f2eb] text-[#050505] font-bold text-xs uppercase tracking-widest hover:bg-white transition-all shadow-[2px_2px_0px_0px_rgba(228,192,103,0.3)]"
             >
               Write First Wish
             </Link>
@@ -417,7 +413,7 @@ export default function DynamicRootPage() {
             {activeWishesList.map((w) => (
               <div
                 key={w.id}
-                className="p-8 bg-[#1a2621] border border-[#2a3d35] hover:border-[#72897e] transition-all flex flex-col justify-between group shadow-[4px_4px_0px_0px_rgba(114,137,126,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(114,137,126,0.3)] min-h-[320px] relative"
+                className="p-8 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/40 transition-all flex flex-col justify-between group shadow-[0_0_24px_rgba(0,0,0,0.4)] hover:shadow-[0_0_32px_rgba(228,192,103,0.1)] min-h-[320px] relative"
               >
                 <div 
                   className="space-y-6 cursor-pointer" 
@@ -430,13 +426,13 @@ export default function DynamicRootPage() {
                     }
                   }}
                 >
-                  <div className="flex items-center justify-between border-b border-[#2a3d35] pb-4">
+                  <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-4">
                     <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
-                      w.tier === 'golden' ? 'bg-[#e4c067] text-[#141f1b]' : 'bg-[#72897e] text-white'
+                      w.tier === 'golden' ? 'bg-[#e4c067] text-[#050505]' : 'bg-[#8da095] text-[#050505]'
                     }`}>
                       {w.tier}
                     </span>
-                    <span className="text-[10px] font-mono text-[#72897e]">
+                    <span className="text-[10px] font-mono text-[#8da095]">
                       {new Date(w.created_at).toLocaleDateString()}
                     </span>
                   </div>
@@ -447,13 +443,13 @@ export default function DynamicRootPage() {
                     </div>
                   )}
 
-                  <p className="text-sm text-[#f3eee3] leading-relaxed line-clamp-4 font-serif italic uppercase">
+                  <p className="text-sm text-[#f5f2eb] leading-relaxed line-clamp-4 font-serif italic uppercase">
                     "{w.message}"
                   </p>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-[#2a3d35] flex justify-between items-center text-xs font-bold uppercase tracking-widest z-10">
-                  <span className="text-[#a6b6ad]">
+                <div className="pt-6 mt-6 border-t border-[#1a1d1b] flex justify-between items-center text-xs font-bold uppercase tracking-widest z-10">
+                  <span className="text-[#a1b0a8]">
                     {activeTab === 'received' ? `FROM: @${w.sender_username}` : `TO: @${w.to_username || 'Recipient'}`}
                   </span>
                   <WishLikeButton wishId={w.id} initialLikes={w.likes_count} showText />

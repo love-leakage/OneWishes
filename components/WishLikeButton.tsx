@@ -118,33 +118,33 @@ export function WishLikeButton({
       {showSignInPrompt && (
         <div 
           onClick={(e) => { e.stopPropagation(); setShowSignInPrompt(false); }}
-          className="fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="max-w-sm w-full bg-[#1a2621] border border-[#2a3d35] p-6 text-center space-y-4 shadow-[8px_8px_0px_0px_rgba(114,137,126,0.3)] animate-in fade-in zoom-in-95 duration-200"
+            className="max-w-sm w-full bg-[#0c0d0d] border border-[#1a1d1b] p-6 text-center space-y-4 shadow-[0_0_40px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 duration-200"
           >
             <div className="w-12 h-12 mx-auto rounded-full bg-[#c67d63]/20 flex items-center justify-center text-[#c67d63]">
               <Heart className="w-6 h-6 fill-current" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif text-lg font-bold text-[#f3eee3] uppercase tracking-wide">
+              <h3 className="font-serif text-lg font-bold text-[#f5f2eb] uppercase tracking-wide">
                 Sign In to Love Wishes
               </h3>
-              <p className="text-xs text-[#a6b6ad] leading-relaxed">
+              <p className="text-xs text-[#a1b0a8] leading-relaxed">
                 Every wish is rare and personal. Sign in with Google to seal your love on this wish.
               </p>
             </div>
             <div className="pt-2 flex flex-col gap-2">
               <button
                 onClick={handleSignIn}
-                className="w-full py-3 bg-[#f3eee3] hover:bg-white text-[#141f1b] font-bold text-xs uppercase tracking-widest transition-all shadow-[2px_2px_0px_0px_rgba(114,137,126,0.3)]"
+                className="w-full py-3 bg-[#f5f2eb] hover:bg-white text-[#050505] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(255,255,255,0.15)]"
               >
                 Sign In with Google
               </button>
               <button
                 onClick={() => setShowSignInPrompt(false)}
-                className="w-full py-2 text-[11px] text-[#72897e] hover:text-[#f3eee3] font-bold uppercase tracking-wider transition-colors"
+                className="w-full py-2 text-[11px] text-[#8da095] hover:text-[#f5f2eb] font-bold uppercase tracking-wider transition-colors"
               >
                 Cancel
               </button>

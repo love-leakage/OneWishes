@@ -75,7 +75,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNameSchema) }}
         />
       </head>
-      <body className="bg-[#141f1b] text-[#f3eee3] flex flex-col min-h-screen selection:bg-[#72897e] selection:text-white">
+      <body className="bg-[#050505] text-[#f5f2eb] flex flex-col min-h-screen selection:bg-[#e4c067] selection:text-[#050505]">
         <AuthGuard>
           <Navbar />
           <main className="flex-1">

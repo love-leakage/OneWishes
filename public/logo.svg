@@ -1,0 +1,78 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Deep Obsidian Radial Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#141816" />
+      <stop offset="60%" stop-color="#070908" />
+      <stop offset="100%" stop-color="#020302" />
+    </radialGradient>
+
+    <!-- Champagne Gold Gradient -->
+    <linearGradient id="goldLinear" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf6e2" />
+      <stop offset="25%" stop-color="#e4c067" />
+      <stop offset="60%" stop-color="#b88f34" />
+      <stop offset="85%" stop-color="#e4c067" />
+      <stop offset="100%" stop-color="#fcedc4" />
+    </linearGradient>
+
+    <!-- Soft Golden Aura -->
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e4c067" stop-opacity="0.35" />
+      <stop offset="50%" stop-color="#e4c067" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#e4c067" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Metallic Rim Highlight -->
+    <linearGradient id="rimShine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#e4c067" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Obsidian Base Disc -->
+  <rect width="512" height="512" rx="128" fill="#050505" />
+  <circle cx="256" cy="256" r="236" fill="url(#bgGlow)" stroke="#1a1f1c" stroke-width="2" />
+
+  <!-- Outer Fine-Line Celestial Ring -->
+  <circle cx="256" cy="256" r="218" stroke="url(#goldLinear)" stroke-width="2" stroke-opacity="0.4" />
+  <circle cx="256" cy="256" r="208" stroke="url(#goldLinear)" stroke-width="1.5" stroke-dasharray="3 8" stroke-opacity="0.35" />
+
+  <!-- Cardinal Coordinates Ticks -->
+  <line x1="256" y1="30" x2="256" y2="44" stroke="url(#goldLinear)" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="256" y1="468" x2="256" y2="482" stroke="url(#goldLinear)" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="30" y1="256" x2="44" y2="256" stroke="url(#goldLinear)" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="468" y1="256" x2="482" y2="256" stroke="url(#goldLinear)" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- Inner Aura behind the Star -->
+  <circle cx="256" cy="250" r="140" fill="url(#starGlow)" />
+
+  <!-- Geometric Wish Relic / Sacred Monolith Vessel (Arch) -->
+  <!-- Subtle back glass silhouette -->
+  <path d="M 176 352 L 176 220 C 176 175.8 211.8 140 256 140 C 300.2 140 336 175.8 336 220 L 336 352 C 336 365.25 325.25 376 312 376 L 200 376 C 186.75 376 176 365.25 176 352 Z" 
+        stroke="url(#goldLinear)" stroke-width="3" stroke-opacity="0.25" fill="#080c0a" fill-opacity="0.7" />
+
+  <!-- The "ONE" Monolithic Pillar (Negative & Positive Space) -->
+  <path d="M 236 170 L 256 150 L 256 350 M 230 350 L 282 350" 
+        stroke="url(#goldLinear)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.4" />
+
+  <!-- The Radiating Everlasting Wish Star (8-Point Brilliant Crest) -->
+  <!-- Main 4 Diamond Points -->
+  <path d="M 256 180 Q 256 242 194 242 Q 256 242 256 304 Q 256 242 318 242 Q 256 242 256 180 Z" 
+        fill="url(#goldLinear)" filter="drop-shadow(0 0 16px rgba(228,192,103,0.6))" />
+
+  <!-- Diagonal 4 Diamond Points -->
+  <path d="M 256 210 Q 256 242 224 242 Q 256 242 256 274 Q 256 242 288 242 Q 256 242 256 210 Z" 
+        fill="#ffffff" transform="rotate(45 256 242)" opacity="0.8" />
+
+  <!-- Core Diamond Sparkle -->
+  <circle cx="256" cy="242" r="5" fill="#ffffff" />
+  <circle cx="256" cy="242" r="10" fill="url(#goldLinear)" opacity="0.75" />
+
+  <!-- Subtle Bottom Pedestal & Inscription Bar -->
+  <line x1="160" y1="396" x2="352" y2="396" stroke="url(#goldLinear)" stroke-width="1.5" stroke-opacity="0.5" stroke-linecap="round" />
+  <circle cx="256" cy="396" r="3" fill="url(#goldLinear)" />
+  <circle cx="216" cy="396" r="2" fill="url(#goldLinear)" opacity="0.5" />
+  <circle cx="296" cy="396" r="2" fill="url(#goldLinear)" opacity="0.5" />
+</svg>

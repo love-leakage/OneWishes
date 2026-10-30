@@ -57,7 +57,7 @@ export default function GalleryPage() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-t border-b border-[#2a3d35] py-6">
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-t border-b border-[#1a1d1b] py-6">
         <div className="relative w-full md:w-96">
           <Search className="absolute left-4 top-4 w-4 h-4 text-[#72897e]" />
           <input
@@ -65,7 +65,7 @@ export default function GalleryPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="SEARCH BY RECIPIENT OR SENDER..."
-            className="w-full pl-12 pr-4 py-3 bg-[#121b18] border border-[#2a3d35] text-xs text-[#f3eee3] placeholder-[#425e52] focus:outline-none focus:border-[#72897e] transition-colors uppercase tracking-widest"
+            className="w-full pl-12 pr-4 py-3 bg-[#080909] border border-[#1a1d1b] text-xs text-[#f5f2eb] placeholder-[#555] focus:outline-none focus:border-[#e4c067] transition-colors uppercase tracking-widest"
           />
         </div>
 
@@ -76,8 +76,8 @@ export default function GalleryPage() {
               onClick={() => setTierFilter(t)}
               className={`px-6 py-3 border text-xs font-bold uppercase tracking-widest transition-all ${
                 tierFilter === t
-                  ? 'bg-[#72897e] text-white border-[#72897e]'
-                  : 'bg-[#1a2621] text-[#a6b6ad] border-[#2a3d35] hover:text-[#f3eee3] hover:border-[#72897e]'
+                  ? 'bg-[#e4c067] text-[#050505] border-[#e4c067]'
+                  : 'bg-[#0c0d0d] text-[#a1b0a8] border-[#1a1d1b] hover:text-[#f5f2eb] hover:border-[#e4c067]/50'
               }`}
             >
               {t}
@@ -92,7 +92,7 @@ export default function GalleryPage() {
           <JarLoader text="GALLERY" subtext="Unsealing public keepsakes..." size="lg" />
         </div>
       ) : filteredWishes.length === 0 ? (
-        <div className="text-[#a6b6ad] text-center py-20 text-sm uppercase tracking-widest font-bold">
+        <div className="text-[#a1b0a8] text-center py-20 text-sm uppercase tracking-widest font-bold">
           No public wishes match your search. Be the first to create one!
         </div>
       ) : (
@@ -106,30 +106,30 @@ export default function GalleryPage() {
               <Link
                 key={w.id}
                 href={wishHref}
-                className="p-8 bg-[#1a2621] border border-[#2a3d35] hover:border-[#72897e] transition-all flex flex-col justify-between group shadow-[4px_4px_0px_0px_rgba(114,137,126,0.15)] hover:shadow-[6px_6px_0px_0px_rgba(114,137,126,0.3)] min-h-[300px]"
+                className="p-8 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/50 transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_0_25px_rgba(228,192,103,0.1)] min-h-[300px]"
               >
               <div className="space-y-6">
-                <div className="flex items-center justify-between border-b border-[#2a3d35] pb-4">
+                <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-4">
                   <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
-                    w.tier === 'golden' ? 'bg-[#e4c067] text-[#141f1b]' : 'bg-[#72897e] text-white'
+                    w.tier === 'golden' ? 'bg-[#e4c067] text-[#050505]' : 'bg-[#1a1d1b] text-[#f5f2eb] border border-[#2a2e2c]'
                   }`}>
                     {w.tier}
                   </span>
-                  <span className="flex items-center gap-2 text-xs text-[#c67d63]">
+                  <span className="flex items-center gap-2 text-xs text-[#e4c067]">
                     <Heart className="w-4 h-4 fill-current" />
                     <span className="font-bold">{w.likes_count || 0}</span>
                   </span>
                 </div>
 
-                <h3 className="font-bold text-xl text-[#f3eee3] uppercase tracking-wider">
+                <h3 className="font-bold text-xl text-[#f5f2eb] uppercase tracking-wider">
                   TO: {w.to_name}
                 </h3>
-                <p className="text-sm text-[#a6b6ad] leading-relaxed line-clamp-4 font-serif italic uppercase">
+                <p className="text-sm text-[#a1b0a8] leading-relaxed line-clamp-4 font-serif italic uppercase">
                   "{w.message}"
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-[#2a3d35] text-right text-xs text-[#72897e] font-bold uppercase tracking-widest">
+              <div className="pt-6 mt-6 border-t border-[#1a1d1b] text-right text-xs text-[#e4c067] font-bold uppercase tracking-widest">
                 FROM: {w.from_name}
               </div>
             </Link>

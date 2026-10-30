@@ -108,13 +108,17 @@ export const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#141f1b]/95 backdrop-blur-md border-b border-[#2a3d35] transition-all">
+    <header className="sticky top-0 z-50 bg-[#050505]/90 backdrop-blur-md border-b border-[#1a1d1b] transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3">
-          <img src="/logo.png" alt="Onewishes Logo" className="w-10 h-10 object-contain rounded-md" />
-          <span className="font-serif font-bold text-xl tracking-widest uppercase text-[#f3eee3] hidden sm:block">
+        <Link href="/" className="flex items-center gap-3 group">
+          <img 
+            src="/logo.svg" 
+            alt="Onewishes Logo" 
+            className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(228,192,103,0.25)] transition-transform group-hover:scale-105" 
+          />
+          <span className="font-serif font-bold text-xl tracking-widest uppercase text-[#f5f2eb] hidden sm:block">
             Onewishes
           </span>
         </Link>
@@ -128,7 +132,7 @@ export const Navbar = () => {
                 key={item.href}
                 href={item.href}
                 className={`text-sm font-medium tracking-wide uppercase transition-colors ${
-                  isActive ? 'text-[#f3eee3] border-b-2 border-[#72897e] pb-1' : 'text-[#a6b6ad] hover:text-[#f3eee3]'
+                  isActive ? 'text-[#f5f2eb] border-b-2 border-[#e4c067] pb-1 font-bold' : 'text-[#a1b0a8] hover:text-[#f5f2eb]'
                 }`}
               >
                 {item.label}
@@ -143,7 +147,7 @@ export const Navbar = () => {
           <button
             onClick={() => sounds.toggle()}
             title={soundOn ? 'Sound On' : 'Sound Muted'}
-            className="p-2 border border-[#2a3d35] rounded-full text-[#a6b6ad] hover:text-[#f3eee3] hover:border-[#72897e] bg-[#1a2621]/60 transition-all"
+            className="p-2 border border-[#1a1d1b] rounded-full text-[#a1b0a8] hover:text-[#f5f2eb] hover:border-[#353b37] bg-[#0d0f0e] transition-all"
           >
             {soundOn ? <Volume2 className="w-4 h-4 text-[#e4c067]" /> : <VolumeX className="w-4 h-4" />}
           </button>
@@ -152,17 +156,17 @@ export const Navbar = () => {
             <div className="flex items-center gap-3">
               <Link 
                 href={profile?.username ? `/${profile.username}` : '/profile'} 
-                className="flex items-center gap-2 border border-[#2a3d35] py-1.5 px-3 rounded-full hover:border-[#72897e] bg-[#1a2621]/80 transition-all group"
+                className="flex items-center gap-2 border border-[#1a1d1b] py-1.5 px-3 rounded-full hover:border-[#e4c067]/60 bg-[#0d0f0e] transition-all group shadow-sm"
               >
                 {user.user_metadata?.avatar_url ? (
                   <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full grayscale group-hover:grayscale-0 transition-all" />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-[#f3eee3] text-[#141f1b] flex items-center justify-center font-bold text-[10px] uppercase">
+                  <div className="w-6 h-6 rounded-full bg-[#f5f2eb] text-[#050505] flex items-center justify-center font-bold text-[10px] uppercase">
                     {(profile?.username || user.email?.charAt(0))?.substring(0, 1)}
                   </div>
                 )}
                 {profile?.username ? (
-                  <span className="text-xs font-bold tracking-wider uppercase text-[#f3eee3] group-hover:text-white">
+                  <span className="text-xs font-bold tracking-wider uppercase text-[#f5f2eb] group-hover:text-[#e4c067] transition-colors">
                     @{profile.username}
                   </span>
                 ) : (
@@ -171,14 +175,14 @@ export const Navbar = () => {
                   </span>
                 )}
               </Link>
-              <button onClick={handleLogout} className="text-[#a6b6ad] hover:text-[#f3eee3] p-1.5 transition-colors" title="Log Out">
+              <button onClick={handleLogout} className="text-[#a1b0a8] hover:text-[#f5f2eb] p-1.5 transition-colors" title="Log Out">
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
           ) : (
             <button
               onClick={handleGoogleLogin}
-              className="px-6 py-2 bg-[#f3eee3] text-[#141f1b] font-bold uppercase text-sm tracking-wider hover:bg-white transition-colors"
+              className="px-6 py-2 bg-[#f5f2eb] text-[#050505] font-bold uppercase text-sm tracking-wider hover:bg-white transition-colors"
             >
               Sign In
             </button>
@@ -190,13 +194,13 @@ export const Navbar = () => {
           <button
             onClick={() => sounds.toggle()}
             title={soundOn ? 'Sound On' : 'Sound Muted'}
-            className="p-2 border border-[#2a3d35] rounded-full text-[#a6b6ad] hover:text-[#f3eee3]"
+            className="p-2 border border-[#1a1d1b] rounded-full text-[#a1b0a8] hover:text-[#f5f2eb] bg-[#0d0f0e]"
           >
             {soundOn ? <Volume2 className="w-4 h-4 text-[#e4c067]" /> : <VolumeX className="w-4 h-4" />}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-[#f3eee3] p-1"
+            className="text-[#f5f2eb] p-1"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -205,33 +209,33 @@ export const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#2a3d35] bg-[#141f1b] px-4 py-4 space-y-4">
+        <div className="md:hidden border-t border-[#1a1d1b] bg-[#070808] px-4 py-4 space-y-4">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-lg font-medium text-[#f3eee3] uppercase tracking-wide"
+              className="block text-lg font-medium text-[#f5f2eb] uppercase tracking-wide"
             >
               {item.label}
             </Link>
           ))}
           {user ? (
-            <div className="pt-4 border-t border-[#2a3d35] flex items-center justify-between">
+            <div className="pt-4 border-t border-[#1a1d1b] flex items-center justify-between">
               <Link 
                 href={profile?.username ? `/${profile.username}` : '/profile'} 
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 border border-[#2a3d35] py-1.5 px-3 rounded-full hover:border-[#72897e] bg-[#1a2621] transition-all"
+                className="flex items-center gap-2 border border-[#1a1d1b] py-1.5 px-3 rounded-full hover:border-[#e4c067] bg-[#0d0f0e] transition-all"
               >
                 {user.user_metadata?.avatar_url ? (
                   <img src={user.user_metadata.avatar_url} alt="Profile" className="w-7 h-7 rounded-full grayscale hover:grayscale-0 transition-all" />
                 ) : (
-                  <div className="w-7 h-7 rounded-full bg-[#f3eee3] text-[#141f1b] flex items-center justify-center font-bold text-xs uppercase">
+                  <div className="w-7 h-7 rounded-full bg-[#f5f2eb] text-[#050505] flex items-center justify-center font-bold text-xs uppercase">
                     {(profile?.username || user.email?.charAt(0))?.substring(0, 1)}
                   </div>
                 )}
                 {profile?.username ? (
-                  <span className="text-xs font-bold tracking-wider uppercase text-[#f3eee3]">
+                  <span className="text-xs font-bold tracking-wider uppercase text-[#f5f2eb]">
                     @{profile.username}
                   </span>
                 ) : (
@@ -240,14 +244,14 @@ export const Navbar = () => {
                   </span>
                 )}
               </Link>
-              <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="text-[#a6b6ad] hover:text-[#f3eee3] p-2">
+              <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="text-[#a1b0a8] hover:text-[#f5f2eb] p-2">
                 <LogOut className="w-5 h-5" />
               </button>
             </div>
           ) : (
             <button
               onClick={() => { handleGoogleLogin(); setMobileMenuOpen(false); }}
-              className="w-full mt-4 py-3 bg-[#f3eee3] text-[#141f1b] font-bold uppercase tracking-wider text-sm"
+              className="w-full mt-4 py-3 bg-[#f5f2eb] text-[#050505] font-bold uppercase tracking-wider text-sm"
             >
               Sign In with Google
             </button>

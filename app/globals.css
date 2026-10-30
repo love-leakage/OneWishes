@@ -8,28 +8,60 @@
     --font-fraunces: 'Fraunces', serif;
   }
 
+  html {
+    scroll-behavior: smooth;
+    background-color: #050505;
+    color-scheme: dark;
+  }
+
   body {
-    background-color: #141f1b;
-    color: #f3eee3;
-    @apply font-sans min-h-screen antialiased selection:bg-[#72897e] selection:text-white;
+    background-color: #050505;
+    color: #f5f2eb;
+    @apply font-sans min-h-screen antialiased selection:bg-[#e4c067] selection:text-[#050505];
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
 }
 
-/* Custom Scrollbar matching logo theme */
+/* Modern Deep Black Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #141f1b;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a3d35;
-  border-radius: 4px;
+  background: #1f2321;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #425e52;
+  background: #353b37;
 }
 
+/* GPU Hardware-Accelerated Marquee Animations (Smooth 120fps, Zero JS Overhead) */
+@keyframes marquee-left {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-right {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.animate-marquee-left {
+  animation: marquee-left 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-right {
+  animation: marquee-right 36s linear infinite;
+  will-change: transform;
+}
+
+/* GPU Accelerated Ambient Motion */
 @keyframes kenburns-slow {
   0% {
     transform: scale(1) translateZ(0);
@@ -46,5 +78,3 @@
   animation: kenburns-slow 10s ease-in-out infinite;
   will-change: transform;
 }
-
-
