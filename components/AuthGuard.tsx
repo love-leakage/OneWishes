@@ -206,28 +206,28 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       {children}
 
       {!loading && needsUsername && (
-        <div className="fixed inset-0 z-[100] bg-[#050505]/95 backdrop-blur-md text-[#f5f2eb] flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-[#0c0d0d] border border-[#1a1d1b] p-6 sm:p-10 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-[100] bg-[#050505]/95 backdrop-blur-md text-[#fbf8f5] flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-[#0d0910] border border-[#26182a] p-6 sm:p-10 shadow-2xl space-y-6">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#e4c067]">
+              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#ff4d8d]">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>First Time Sign In</span>
               </div>
-              <h2 className="font-serif text-3xl font-bold uppercase tracking-tighter text-[#f5f2eb]">
+              <h2 className="font-serif text-3xl font-bold uppercase tracking-tighter text-[#fbf8f5]">
                 Claim Your Username
               </h2>
-              <p className="text-xs text-[#a1b0a8] uppercase tracking-wider leading-relaxed">
+              <p className="text-xs text-[#b5a5b5] uppercase tracking-wider leading-relaxed">
                 One username per user. This is your permanent, unique handle on OneWishes.
               </p>
             </div>
 
             <form onSubmit={handleSave} className="space-y-5">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb] mb-2">
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5] mb-2">
                   Unique Username *
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-4 text-[#e4c067] font-bold text-sm">@</span>
+                  <span className="absolute left-4 top-4 text-[#ff4d8d] font-bold text-sm">@</span>
                   <input
                     type="text"
                     value={username}
@@ -236,17 +236,17 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                     maxLength={20}
                     autoFocus
                     required
-                    className="w-full pl-9 pr-4 py-3.5 bg-[#080909] border border-[#1a1d1b] text-[#f5f2eb] placeholder-[#555] focus:outline-none focus:border-[#e4c067] transition-colors font-bold tracking-wider text-sm"
+                    className="w-full pl-9 pr-4 py-3.5 bg-[#08050a] border border-[#241727] text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors font-bold tracking-wider text-sm"
                   />
                 </div>
 
                 {/* Real-time availability indicator */}
                 <div className="mt-2 text-[11px] font-bold tracking-wide">
                   {checkingAvailability && (
-                    <span className="text-[#a1b0a8] uppercase">Checking availability...</span>
+                    <span className="text-[#b5a5b5] uppercase">Checking availability...</span>
                   )}
                   {!checkingAvailability && isAvailable === true && username.length >= 3 && (
-                    <span className="text-[#e4c067] flex items-center gap-1">
+                    <span className="text-[#ff4d8d] flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       @{username} is available!
                     </span>
@@ -258,7 +258,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                     </span>
                   )}
                   {!checkingAvailability && isAvailable === null && (
-                    <span className="text-[#6e7d75] text-[10px] uppercase tracking-wider">
+                    <span className="text-[#7a6a7a] text-[10px] uppercase tracking-wider">
                       3–20 characters. Lowercase letters, numbers & underscores only.
                     </span>
                   )}
@@ -266,21 +266,21 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb] mb-2">
-                  Instagram Handle <span className="text-[#6e7d75] font-normal">(Optional)</span>
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5] mb-2">
+                  Instagram Handle <span className="text-[#7a6a7a] font-normal">(Optional)</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-4 text-[#e4c067] font-bold text-sm">@</span>
+                  <span className="absolute left-4 top-4 text-[#ff4d8d] font-bold text-sm">@</span>
                   <input
                     type="text"
                     value={instagram}
                     onChange={(e) => setInstagram(e.target.value)}
                     placeholder="instagram_handle"
                     maxLength={30}
-                    className="w-full pl-9 pr-4 py-3.5 bg-[#080909] border border-[#1a1d1b] text-[#f5f2eb] placeholder-[#555] focus:outline-none focus:border-[#e4c067] transition-colors font-medium tracking-wider text-sm"
+                    className="w-full pl-9 pr-4 py-3.5 bg-[#08050a] border border-[#241727] text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors font-medium tracking-wider text-sm"
                   />
                 </div>
-                <p className="text-[10px] text-[#6e7d75] mt-1.5 uppercase tracking-wider">
+                <p className="text-[10px] text-[#7a6a7a] mt-1.5 uppercase tracking-wider">
                   Optional: Link your Instagram so friends can find and verify you.
                 </p>
               </div>
@@ -294,12 +294,12 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
               <button
                 type="submit"
                 disabled={saving || checkingAvailability || isAvailable === false || username.length < 3}
-                className="w-full py-4 bg-[#e4c067] text-[#050505] font-bold uppercase tracking-widest text-xs hover:bg-[#edd48d] transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(228,192,103,0.2)]"
+                className="w-full py-4 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold uppercase tracking-widest text-xs hover:opacity-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(248,79,156,0.35)]"
               >
                 {saving ? 'CONFIRMING IDENTITY...' : 'CONFIRM USERNAME'}
               </button>
 
-              <p className="text-[10px] text-center text-[#6e7d75] uppercase tracking-widest">
+              <p className="text-[10px] text-center text-[#7a6a7a] uppercase tracking-widest">
                 Rule: 1 User = 1 Permanent Username
               </p>
             </form>

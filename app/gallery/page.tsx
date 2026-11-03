@@ -65,20 +65,20 @@ export default function GalleryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
       <div className="space-y-4 text-center">
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#f3eee3] uppercase tracking-tighter">Public Showcase</h1>
-        <p className="text-[#a6b6ad] text-sm uppercase tracking-widest">Explore heartfelt keepsake wishes sent across the world.</p>
+        <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#fbf8f5] uppercase tracking-tighter">Public Showcase</h1>
+        <p className="text-[#b5a5b5] text-sm uppercase tracking-widest">Explore heartfelt keepsake wishes sent across the world.</p>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-t border-b border-[#1a1d1b] py-6">
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-t border-b border-[#211624] py-6">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-4 w-4 h-4 text-[#72897e]" />
+          <Search className="absolute left-4 top-4 w-4 h-4 text-[#ff4d8d]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="SEARCH BY RECIPIENT OR SENDER..."
-            className="w-full pl-12 pr-4 py-3 bg-[#080909] border border-[#1a1d1b] text-xs text-[#f5f2eb] placeholder-[#555] focus:outline-none focus:border-[#e4c067] transition-colors uppercase tracking-widest"
+            className="w-full pl-12 pr-4 py-3 bg-[#08050a] border border-[#241727] text-xs text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors uppercase tracking-widest"
           />
         </div>
 
@@ -89,8 +89,8 @@ export default function GalleryPage() {
               onClick={() => setTierFilter(t)}
               className={`px-6 py-3 border text-xs font-bold uppercase tracking-widest transition-all ${
                 tierFilter === t
-                  ? 'bg-[#e4c067] text-[#050505] border-[#e4c067]'
-                  : 'bg-[#0c0d0d] text-[#a1b0a8] border-[#1a1d1b] hover:text-[#f5f2eb] hover:border-[#e4c067]/50'
+                  ? 'bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white border-transparent shadow-[0_0_16px_rgba(248,79,156,0.35)]'
+                  : 'bg-[#0d0910] text-[#b5a5b5] border-[#241727] hover:text-[#fbf8f5] hover:border-[#ff4d8d]/50'
               }`}
             >
               {t}
@@ -102,10 +102,10 @@ export default function GalleryPage() {
       {/* Grid */}
       {loading ? (
         <div className="py-24 flex items-center justify-center">
-          <JarLoader text="GALLERY" subtext="Unsealing public keepsakes..." size="lg" />
+          <JarLoader text="GALLERY" subtext="Unsealing public keepsakes across infinity..." size="lg" />
         </div>
       ) : filteredWishes.length === 0 ? (
-        <div className="text-[#a1b0a8] text-center py-20 text-sm uppercase tracking-widest font-bold">
+        <div className="text-[#b5a5b5] text-center py-20 text-sm uppercase tracking-widest font-bold">
           No public wishes match your search. Be the first to create one!
         </div>
       ) : (
@@ -119,30 +119,30 @@ export default function GalleryPage() {
               <Link
                 key={w.id}
                 href={wishHref}
-                className="p-8 bg-[#0c0d0d] border border-[#1a1d1b] hover:border-[#e4c067]/50 transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_0_25px_rgba(228,192,103,0.1)] min-h-[300px]"
+                className="p-8 bg-[#0d0910] border border-[#26182a] hover:border-[#ff4d8d]/50 transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_0_30px_rgba(248,79,156,0.18)] min-h-[300px]"
               >
               <div className="space-y-6">
-                <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-4">
+                <div className="flex items-center justify-between border-b border-[#211624] pb-4">
                   <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
-                    w.tier === 'golden' ? 'bg-[#e4c067] text-[#050505]' : 'bg-[#1a1d1b] text-[#f5f2eb] border border-[#2a2e2c]'
+                    w.tier === 'golden' ? 'bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white' : 'bg-[#ff6b8b] text-[#050505]'
                   }`}>
                     {w.tier}
                   </span>
-                  <span className="flex items-center gap-2 text-xs text-[#e4c067]">
+                  <span className="flex items-center gap-2 text-xs text-[#ff4d8d]">
                     <Heart className="w-4 h-4 fill-current" />
                     <span className="font-bold">{w.likes_count || 0}</span>
                   </span>
                 </div>
 
-                <h3 className="font-bold text-xl text-[#f5f2eb] uppercase tracking-wider">
+                <h3 className="font-bold text-xl text-[#fbf8f5] uppercase tracking-wider group-hover:text-[#ff758c] transition-colors">
                   TO: {w.to_name}
                 </h3>
-                <p className="text-sm text-[#a1b0a8] leading-relaxed line-clamp-4 font-serif italic uppercase">
+                <p className="text-sm text-[#b5a5b5] leading-relaxed line-clamp-4 font-serif italic uppercase">
                   "{w.message}"
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-[#1a1d1b] text-right text-xs text-[#e4c067] font-bold uppercase tracking-widest">
+              <div className="pt-6 mt-6 border-t border-[#211624] text-right text-xs text-[#ff4d8d] font-bold uppercase tracking-widest">
                 FROM: {w.from_name}
               </div>
             </Link>

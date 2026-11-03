@@ -324,25 +324,25 @@ export default function HomePage() {
           className="space-y-8 relative z-10"
         >
           {/* Text Masking Style Heading */}
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-black leading-[0.9] text-[#f5f2eb] uppercase tracking-tighter">
-            A WISH <br/> <span className="text-transparent" style={{ WebkitTextStroke: '2px #e4c067' }}>WORTH</span> SENDING
+          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-black leading-[0.9] text-[#fbf8f5] uppercase tracking-tighter">
+            A WISH <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff6b8b] via-[#f84f9c] to-[#ff2a85] drop-shadow-[0_0_30px_rgba(248,79,156,0.35)]">WORTH</span> SENDING
           </h1>
 
-          <p className="text-[#a1b0a8] text-sm md:text-base uppercase tracking-widest max-w-lg mx-auto leading-loose font-bold">
+          <p className="text-[#b5a5b5] text-sm md:text-base uppercase tracking-widest max-w-lg mx-auto leading-loose font-bold">
             ARTIFICIAL SCARCITY. <br/> So the ones you wish know what it cost you.
           </p>
           {/* Today's Onewish Banner */}
           {todayOnewish && (
-            <div className="mt-16 w-full max-w-4xl mx-auto p-1 border border-[#1a1d1b] bg-[#0c0d0d] shadow-[0_0_32px_rgba(0,0,0,0.8)]">
-              <div className="bg-[#070808] p-8 sm:p-10 border border-[#1a1d1b]">
-                <div className="text-xs font-bold uppercase tracking-widest text-[#e4c067] mb-6 flex items-center justify-between">
+            <div className="mt-16 w-full max-w-4xl mx-auto p-1 border border-[#26182a] bg-[#0d0910] shadow-[0_0_35px_rgba(248,79,156,0.15)]">
+              <div className="bg-[#08050a] p-8 sm:p-10 border border-[#211624]">
+                <div className="text-xs font-bold uppercase tracking-widest text-[#ff4d8d] mb-6 flex items-center justify-between">
                   <span className="flex items-center gap-2">✦ Today's Onewish Spotlight</span>
-                  <span className="text-[#a1b0a8] font-mono">{new Date().toISOString().split('T')[0]}</span>
+                  <span className="text-[#b5a5b5] font-mono">{new Date().toISOString().split('T')[0]}</span>
                 </div>
                 
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-4">
-                    <Link href={`/${todayOnewish.to_username || ''}`} className="text-sm font-bold tracking-widest text-[#a1b0a8] uppercase hover:text-[#f5f2eb] transition-colors">
+                  <div className="flex items-center justify-between border-b border-[#211624] pb-4">
+                    <Link href={`/${todayOnewish.to_username || ''}`} className="text-sm font-bold tracking-widest text-[#b5a5b5] uppercase hover:text-[#fbf8f5] transition-colors">
                       TO: {todayOnewish.to_name.toUpperCase()} {todayOnewish.to_username ? `(@${todayOnewish.to_username})` : ''}
                     </Link>
                   </div>
@@ -351,12 +351,12 @@ export default function HomePage() {
                     <WishMediaGallery mediaUrl={todayOnewish.media_url} mediaType={todayOnewish.media_type} />
                   )}
 
-                  <p className="font-serif text-2xl md:text-3xl text-[#f5f2eb] leading-loose uppercase italic tracking-wide">
+                  <p className="font-serif text-2xl md:text-3xl text-[#fbf8f5] leading-loose uppercase italic tracking-wide">
                     "{todayOnewish.message}"
                   </p>
 
-                  <div className="pt-6 mt-6 border-t border-[#1a1d1b] flex justify-between items-center text-xs font-bold uppercase tracking-widest">
-                    <Link href={`/${todayOnewish.sender_username}`} className="text-[#f5f2eb] hover:text-[#e4c067] transition-colors">FROM: @{todayOnewish.sender_username}</Link>
+                  <div className="pt-6 mt-6 border-t border-[#211624] flex justify-between items-center text-xs font-bold uppercase tracking-widest">
+                    <Link href={`/${todayOnewish.sender_username}`} className="text-[#fbf8f5] hover:text-[#ff4d8d] transition-colors">FROM: @{todayOnewish.sender_username}</Link>
                     <WishLikeButton wishId={todayOnewish.id} initialLikes={todayOnewish.likes_count} showText />
                   </div>
                 </div>
@@ -367,7 +367,7 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center justify-center gap-4 pt-12">
             <button
               onClick={scrollToCreate}
-              className="px-8 py-4 bg-[#f5f2eb] text-[#050505] font-bold uppercase tracking-widest text-sm hover:bg-white hover:shadow-[0_0_24px_rgba(255,255,255,0.2)] transition-all flex items-center gap-3 shadow-[4px_4px_0px_0px_rgba(228,192,103,0.3)]"
+              className="px-9 py-4 bg-gradient-to-r from-[#ff5376] via-[#f84f9c] to-[#ff2a85] text-white font-bold uppercase tracking-widest text-sm hover:opacity-95 hover:shadow-[0_0_30px_rgba(248,79,156,0.5)] transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(248,79,156,0.3)] rounded-full"
             >
               <span>Write a Wish</span>
               <ArrowRight className="w-4 h-4" />
@@ -377,46 +377,46 @@ export default function HomePage() {
       </section>
 
       {/* ===== TIERS SHOWCASE ===== */}
-      <section className="space-y-12 pt-16 border-t border-[#1a1d1b]">
+      <section className="space-y-12 pt-16 border-t border-[#211624]">
         <div className="text-center space-y-3">
-          <h2 className="font-serif text-3xl font-bold text-[#f5f2eb] uppercase tracking-widest">The Tiers</h2>
-          <p className="text-[#a1b0a8] text-sm uppercase tracking-wider">Two intentional constraints.</p>
+          <h2 className="font-serif text-3xl font-bold text-[#fbf8f5] uppercase tracking-widest">The Tiers</h2>
+          <p className="text-[#b5a5b5] text-sm uppercase tracking-wider">Two intentional constraints.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Golden Wish Card */}
-          <div className="p-10 border border-[#e4c067]/40 hover:border-[#e4c067] bg-[#0c0d0d] transition-all flex flex-col justify-between shadow-[6px_6px_0px_0px_rgba(228,192,103,0.12)]">
+          <div className="p-10 border border-[#ff4d8d]/35 hover:border-[#ff4d8d] bg-[#0d0910] transition-all flex flex-col justify-between shadow-[0_0_30px_rgba(248,79,156,0.1)] hover:shadow-[0_0_40px_rgba(248,79,156,0.2)]">
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-[#e4c067] mb-6 flex items-center gap-2">
+              <div className="text-xs font-bold uppercase tracking-widest text-[#ff4d8d] mb-6 flex items-center gap-2">
                 <span>✦</span> Tier I • 3 Per Lifetime
               </div>
-              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-4 uppercase">Golden Wish</h3>
-              <p className="text-sm text-[#a1b0a8] leading-relaxed mb-8">
+              <h3 className="font-serif text-3xl font-bold text-[#fbf8f5] mb-4 uppercase">Golden Wish</h3>
+              <p className="text-sm text-[#b5a5b5] leading-relaxed mb-8">
                 Rare keepsake wish attached to your identity. Exactly 3 allowed per user account.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('golden'); scrollToCreate(); }}
-              className="w-full py-4 border border-[#e4c067] text-[#e4c067] font-bold uppercase tracking-widest text-xs hover:bg-[#e4c067] hover:text-[#050505] transition-colors"
+              className="w-full py-4 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-[0_0_18px_rgba(248,79,156,0.3)]"
             >
               Create Golden
             </button>
           </div>
 
           {/* Onewish Spotlight Card */}
-          <div className="p-10 border border-[#1a1d1b] hover:border-[#8da095] bg-[#0c0d0d] transition-all flex flex-col justify-between shadow-[6px_6px_0px_0px_rgba(0,0,0,0.5)]">
+          <div className="p-10 border border-[#ff6b8b]/30 hover:border-[#ff6b8b] bg-[#0d0910] transition-all flex flex-col justify-between shadow-[0_0_30px_rgba(255,107,139,0.08)] hover:shadow-[0_0_40px_rgba(255,107,139,0.18)]">
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-[#8da095] mb-6 flex items-center gap-2">
+              <div className="text-xs font-bold uppercase tracking-widest text-[#ff758c] mb-6 flex items-center gap-2">
                 <span>✦</span> Tier II • 1 Slot / Day
               </div>
-              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-4 uppercase">Onewish Spotlight</h3>
-              <p className="text-sm text-[#a1b0a8] leading-relaxed mb-8">
+              <h3 className="font-serif text-3xl font-bold text-[#fbf8f5] mb-4 uppercase">Onewish Spotlight</h3>
+              <p className="text-sm text-[#b5a5b5] leading-relaxed mb-8">
                 Claim the front-page spotlight for a specific calendar date worldwide. Never fades.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('onewish'); scrollToCreate(); }}
-              className="w-full py-4 border border-[#1a1d1b] text-[#f5f2eb] font-bold uppercase tracking-widest text-xs hover:border-[#8da095] hover:bg-[#8da095]/10 transition-colors"
+              className="w-full py-4 border border-[#ff6b8b] text-[#ff758c] font-bold uppercase tracking-widest text-xs hover:bg-[#ff6b8b]/15 transition-all"
             >
               Book Onewish
             </button>
@@ -425,37 +425,37 @@ export default function HomePage() {
       </section>
 
       {/* ===== PHILOSOPHY / A NOTE ON OUR NAME ===== */}
-      <section className="py-8 border-t border-[#1a1d1b]">
-        <div className="max-w-3xl mx-auto p-8 sm:p-12 border border-[#1a1d1b] bg-[#0c0d0d] text-center space-y-6 shadow-[6px_6px_0px_0px_rgba(228,192,103,0.1)] relative overflow-hidden">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#050505] border border-[#1a1d1b] rounded-full text-[11px] font-bold uppercase tracking-widest text-[#e4c067]">
+      <section className="py-8 border-t border-[#211624]">
+        <div className="max-w-3xl mx-auto p-8 sm:p-12 border border-[#211624] bg-[#0d0910] text-center space-y-6 shadow-[0_0_30px_rgba(248,79,156,0.08)] relative overflow-hidden">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#050505] border border-[#ff4d8d]/35 rounded-full text-[11px] font-bold uppercase tracking-widest text-[#ff4d8d]">
             ✦ A Note On Our Name
           </div>
 
-          <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#f5f2eb] uppercase tracking-tight leading-snug">
-            "Grammar says <span className="italic text-[#a1b0a8]">One Wish</span>. <br className="hidden sm:block" />
+          <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#fbf8f5] uppercase tracking-tight leading-snug">
+            "Grammar says <span className="italic text-[#b5a5b5]">One Wish</span>. <br className="hidden sm:block" />
             Feelings don't follow grammar."
           </h2>
 
-          <p className="text-sm sm:text-base text-[#a1b0a8] leading-relaxed max-w-xl mx-auto">
+          <p className="text-sm sm:text-base text-[#b5a5b5] leading-relaxed max-w-xl mx-auto">
             Yes, we might have broken English rules with our name. But in a world full of temporary stories and disposable texts, we built this with one truth:
           </p>
 
-          <p className="text-base sm:text-lg font-serif italic text-[#e4c067] tracking-wide max-w-xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg font-serif italic text-gradient-rose tracking-wide max-w-xl mx-auto leading-relaxed">
             "We made a mistake in our name — but don't make the mistake of leaving your memories unsaid."
           </p>
 
-          <div className="pt-4 border-t border-[#1a1d1b] text-[11px] uppercase tracking-widest text-[#8da095] font-mono font-bold">
+          <div className="pt-4 border-t border-[#211624] text-[11px] uppercase tracking-widest text-[#ff758c] font-mono font-bold">
             When ONE person WISHES with all their heart, it lasts forever.
           </div>
         </div>
       </section>
 
       {/* ===== CREATE WISH FORM & PREVIEW ===== */}
-      <section id="create-section" className="pt-24 scroll-mt-24 border-t border-[#1a1d1b]">
+      <section id="create-section" className="pt-24 scroll-mt-24 border-t border-[#211624]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Form Box */}
           <div className="lg:col-span-7 space-y-8">
-            <h2 className="font-serif text-4xl font-bold text-[#f5f2eb] uppercase tracking-tighter">Write Your Wish</h2>
+            <h2 className="font-serif text-4xl font-bold text-[#fbf8f5] uppercase tracking-tighter">Write Your Wish</h2>
             
             {/* Tier Selector */}
             <div className="grid grid-cols-2 gap-4">
@@ -464,8 +464,8 @@ export default function HomePage() {
                 onClick={() => setSelectedTier('golden')}
                 className={`p-4 border text-center transition-all ${
                   selectedTier === 'golden'
-                    ? 'border-[#e4c067] bg-[#e4c067] text-[#050505]'
-                    : 'border-[#1a1d1b] bg-[#0c0d0d] text-[#a1b0a8] hover:border-[#e4c067]/50'
+                    ? 'border-[#ff4d8d] bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white shadow-[0_0_20px_rgba(248,79,156,0.35)]'
+                    : 'border-[#241727] bg-[#0d0910] text-[#b5a5b5] hover:border-[#ff4d8d]/50'
                 }`}
               >
                 <div className="text-sm font-bold uppercase tracking-widest">Golden</div>
@@ -476,8 +476,8 @@ export default function HomePage() {
                 onClick={() => setSelectedTier('onewish')}
                 className={`p-4 border text-center transition-all ${
                   selectedTier === 'onewish'
-                    ? 'border-[#8da095] bg-[#8da095] text-[#050505]'
-                    : 'border-[#1a1d1b] bg-[#0c0d0d] text-[#a1b0a8] hover:border-[#8da095]/50'
+                    ? 'border-[#ff6b8b] bg-[#ff6b8b] text-[#050505] shadow-[0_0_20px_rgba(255,107,139,0.35)] font-bold'
+                    : 'border-[#241727] bg-[#0d0910] text-[#b5a5b5] hover:border-[#ff6b8b]/50'
                 }`}
               >
                 <div className="text-sm font-bold uppercase tracking-widest">Onewish</div>
@@ -486,7 +486,7 @@ export default function HomePage() {
 
             <form onSubmit={handleWishSubmit} className="space-y-6">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb] mb-2">
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5] mb-2">
                   Recipient Name (Optional if Username provided)
                 </label>
                 <input
@@ -494,46 +494,46 @@ export default function HomePage() {
                   value={toName}
                   onChange={(e) => setToName(e.target.value)}
                   placeholder="E.G. MAYA"
-                  className="w-full px-4 py-4 bg-[#080909] border border-[#1a1d1b] text-[#f5f2eb] placeholder-[#424844] focus:outline-none focus:border-[#e4c067] transition-colors uppercase tracking-widest"
+                  className="w-full px-4 py-4 bg-[#08050a] border border-[#241727] text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors uppercase tracking-widest"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb] mb-2">
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5] mb-2">
                   {selectedTier === 'golden' ? 'Recipient Username * (For /goldenwish/username/count)' : 'Recipient Username (Optional)'}
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-4 text-[#8da095] font-bold">@</span>
+                  <span className="absolute left-4 top-4 text-[#ff4d8d] font-bold">@</span>
                   <input
                     type="text"
                     value={toUsername}
                     onChange={(e) => setToUsername(e.target.value)}
                     placeholder="USERNAME"
                     required={selectedTier === 'golden'}
-                    className="w-full pl-8 pr-4 py-4 bg-[#080909] border border-[#1a1d1b] text-[#f5f2eb] placeholder-[#424844] focus:outline-none focus:border-[#e4c067] transition-colors uppercase tracking-widest"
+                    className="w-full pl-8 pr-4 py-4 bg-[#08050a] border border-[#241727] text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors uppercase tracking-widest"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb]">
-                    Attach Media <span className="text-[#a1b0a8] font-normal">(Up to 5 photos, or 1 video + photos)</span>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5]">
+                    Attach Media <span className="text-[#b5a5b5] font-normal">(Up to 5 photos, or 1 video + photos)</span>
                   </label>
-                  <span className="text-[10px] font-mono font-bold text-[#e4c067]">
+                  <span className="text-[10px] font-mono font-bold text-[#ff4d8d]">
                     {mediaList.length}/5 SELECTED
                   </span>
                 </div>
 
                 {mediaList.length < 5 && (
-                  <label className="flex flex-col items-center justify-center border border-dashed border-[#1a1d1b] hover:border-[#e4c067]/60 bg-[#080909] p-5 cursor-pointer transition-all group">
-                    <div className="flex items-center gap-3 text-[#a1b0a8] group-hover:text-[#f5f2eb] transition-colors">
-                      <Upload className="w-4 h-4 text-[#8da095]" />
+                  <label className="flex flex-col items-center justify-center border border-dashed border-[#241727] hover:border-[#ff4d8d]/60 bg-[#08050a] p-5 cursor-pointer transition-all group">
+                    <div className="flex items-center gap-3 text-[#b5a5b5] group-hover:text-[#fbf8f5] transition-colors">
+                      <Upload className="w-4 h-4 text-[#ff4d8d]" />
                       <span className="text-xs uppercase font-bold tracking-widest">
                         Choose Photos or Video (Max 5)
                       </span>
                     </div>
-                    <span className="text-[10px] text-[#8da095] mt-1 uppercase tracking-wider">
+                    <span className="text-[10px] text-[#7a6a7a] mt-1 uppercase tracking-wider">
                       Supports JPG, PNG, WEBP, MP4, WEBM
                     </span>
                     <input
@@ -602,13 +602,13 @@ export default function HomePage() {
                   onChange={(e) => setFromName(e.target.value)}
                   placeholder={currentUserProfile?.username ? `@${currentUserProfile.username}` : "E.G. ALEX"}
                   required
-                  className="w-full px-4 py-4 bg-[#080909] border border-[#1a1d1b] text-[#f5f2eb] placeholder-[#424844] focus:outline-none focus:border-[#e4c067] transition-colors uppercase tracking-widest"
+                  className="w-full px-4 py-4 bg-[#08050a] border border-[#241727] text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors uppercase tracking-widest"
                 />
               </div>
 
               {selectedTier === 'onewish' && (
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb] mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5] mb-2">
                     Spotlight Date
                   </label>
                   <input
@@ -616,30 +616,31 @@ export default function HomePage() {
                     value={bookingDate}
                     onChange={(e) => setBookingDate(e.target.value)}
                     required
-                    className="w-full px-4 py-4 bg-[#080909] border border-[#1a1d1b] text-[#f5f2eb] focus:outline-none focus:border-[#e4c067] transition-colors tracking-widest uppercase"
+                    className="w-full px-4 py-4 bg-[#08050a] border border-[#241727] text-[#fbf8f5] focus:outline-none focus:border-[#ff4d8d] transition-colors tracking-widest uppercase"
                   />
                 </div>
               )}
 
               <button
                 type="submit"
-                className="w-full py-5 bg-[#f5f2eb] text-[#050505] font-bold text-sm tracking-widest uppercase hover:bg-white transition-colors mt-6 shadow-[4px_4px_0px_0px_rgba(228,192,103,0.3)]"
+                className="w-full py-5 bg-gradient-to-r from-[#ff5376] via-[#f84f9c] to-[#ff2a85] text-white font-bold text-sm tracking-widest uppercase hover:opacity-95 transition-all mt-6 shadow-[0_0_25px_rgba(248,79,156,0.35)]"
               >
                 Seal & Send Wish
               </button>
 
               {statusMsg && (
-                <p className="text-xs text-[#8da095] text-center pt-4 font-bold uppercase tracking-widest">{statusMsg}</p>
+                <p className="text-xs text-[#ff758c] text-center pt-4 font-bold uppercase tracking-widest">{statusMsg}</p>
               )}
             </form>
           </div>
 
           {/* Live Preview Card */}
           <div className="lg:col-span-5 flex flex-col pt-16">
-            <div className="p-10 border border-[#1a1d1b] bg-[#0c0d0d] flex-1 flex flex-col justify-between shadow-[8px_8px_0px_0px_rgba(0,0,0,0.6)] min-h-[500px]">
+            <div className="p-10 border border-[#26182a] bg-[#0d0910] flex-1 flex flex-col justify-between shadow-[0_0_35px_rgba(248,79,156,0.12)] min-h-[500px]">
               <div>
-                <div className="text-xs font-bold tracking-widest text-[#a1b0a8] uppercase mb-8 border-b border-[#1a1d1b] pb-4">
-                  TO: {toName ? toName.toUpperCase() : (toUsername ? `@${toUsername}` : 'MAYA')}
+                <div className="text-xs font-bold tracking-widest text-[#b5a5b5] uppercase mb-8 border-b border-[#211624] pb-4 flex items-center justify-between">
+                  <span>TO: {toName ? toName.toUpperCase() : (toUsername ? `@${toUsername}` : 'MAYA')}</span>
+                  <span className="text-[#ff4d8d] text-base">✦</span>
                 </div>
                 
                 {mediaList.length > 0 && (
@@ -650,14 +651,14 @@ export default function HomePage() {
                   </div>
                 )}
 
-                <p className="font-serif text-2xl text-[#f5f2eb] leading-loose uppercase tracking-wide italic">
+                <p className="font-serif text-2xl text-[#fbf8f5] leading-loose uppercase tracking-wide italic">
                   "{message || 'MAY YOUR PATH BE CLEAR, AND EVERY DREAM YOU CARRY FIND ITS LIGHT.'}"
                 </p>
               </div>
 
-              <div className="pt-8 border-t border-[#1a1d1b] flex flex-col gap-4 text-[#f5f2eb] text-xs">
+              <div className="pt-8 border-t border-[#211624] flex flex-col gap-4 text-[#fbf8f5] text-xs">
                 <span className="font-bold tracking-widest uppercase">FROM: {fromName || 'ALEX'}</span>
-                <span className="uppercase text-[10px] font-bold tracking-widest text-[#e4c067]">
+                <span className="uppercase text-[10px] font-bold tracking-widest text-[#ff4d8d]">
                   TIER: {selectedTier}
                 </span>
               </div>

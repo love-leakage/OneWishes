@@ -16,8 +16,8 @@
 
   body {
     background-color: #050505;
-    color: #f5f2eb;
-    @apply font-sans min-h-screen antialiased selection:bg-[#e4c067] selection:text-[#050505];
+    color: #fbf8f5;
+    @apply font-sans min-h-screen antialiased selection:bg-[#ff4d8d] selection:text-white;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -25,7 +25,7 @@
   }
 }
 
-/* Modern Deep Black Custom Scrollbar */
+/* Cyber-Luxury Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -33,11 +33,13 @@
   background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1f2321;
+  background: #231826;
   border-radius: 3px;
+  border: 1px solid #36223b;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #353b37;
+  background: #ff4d8d;
+  box-shadow: 0 0 10px rgba(255, 77, 141, 0.6);
 }
 
 /* GPU Hardware-Accelerated Marquee Animations (Smooth 120fps, Zero JS Overhead) */
@@ -61,20 +63,49 @@
   will-change: transform;
 }
 
-/* GPU Accelerated Ambient Motion */
-@keyframes kenburns-slow {
-  0% {
-    transform: scale(1) translateZ(0);
+/* Motion Graphics Keyframes */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.98);
   }
   50% {
-    transform: scale(1.04) translateZ(0);
-  }
-  100% {
-    transform: scale(1) translateZ(0);
+    opacity: 0.75;
+    transform: scale(1.04);
   }
 }
 
-.animate-kenburns {
-  animation: kenburns-slow 10s ease-in-out infinite;
-  will-change: transform;
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3.5s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.text-gradient-rose {
+  background: linear-gradient(135deg, #ff758c 0%, #ff4d8d 50%, #ff2a85 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-coral {
+  background: linear-gradient(135deg, #ffa07a 0%, #ff6b8b 50%, #f84f9c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

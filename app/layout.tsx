@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   applicationName: 'OneWishes',
   title: 'OneWishes — A wish worth sending',
   description: 'OneWishes limits how many people you can wish, on purpose — so the ones you do wish know exactly what it cost you.',
+  manifest: '/manifest.json',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -38,23 +39,50 @@ export const metadata: Metadata = {
     url: 'https://onewishes.com',
     siteName: 'OneWishes',
     type: 'website',
+    images: [
+      {
+        url: 'https://onewishes.com/logo.png',
+        width: 512,
+        height: 512,
+        alt: 'OneWishes Infinity Emblem',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'OneWishes — A wish worth sending',
+    description: 'Artificial Scarcity Wish Platform. Send rare, everlasting wishes.',
+    images: ['https://onewishes.com/logo.png'],
   },
 };
 
 const siteNameSchema = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'OneWishes',
-  alternateName: ['onewishes', 'One Wishes'],
-  url: 'https://onewishes.com/',
-  publisher: {
-    '@type': 'Organization',
-    name: 'OneWishes',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://onewishes.com/icon-192.png',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://onewishes.com/#website',
+      name: 'OneWishes',
+      alternateName: ['onewishes', 'One Wishes'],
+      url: 'https://onewishes.com/',
+      publisher: {
+        '@id': 'https://onewishes.com/#organization',
+      },
     },
-  },
+    {
+      '@type': 'Organization',
+      '@id': 'https://onewishes.com/#organization',
+      name: 'OneWishes',
+      url: 'https://onewishes.com/',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://onewishes.com/logo.png',
+        width: 512,
+        height: 512,
+      },
+      image: 'https://onewishes.com/logo.png',
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -70,12 +98,13 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="96x96" href="/icon-96.png" />
         <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNameSchema) }}
         />
       </head>
-      <body className="bg-[#050505] text-[#f5f2eb] flex flex-col min-h-screen selection:bg-[#e4c067] selection:text-[#050505]">
+      <body className="bg-[#050505] text-[#fbf8f5] flex flex-col min-h-screen selection:bg-[#ff4d8d] selection:text-white">
         <AuthGuard>
           <Navbar />
           <main className="flex-1">

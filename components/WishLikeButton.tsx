@@ -102,12 +102,12 @@ export function WishLikeButton({
         disabled={loading}
         title={hasLiked ? 'You loved this wish' : 'Sign in to love this wish'}
         className={`flex items-center gap-1.5 transition-all group ${
-          hasLiked ? 'text-[#c67d63] scale-105' : 'text-[#a6b6ad] hover:text-[#c67d63]'
+          hasLiked ? 'text-[#ff4d8d] scale-105 drop-shadow-[0_0_8px_rgba(255,77,141,0.5)]' : 'text-[#b5a5b5] hover:text-[#ff758c]'
         } ${className}`}
       >
         <Heart
           className={`w-4 h-4 transition-transform group-hover:scale-125 ${
-            hasLiked ? 'fill-current text-[#c67d63]' : 'fill-none'
+            hasLiked ? 'fill-current text-[#ff4d8d]' : 'fill-none'
           }`}
         />
         <span className="font-mono text-xs font-bold">{likes}</span>
@@ -118,33 +118,33 @@ export function WishLikeButton({
       {showSignInPrompt && (
         <div 
           onClick={(e) => { e.stopPropagation(); setShowSignInPrompt(false); }}
-          className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-[120] bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="max-w-sm w-full bg-[#0c0d0d] border border-[#1a1d1b] p-6 text-center space-y-4 shadow-[0_0_40px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 duration-200"
+            className="max-w-sm w-full bg-[#0d0910] border border-[#241727] p-6 text-center space-y-4 shadow-[0_0_40px_rgba(0,0,0,0.9)] animate-in fade-in zoom-in-95 duration-200"
           >
-            <div className="w-12 h-12 mx-auto rounded-full bg-[#c67d63]/20 flex items-center justify-center text-[#c67d63]">
+            <div className="w-12 h-12 mx-auto rounded-full bg-[#ff4d8d]/15 flex items-center justify-center text-[#ff4d8d] shadow-[0_0_16px_rgba(255,77,141,0.3)]">
               <Heart className="w-6 h-6 fill-current" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif text-lg font-bold text-[#f5f2eb] uppercase tracking-wide">
+              <h3 className="font-serif text-lg font-bold text-[#fbf8f5] uppercase tracking-wide">
                 Sign In to Love Wishes
               </h3>
-              <p className="text-xs text-[#a1b0a8] leading-relaxed">
+              <p className="text-xs text-[#b5a5b5] leading-relaxed">
                 Every wish is rare and personal. Sign in with Google to seal your love on this wish.
               </p>
             </div>
             <div className="pt-2 flex flex-col gap-2">
               <button
                 onClick={handleSignIn}
-                className="w-full py-3 bg-[#f5f2eb] hover:bg-white text-[#050505] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(255,255,255,0.15)]"
+                className="w-full py-3 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(255,77,141,0.3)] hover:opacity-95"
               >
                 Sign In with Google
               </button>
               <button
                 onClick={() => setShowSignInPrompt(false)}
-                className="w-full py-2 text-[11px] text-[#8da095] hover:text-[#f5f2eb] font-bold uppercase tracking-wider transition-colors"
+                className="w-full py-2 text-[11px] text-[#7a6a7a] hover:text-[#fbf8f5] font-bold uppercase tracking-wider transition-colors"
               >
                 Cancel
               </button>

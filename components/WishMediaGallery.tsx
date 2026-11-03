@@ -175,14 +175,14 @@ export function WishMediaGallery({
           {/* Previous / Next buttons */}
           <button
             onClick={handlePrev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-[#0c0d0d]/90 hover:bg-[#050505] text-[#f5f2eb] border border-[#1a1d1b] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-[#0d0910]/90 hover:bg-[#050505] text-[#fbf8f5] border border-[#26182a] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
             aria-label="Previous media"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-[#0c0d0d]/90 hover:bg-[#050505] text-[#f5f2eb] border border-[#1a1d1b] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-[#0d0910]/90 hover:bg-[#050505] text-[#fbf8f5] border border-[#26182a] rounded-full transition-all opacity-0 group-hover:opacity-100 sm:opacity-70 hover:opacity-100 z-20 shadow-lg"
             aria-label="Next media"
           >
             <ChevronRight className="w-4 h-4" />
@@ -192,13 +192,13 @@ export function WishMediaGallery({
           <div className="absolute bottom-3 left-0 right-0 flex items-center justify-between px-4 z-20 pointer-events-none">
             <button
               onClick={togglePlay}
-              className="p-1.5 bg-[#0c0d0d]/90 backdrop-blur-sm border border-[#1a1d1b] rounded-full text-[#a1b0a8] hover:text-[#e4c067] transition-colors pointer-events-auto shadow-md"
+              className="p-1.5 bg-[#0d0910]/90 backdrop-blur-sm border border-[#26182a] rounded-full text-[#b5a5b5] hover:text-[#ff4d8d] transition-colors pointer-events-auto shadow-md"
               title={isPlaying ? 'Pause auto-slide' : 'Play auto-slide'}
             >
               {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
             </button>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#0c0d0d]/90 backdrop-blur-sm border border-[#1a1d1b] rounded-full pointer-events-auto shadow-md">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#0d0910]/90 backdrop-blur-sm border border-[#26182a] rounded-full pointer-events-auto shadow-md">
               {items.map((_, idx) => (
                 <button
                   key={idx}
@@ -209,13 +209,13 @@ export function WishMediaGallery({
                   }}
                   className={`h-1.5 rounded-full transition-all ${
                     idx === activeIndex
-                      ? 'bg-[#e4c067] w-5'
+                      ? 'bg-gradient-to-r from-[#ff5376] to-[#f84f9c] w-5 shadow-[0_0_8px_#ff4d8d]'
                       : 'bg-white/40 hover:bg-white/70 w-1.5'
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
-              <span className="text-[10px] text-[#a1b0a8] font-mono ml-1.5 font-bold">
+              <span className="text-[10px] text-[#b5a5b5] font-mono ml-1.5 font-bold">
                 {activeIndex + 1}/{items.length}
               </span>
             </div>
