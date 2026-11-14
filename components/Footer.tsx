@@ -14,8 +14,8 @@ export const Footer: React.FC = () => {
               alt="OneWishes Logo" 
               className="h-8 w-auto object-contain drop-shadow-[0_0_12px_rgba(248,79,156,0.5)] transition-transform group-hover:scale-105" 
             />
-            <span className="font-serif text-sm text-[#fbf8f5] uppercase tracking-widest font-bold group-hover:text-[#ff758c] transition-colors">
-              OneWishes
+            <span className="font-serif font-black text-sm tracking-[0.25em] text-[#fbf8f5] uppercase group-hover:text-[#ff4d8d] transition-colors">
+              ONEWISHES
             </span>
           </Link>
 

@@ -67,17 +67,22 @@ export default function DynamicRootPage() {
         setIsDate(true);
         const { data: booking } = await supabase
           .from('onewish_bookings')
-          .select('wish_id')
+          .select('wish_id, wishes (*)')
           .eq('booking_date', cleanUser)
           .maybeSingle();
 
-        if (booking?.wish_id) {
-          const { data: wish } = await supabase
-            .from('wishes')
-            .select('*')
-            .eq('id', booking.wish_id)
-            .single();
-          setOnewish(wish);
+        if (booking) {
+          const joinedWish = (booking as any).wishes;
+          if (joinedWish) {
+            setOnewish(Array.isArray(joinedWish) ? joinedWish[0] : joinedWish);
+          } else if (booking.wish_id) {
+            const { data: directWish } = await supabase
+              .from('wishes')
+              .select('*')
+              .eq('id', booking.wish_id)
+              .maybeSingle();
+            setOnewish(directWish);
+          }
         }
         setLoading(false);
         return;
@@ -96,7 +101,7 @@ export default function DynamicRootPage() {
           supabase
             .from('wishes')
             .select('*')
-            .ilike('to_username', cleanUser)
+            .or(`to_username.ilike.${cleanUser},to_name.ilike.${cleanUser}`)
             .order('created_at', { ascending: false }),
           supabase
             .from('wishes')
@@ -147,6 +152,16 @@ export default function DynamicRootPage() {
             sessionStorage.setItem(`onewishes_received_${cleanUser}`, JSON.stringify(receivedRes.data || []));
             sessionStorage.setItem(`onewishes_sent_${cleanUser}`, JSON.stringify(finalSent));
           } catch (e) {}
+        } else if ((receivedRes.data && receivedRes.data.length > 0) || (sentRes.data && sentRes.data.length > 0)) {
+          // Unclaimed Profile: Wishes were sealed for this name/username before registration!
+          setProfile({
+            username: cleanUser,
+            avatar_url: null,
+            golden_used: 0,
+            isUnclaimed: true,
+          });
+          setReceivedWishes(receivedRes.data || []);
+          setSentWishes(sentRes.data || []);
         }
       } catch (err) {
         console.error('Error fetching profile:', err);
@@ -190,36 +205,73 @@ export default function DynamicRootPage() {
 
   // DATE SPOTLIGHT VIEW
   if (isDate) {
+    const formattedDate = (() => {
+      try {
+        const d = new Date(id + 'T00:00:00');
+        if (!isNaN(d.getTime())) {
+          return d.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
+        }
+      } catch {}
+      return id;
+    })();
+
     if (!onewish) {
       return (
-        <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-          <h2 className="font-serif text-4xl font-bold text-[#fbf8f5] uppercase tracking-tighter">No Onewish Found</h2>
-          <p className="text-[#b5a5b5] text-sm uppercase tracking-widest">There is no Onewish booked for {id}.</p>
-          <Link href="/onewish" className="inline-block px-8 py-4 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(248,79,156,0.35)]">
-            Book this date
-          </Link>
+        <div className="max-w-lg mx-auto px-4 py-32 text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#ff4d8d]/10 border border-[#ff4d8d]/30 rounded-full text-[10px] font-mono text-[#ff4d8d] uppercase tracking-widest shadow-sm">
+            <span>✦ UNCLAIMED CALENDAR DATE</span>
+          </div>
+          <h2 className="font-serif text-4xl sm:text-5xl font-black text-[#fbf8f5] uppercase tracking-tighter">
+            Spotlight Open
+          </h2>
+          <p className="text-[#ff6b8b] font-mono text-sm uppercase tracking-widest font-bold">
+            {formattedDate}
+          </p>
+          <p className="text-[#b5a5b5] text-xs uppercase tracking-widest max-w-sm mx-auto leading-relaxed">
+            No one has claimed this date worldwide. Be the sole individual across infinity to seal an eternal wish on this day.
+          </p>
+          <div className="pt-2">
+            <Link
+              href={`/?date=${id}#create-section`}
+              className="inline-block px-8 py-4 bg-gradient-to-r from-[#ff5376] via-[#f84f9c] to-[#ff2a85] text-white font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_24px_rgba(248,79,156,0.35)]"
+            >
+              Claim {id} Spotlight
+            </Link>
+          </div>
         </div>
       );
     }
 
     return (
-      <div className="max-w-3xl mx-auto px-4 py-24 space-y-12">
-        <div className="text-center space-y-4">
-          <h1 className="font-serif text-5xl font-bold uppercase tracking-tighter text-[#fbf8f5]">THE ONEWISH</h1>
-          <p className="text-[#ff4d8d] font-bold tracking-widest uppercase text-sm font-mono">{id}</p>
+      <div className="max-w-3xl mx-auto px-4 py-20 space-y-12">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#ff4d8d]/15 border border-[#ff4d8d]/40 rounded-full text-[10px] font-mono text-[#ff4d8d] uppercase tracking-widest shadow-[0_0_15px_rgba(248,79,156,0.25)]">
+            <span>✦ WORLDWIDE FRONTPAGE SPOTLIGHT</span>
+          </div>
+          <h1 className="font-serif text-4xl sm:text-6xl font-black uppercase tracking-tighter text-[#fbf8f5]">
+            THE ONEWISH
+          </h1>
+          <p className="text-[#ff6b8b] font-bold tracking-widest uppercase text-sm sm:text-base font-mono">
+            {formattedDate}
+          </p>
         </div>
         
-        <div className="p-10 sm:p-16 border border-[#26182a] bg-[#0d0910] shadow-[0_0_32px_rgba(0,0,0,0.8)] space-y-10 relative overflow-hidden">
-          <div className="flex items-center justify-between border-b border-[#211624] pb-6">
-            <Link href={`/${onewish.to_username}`} className="text-sm font-bold tracking-widest text-[#b5a5b5] uppercase hover:text-[#fbf8f5] transition-colors">
+        <div className="p-8 sm:p-14 border border-[#26182a] bg-[#0d0910] shadow-[0_0_40px_rgba(0,0,0,0.9)] space-y-8 relative overflow-hidden">
+          <div className="flex items-center justify-between border-b border-[#211624] pb-5">
+            <Link href={`/${onewish.to_username || ''}`} className="text-sm font-bold tracking-widest text-[#b5a5b5] uppercase hover:text-[#fbf8f5] transition-colors">
               TO: {onewish.to_name.toUpperCase()} {onewish.to_username ? `(@${onewish.to_username})` : ''}
             </Link>
-            <span className="px-4 py-1.5 bg-[#ff6b8b] text-[#050505] text-[10px] font-bold uppercase tracking-widest">
-              ONEWISH
+            <span className="px-3.5 py-1 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white text-[10px] font-bold uppercase tracking-widest shadow-[0_0_12px_rgba(248,79,156,0.4)]">
+              ONEWISH SPOTLIGHT
             </span>
           </div>
 
-          <p className="font-serif text-2xl sm:text-4xl text-[#fbf8f5] leading-loose uppercase italic tracking-wide">
+          <p className="font-serif text-2xl sm:text-4xl text-[#fbf8f5] leading-relaxed uppercase italic tracking-wide">
             &ldquo;{onewish.message}&rdquo;
           </p>
 
@@ -227,7 +279,7 @@ export default function DynamicRootPage() {
             <WishMediaGallery mediaUrl={onewish.media_url} mediaType={onewish.media_type} />
           )}
 
-          <div className="pt-8 mt-8 border-t border-[#211624] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="pt-6 border-t border-[#211624] flex flex-col sm:flex-row items-center justify-between gap-6">
             <Link href={`/${onewish.sender_username}`} className="text-sm text-[#fbf8f5] font-bold uppercase tracking-widest hover:text-[#ff4d8d] transition-colors">
               FROM: @{onewish.sender_username}
             </Link>
@@ -271,11 +323,14 @@ export default function DynamicRootPage() {
         </div>
         
         <div className="space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#ff4d8d]/15 border border-[#ff4d8d]/40 rounded-full text-[10px] font-mono text-[#ff4d8d] uppercase tracking-widest shadow-sm">
+            {profile.isUnclaimed ? '✦ UNCLAIMED CITIZEN VAULT' : '✦ VERIFIED ONEWISHES CITIZEN'}
+          </div>
           <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-[#fbf8f5]">
             @{profile.username}
           </h1>
           <p className="text-xs uppercase tracking-widest text-[#b5a5b5]">
-            Verified OneWishes Citizen
+            {profile.isUnclaimed ? 'Wishes sealed across infinity for this recipient' : 'Permanent Keepsake Vault'}
           </p>
         </div>
 
@@ -413,9 +468,11 @@ export default function DynamicRootPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {activeWishesList.map((w) => {
-              const wishHref = w.tier === 'onewish'
-                ? (w.created_at ? `/${w.created_at.split('T')[0]}` : '/onewish')
-                : `/goldenwish/${w.to_username || profile.username}/1`;
+              const wishHref = w.slug
+                ? `/w/${w.slug}`
+                : (w.tier === 'onewish'
+                  ? (w.created_at ? `/${w.created_at.split('T')[0]}` : '/onewish')
+                  : `/goldenwish/${w.to_username || profile.username}/1`);
 
               return (
                 <div

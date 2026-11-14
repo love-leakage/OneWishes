@@ -146,14 +146,14 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
           <img 
             src="/logo-tight.png" 
             alt="OneWishes Logo" 
-            className="h-9 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(248,79,156,0.6)] transition-transform group-hover:scale-105" 
+            className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(248,79,156,0.6)] transition-transform group-hover:scale-105" 
           />
-          <span className="font-serif font-bold text-lg sm:text-xl tracking-widest uppercase text-[#fbf8f5] group-hover:text-[#ff758c] transition-colors">
-            Onewishes
+          <span className="font-serif font-black text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#fbf8f5] via-[#ff6b8b] to-[#f84f9c] transition-opacity">
+            ONEWISHES
           </span>
         </Link>
 
@@ -227,13 +227,13 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile Nav Trigger & Sound */}
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-1.5 sm:gap-2">
           {user && (
             <Link 
               href={profile?.username ? `/${profile.username}` : '/profile'} 
-              className="flex items-center gap-1.5 border border-[#241727] py-1 px-2.5 rounded-full bg-[#0d0910] text-xs font-bold uppercase tracking-wider text-[#ff4d8d]"
+              className="flex items-center gap-1 border border-[#241727] py-1 px-2 rounded-full bg-[#0d0910] text-[11px] font-bold uppercase tracking-wider text-[#ff4d8d] max-w-[120px] truncate"
             >
-              <span>@{profile?.username || 'Profile'}</span>
+              <span className="truncate">@{profile?.username || 'Profile'}</span>
             </Link>
           )}
 

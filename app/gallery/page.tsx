@@ -226,12 +226,11 @@ export default function GalleryPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredWishes.map((w) => {
-            const wishHref =
-              w.tier === 'onewish'
-                ? w.created_at
-                  ? `/${w.created_at.split('T')[0]}`
-                  : '/onewish'
-                : `/goldenwish/${w.to_username || w.slug}/1`;
+            const wishHref = w.slug
+              ? `/w/${w.slug}`
+              : (w.tier === 'onewish'
+                ? (w.created_at ? `/${w.created_at.split('T')[0]}` : '/onewish')
+                : `/goldenwish/${w.to_username || w.slug}/1`);
 
             const mediaPreview = extractFirstMedia(w.media_url);
 
@@ -259,13 +258,17 @@ export default function GalleryPage() {
                   </div>
 
                   {mediaPreview && (
-                    <div className="relative w-full h-44 overflow-hidden bg-[#08050a] border border-[#241727]">
+                    <div className="relative w-full h-44 overflow-hidden bg-[#08050a] border border-[#ff4d8d]/30 rounded-sm shadow-[0_0_20px_rgba(248,79,156,0.15)] group-hover:border-[#ff4d8d] transition-all">
                       <img
                         src={mediaPreview}
                         alt={`Keepsake to ${w.to_name}`}
                         loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 filter contrast-[1.05] saturate-[1.12]"
                       />
+                      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_40px_rgba(0,0,0,0.85)]" />
+                      <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 backdrop-blur-sm border border-[#ff4d8d]/30 text-[8px] font-mono text-[#ff4d8d] uppercase tracking-widest rounded-full">
+                        ✦ EFX MONTAGE
+                      </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0d0910] via-transparent to-transparent pointer-events-none" />
                     </div>
                   )}

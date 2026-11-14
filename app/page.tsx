@@ -31,7 +31,30 @@ export default function HomePage() {
   const [fromName, setFromName] = useState('');
   const [mediaList, setMediaList] = useState<MediaPreview[]>([]);
   const [privacy, setPrivacy] = useState('public');
-  const [bookingDate, setBookingDate] = useState('');
+  const getLocalDateString = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const [bookingDate, setBookingDate] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryDate = urlParams.get('date');
+      if (queryDate && /^\d{4}-\d{2}-\d{2}$/.test(queryDate)) {
+        return queryDate;
+      }
+    }
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
+
+  const [dateAvailability, setDateAvailability] = useState<'checking' | 'available' | 'booked' | null>(null);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,6 +79,47 @@ export default function HomePage() {
       return null;
     }
   });
+
+  useEffect(() => {
+    // Check URL parameters for pre-selected tier or date
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const qTier = urlParams.get('tier');
+      const qDate = urlParams.get('date');
+      if (qTier === 'onewish' || qDate) {
+        setSelectedTier('onewish');
+      } else if (qTier === 'golden') {
+        setSelectedTier('golden');
+      }
+      if (qDate && /^\d{4}-\d{2}-\d{2}$/.test(qDate)) {
+        setBookingDate(qDate);
+      }
+    }
+  }, []);
+
+  // Real-time booking date availability checker
+  useEffect(() => {
+    if (!bookingDate || selectedTier !== 'onewish') {
+      setDateAvailability(null);
+      return;
+    }
+    let active = true;
+    setDateAvailability('checking');
+    supabase
+      .from('onewish_bookings')
+      .select('id')
+      .eq('booking_date', bookingDate)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!active) return;
+        if (data) {
+          setDateAvailability('booked');
+        } else {
+          setDateAvailability('available');
+        }
+      });
+    return () => { active = false; };
+  }, [bookingDate, selectedTier]);
 
   useEffect(() => {
     // If profile already in local storage, initialize fromName immediately
@@ -225,7 +289,7 @@ export default function HomePage() {
     sounds.playSeal();
 
     if (selectedTier === 'onewish') {
-      const dateVal = bookingDate || new Date().toISOString().split('T')[0];
+      const dateVal = bookingDate || getLocalDateString();
       const { error: bookingErr } = await supabase.from('onewish_bookings').insert([
         { booking_date: dateVal, wish_id: data.id, user_id: session.user.id }
       ]);
@@ -233,11 +297,17 @@ export default function HomePage() {
       if (bookingErr) {
         setIsSubmitting(false);
         await supabase.from('wishes').delete().eq('id', data.id);
-        setStatusMsg('Sorry, this date is already booked! Choose another date.');
+        setStatusMsg(`Date ${dateVal} was already booked! Please pick another date.`);
+        setDateAvailability('booked');
         return;
       }
 
-      setStatusMsg('Wish sealed! Redirecting...');
+      // Pre-warm sessionStorage so today spotlight shows instantly
+      try {
+        sessionStorage.setItem(`onewishes_today_${dateVal}`, JSON.stringify(data));
+      } catch (e) {}
+
+      setStatusMsg(`Wish sealed for ${dateVal}! Redirecting to spotlight...`);
       setTimeout(() => {
         window.location.href = `/${dateVal}`;
       }, 500);
@@ -433,6 +503,12 @@ export default function HomePage() {
                   <div className="flex items-center justify-between border-b border-[#211624] pb-4">
                     <Link href={`/${todayOnewish.to_username || ''}`} className="text-sm font-bold tracking-widest text-[#b5a5b5] uppercase hover:text-[#fbf8f5] transition-colors">
                       TO: {todayOnewish.to_name.toUpperCase()} {todayOnewish.to_username ? `(@${todayOnewish.to_username})` : ''}
+                    </Link>
+                    <Link
+                      href={`/${new Date().toISOString().split('T')[0]}`}
+                      className="px-3 py-1 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white text-[10px] font-bold uppercase tracking-widest shadow-[0_0_12px_rgba(248,79,156,0.35)] hover:brightness-110 transition-all"
+                    >
+                      Spotlight Date ➔
                     </Link>
                   </div>
                   
@@ -733,17 +809,38 @@ export default function HomePage() {
               </div>
 
               {selectedTier === 'onewish' && (
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5] mb-2">
-                    Spotlight Date
-                  </label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5]">
+                      Frontpage Spotlight Date
+                    </label>
+                    {dateAvailability === 'checking' && (
+                      <span className="text-[10px] text-[#b5a5b5] font-mono flex items-center gap-1">
+                        <Loader2 className="w-3 h-3 animate-spin text-[#ff4d8d]" /> Checking slot...
+                      </span>
+                    )}
+                    {dateAvailability === 'available' && (
+                      <span className="text-[10px] text-[#00ffaa] font-mono flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Slot Available
+                      </span>
+                    )}
+                    {dateAvailability === 'booked' && (
+                      <span className="text-[10px] text-[#ff4d8d] font-mono flex items-center gap-1 font-bold">
+                        <X className="w-3 h-3" /> Date Already Claimed
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="date"
                     value={bookingDate}
+                    min={getLocalDateString()}
                     onChange={(e) => setBookingDate(e.target.value)}
                     required
-                    className="w-full px-4 py-4 bg-[#08050a] border border-[#241727] text-[#fbf8f5] focus:outline-none focus:border-[#ff4d8d] transition-colors tracking-widest uppercase"
+                    className="w-full px-4 py-4 bg-[#08050a] border border-[#241727] text-[#fbf8f5] focus:outline-none focus:border-[#ff4d8d] transition-colors tracking-widest uppercase font-mono"
                   />
+                  <p className="text-[10px] text-[#b5a5b5] tracking-wider uppercase font-mono">
+                    Only 1 wish exists per date globally. Once sealed, it belongs to you across infinity.
+                  </p>
                 </div>
               )}
 
