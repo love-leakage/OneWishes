@@ -13,6 +13,7 @@ routes = [
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
+run_worker_first = false
 
 # Uncomment if you enable ISR caching:
 # [[kv_namespaces]]

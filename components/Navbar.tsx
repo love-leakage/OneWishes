@@ -42,17 +42,21 @@ export const Navbar = () => {
     } catch (e) {}
 
     async function loadUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-      if (session?.user) {
-        const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
-        setProfile(prof || null);
-        if (prof) {
-          localStorage.setItem('onewishes_cached_profile', JSON.stringify(prof));
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setUser(session?.user || null);
+        if (session?.user) {
+          const { data: prof } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+          setProfile(prof || null);
+          if (prof) {
+            localStorage.setItem('onewishes_cached_profile', JSON.stringify(prof));
+          }
+        } else {
+          setProfile(null);
+          localStorage.removeItem('onewishes_cached_profile');
         }
-      } else {
-        setProfile(null);
-        localStorage.removeItem('onewishes_cached_profile');
+      } catch (err) {
+        console.error('Navbar loadUser error:', err);
       }
     }
     

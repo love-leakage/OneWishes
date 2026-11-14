@@ -146,3 +146,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+-- 8. ATOMIC WISH LIKE COUNTER INCREMENT RPC
+CREATE OR REPLACE FUNCTION public.increment_wish_likes(target_wish_id UUID)
+RETURNS INTEGER AS $$
+DECLARE
+    new_likes INT;
+BEGIN
+    UPDATE public.wishes
+    SET likes_count = likes_count + 1
+    WHERE id = target_wish_id
+    RETURNING likes_count INTO new_likes;
+
+    RETURN new_likes;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+

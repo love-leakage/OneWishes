@@ -36,41 +36,50 @@ export default function ViewWishPage() {
     if (!slug) return;
 
     async function fetchWish() {
-      setLoading(true);
-      const { data } = await supabase.from('wishes').select('*').eq('slug', slug).single();
+      try {
+        setLoading(true);
+        const { data, error } = await supabase.from('wishes').select('*').eq('slug', slug).maybeSingle();
 
-      if (data) {
-        // Automatically redirect to canonical path as specified by user rules
-        if (data.tier === 'onewish') {
-          const { data: booking } = await supabase
-            .from('onewish_bookings')
-            .select('booking_date')
-            .eq('wish_id', data.id)
-            .maybeSingle();
-          const targetDate = booking?.booking_date || data.created_at?.split('T')[0];
-          if (targetDate) {
-            window.location.replace(`/${targetDate}`);
+        if (error) {
+          console.error('Error fetching wish:', error);
+        }
+
+        if (data) {
+          // Automatically redirect to canonical path as specified by user rules
+          if (data.tier === 'onewish') {
+            const { data: booking } = await supabase
+              .from('onewish_bookings')
+              .select('booking_date')
+              .eq('wish_id', data.id)
+              .maybeSingle();
+            const targetDate = booking?.booking_date || data.created_at?.split('T')[0];
+            if (targetDate) {
+              window.location.replace(`/${targetDate}`);
+              return;
+            }
+          }
+
+          if (data.tier === 'golden') {
+            const targetUser = data.to_username || data.slug;
+            const { count } = await supabase
+              .from('wishes')
+              .select('*', { count: 'exact', head: true })
+              .or(`to_username.eq.${targetUser},slug.eq.${data.slug}`)
+              .eq('tier', 'golden');
+            const wishNum = count && count > 0 ? count : 1;
+            window.location.replace(`/goldenwish/${targetUser}/${wishNum}`);
             return;
           }
-        }
 
-        if (data.tier === 'golden') {
-          const targetUser = data.to_username || data.slug;
-          const { count } = await supabase
-            .from('wishes')
-            .select('*', { count: 'exact', head: true })
-            .or(`to_username.eq.${targetUser},slug.eq.${data.slug}`)
-            .eq('tier', 'golden');
-          const wishNum = count && count > 0 ? count : 1;
-          window.location.replace(`/goldenwish/${targetUser}/${wishNum}`);
-          return;
+          setWish(data);
+          sounds.playChime();
+          supabase.rpc('increment_wish_views', { target_wish_id: data.id });
         }
-
-        setWish(data);
-        sounds.playChime();
-        supabase.rpc('increment_wish_views', { target_wish_id: data.id });
+      } catch (err) {
+        console.error('Failed to load wish:', err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     fetchWish();
   }, [slug]);

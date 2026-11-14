@@ -74,10 +74,13 @@ export function WishLikeButton({
       likedWishes.push(wishId);
       localStorage.setItem(storageKey, JSON.stringify(likedWishes));
 
-      // Call Supabase atomic RPC
+      // Call Supabase atomic RPC with graceful direct fallback
       const { data, error } = await supabase.rpc('increment_wish_likes', { target_wish_id: wishId });
       if (!error && typeof data === 'number') {
         setLikes(data);
+      } else if (error) {
+        // Fallback: direct update if RPC is not present
+        await supabase.from('wishes').update({ likes_count: likes + 1 }).eq('id', wishId);
       }
     } catch (err) {
       console.error('Error updating like count:', err);

@@ -21,22 +21,33 @@ export default function GoldenWishPage() {
 
   useEffect(() => {
     async function loadData() {
-      const cleanUser = username.toLowerCase().replace(/^@/, '');
-      // Find golden wishes sent TO this username or matching slug
-      const { data } = await supabase
-        .from('wishes')
-        .select('*')
-        .or(`to_username.ilike.${cleanUser},slug.eq.${cleanUser}`)
-        .eq('tier', 'golden')
-        .order('created_at', { ascending: true });
-      
-      if (data && data.length > 0) {
-        // Select the wish based on index, or default to the first/latest
-        const selected = data[countIndex] || data[0];
-        setWish(selected);
-        sounds.playChime();
+      try {
+        setLoading(true);
+        const cleanUser = username?.toLowerCase().replace(/^@/, '') || '';
+        if (!cleanUser) return;
+        // Find golden wishes sent TO this username or matching slug
+        const { data, error } = await supabase
+          .from('wishes')
+          .select('*')
+          .or(`to_username.ilike.${cleanUser},slug.eq.${cleanUser}`)
+          .eq('tier', 'golden')
+          .order('created_at', { ascending: true });
+        
+        if (error) {
+          console.error('Error fetching golden wish:', error);
+        }
+
+        if (data && data.length > 0) {
+          // Select the wish based on index, or default to the first/latest
+          const selected = data[countIndex] || data[0];
+          setWish(selected);
+          sounds.playChime();
+        }
+      } catch (err) {
+        console.error('Failed to load golden wish:', err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     loadData();
   }, [username, countIndex]);

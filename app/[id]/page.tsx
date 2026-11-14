@@ -193,9 +193,9 @@ export default function DynamicRootPage() {
     if (!onewish) {
       return (
         <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-          <h2 className="font-serif text-4xl font-bold text-[#f5f2eb] uppercase tracking-tighter">No Onewish Found</h2>
-          <p className="text-[#a1b0a8] text-sm uppercase tracking-widest">There is no Onewish booked for {id}.</p>
-          <Link href="/onewish" className="inline-block px-8 py-4 bg-[#f5f2eb] text-[#050505] font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors">
+          <h2 className="font-serif text-4xl font-bold text-[#fbf8f5] uppercase tracking-tighter">No Onewish Found</h2>
+          <p className="text-[#b5a5b5] text-sm uppercase tracking-widest">There is no Onewish booked for {id}.</p>
+          <Link href="/onewish" className="inline-block px-8 py-4 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(248,79,156,0.35)]">
             Book this date
           </Link>
         </div>
@@ -205,30 +205,30 @@ export default function DynamicRootPage() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-24 space-y-12">
         <div className="text-center space-y-4">
-          <h1 className="font-serif text-5xl font-bold uppercase tracking-tighter text-[#f5f2eb]">THE ONEWISH</h1>
-          <p className="text-[#e4c067] font-bold tracking-widest uppercase text-sm font-mono">{id}</p>
+          <h1 className="font-serif text-5xl font-bold uppercase tracking-tighter text-[#fbf8f5]">THE ONEWISH</h1>
+          <p className="text-[#ff4d8d] font-bold tracking-widest uppercase text-sm font-mono">{id}</p>
         </div>
         
-        <div className="p-10 sm:p-16 border border-[#1a1d1b] bg-[#0c0d0d] shadow-[0_0_32px_rgba(0,0,0,0.8)] space-y-10 relative overflow-hidden">
-          <div className="flex items-center justify-between border-b border-[#1a1d1b] pb-6">
-            <Link href={`/${onewish.to_username}`} className="text-sm font-bold tracking-widest text-[#a1b0a8] uppercase hover:text-[#f5f2eb] transition-colors">
+        <div className="p-10 sm:p-16 border border-[#26182a] bg-[#0d0910] shadow-[0_0_32px_rgba(0,0,0,0.8)] space-y-10 relative overflow-hidden">
+          <div className="flex items-center justify-between border-b border-[#211624] pb-6">
+            <Link href={`/${onewish.to_username}`} className="text-sm font-bold tracking-widest text-[#b5a5b5] uppercase hover:text-[#fbf8f5] transition-colors">
               TO: {onewish.to_name.toUpperCase()} {onewish.to_username ? `(@${onewish.to_username})` : ''}
             </Link>
-            <span className="px-4 py-1.5 bg-[#8da095] text-[#050505] text-[10px] font-bold uppercase tracking-widest">
+            <span className="px-4 py-1.5 bg-[#ff6b8b] text-[#050505] text-[10px] font-bold uppercase tracking-widest">
               ONEWISH
             </span>
           </div>
 
-          <p className="font-serif text-2xl sm:text-4xl text-[#f5f2eb] leading-loose uppercase italic tracking-wide">
-            "{onewish.message}"
+          <p className="font-serif text-2xl sm:text-4xl text-[#fbf8f5] leading-loose uppercase italic tracking-wide">
+            &ldquo;{onewish.message}&rdquo;
           </p>
 
           {onewish.media_url && (
             <WishMediaGallery mediaUrl={onewish.media_url} mediaType={onewish.media_type} />
           )}
 
-          <div className="pt-8 mt-8 border-t border-[#1a1d1b] flex flex-col sm:flex-row items-center justify-between gap-6">
-            <Link href={`/${onewish.sender_username}`} className="text-sm text-[#f5f2eb] font-bold uppercase tracking-widest hover:text-[#e4c067] transition-colors">
+          <div className="pt-8 mt-8 border-t border-[#211624] flex flex-col sm:flex-row items-center justify-between gap-6">
+            <Link href={`/${onewish.sender_username}`} className="text-sm text-[#fbf8f5] font-bold uppercase tracking-widest hover:text-[#ff4d8d] transition-colors">
               FROM: @{onewish.sender_username}
             </Link>
             <WishLikeButton wishId={onewish.id} initialLikes={onewish.likes_count} showText />
@@ -242,9 +242,9 @@ export default function DynamicRootPage() {
   if (!profile) {
     return (
       <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-        <h2 className="font-serif text-4xl font-bold text-[#f5f2eb] uppercase tracking-tighter">Profile Not Found</h2>
-        <p className="text-[#a1b0a8] text-sm uppercase tracking-widest">The user @{id} does not exist.</p>
-        <Link href="/" className="inline-block px-8 py-4 bg-[#f5f2eb] text-[#050505] font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors shadow-[4px_4px_0px_0px_rgba(228,192,103,0.3)]">
+        <h2 className="font-serif text-4xl font-bold text-[#fbf8f5] uppercase tracking-tighter">Profile Not Found</h2>
+        <p className="text-[#b5a5b5] text-sm uppercase tracking-widest">The user @{id} does not exist.</p>
+        <Link href="/" className="inline-block px-8 py-4 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(248,79,156,0.35)]">
           Return to Home
         </Link>
       </div>
@@ -260,21 +260,21 @@ export default function DynamicRootPage() {
     <div className="max-w-4xl mx-auto px-4 py-20 space-y-16">
       {/* Profile Header */}
       <div className="flex flex-col items-center text-center space-y-6">
-        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#e4c067]/40 p-1 overflow-hidden bg-[#0c0d0d] shadow-[0_0_24px_rgba(228,192,103,0.15)]">
+        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#ff4d8d]/50 p-1 overflow-hidden bg-[#0d0910] shadow-[0_0_24px_rgba(248,79,156,0.2)]">
           {profile.avatar_url ? (
             <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover rounded-full" />
           ) : (
-            <div className="w-full h-full bg-[#f5f2eb] text-[#050505] flex items-center justify-center font-serif text-5xl font-bold uppercase">
+            <div className="w-full h-full bg-gradient-to-br from-[#ff5376] to-[#f84f9c] text-white flex items-center justify-center font-serif text-5xl font-bold uppercase">
               {profile.username.charAt(0)}
             </div>
           )}
         </div>
         
         <div className="space-y-2">
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-[#f5f2eb]">
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-[#fbf8f5]">
             @{profile.username}
           </h1>
-          <p className="text-xs uppercase tracking-widest text-[#a1b0a8]">
+          <p className="text-xs uppercase tracking-widest text-[#b5a5b5]">
             Verified OneWishes Citizen
           </p>
         </div>
@@ -397,15 +397,15 @@ export default function DynamicRootPage() {
             <JarLoader text="ONEWISHES" subtext="Unsealing wishes..." size="sm" />
           </div>
         ) : activeWishesList.length === 0 ? (
-          <div className="text-center py-16 space-y-4 bg-[#0c0d0d] border border-[#1a1d1b] p-8">
-            <p className="text-sm text-[#a1b0a8] uppercase tracking-widest font-bold">
+          <div className="text-center py-16 space-y-4 bg-[#0d0910] border border-[#26182a] p-8">
+            <p className="text-sm text-[#b5a5b5] uppercase tracking-widest font-bold">
               {activeTab === 'received'
                 ? `No wishes received yet for @${profile.username}.`
                 : `@${profile.username} has not sent any wishes yet.`}
             </p>
             <Link
               href="/#create-section"
-              className="inline-block px-6 py-3 bg-[#f5f2eb] text-[#050505] font-bold text-xs uppercase tracking-widest hover:bg-white transition-all shadow-[2px_2px_0px_0px_rgba(228,192,103,0.3)]"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_16px_rgba(248,79,156,0.3)]"
             >
               Write First Wish
             </Link>

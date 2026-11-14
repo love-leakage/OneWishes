@@ -25,8 +25,8 @@ export async function GET() {
       { wishes: data || [] },
       {
         headers: {
-          // Cache in Cloudflare CDN edge for 30s, stale-while-revalidate for 60s
-          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+          // Cache in Cloudflare CDN edge for 60s, stale-while-revalidate for 300s
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
         },
       }
     );
