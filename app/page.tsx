@@ -530,6 +530,30 @@ export default function HomePage() {
             ARTIFICIAL SCARCITY. <br/> So the ones you wish know what it cost you.
           </p>
 
+          {/* Inspo-Engineered Interactive Marquee Loop */}
+          <div 
+            className="w-full max-w-4xl mx-auto overflow-hidden py-3 border-y border-[#d4af37]/25 relative select-none"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+            }}
+          >
+            <div className="flex w-fit gap-10 whitespace-nowrap animate-marquee-left">
+              {[0, 1, 2].map((i) => (
+                <span key={i} className="text-[10px] sm:text-[11px] font-mono tracking-[0.25em] uppercase text-[#e5c07b]/80 flex items-center gap-5">
+                  <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-[#d4af37]" /> 3 LIFETIME GOLDEN WISHES</span>
+                  <span className="text-[#d4af37]/40">•</span>
+                  <span>1 FRONTPAGE SPOTLIGHT PER CALENDAR DATE</span>
+                  <span className="text-[#d4af37]/40">•</span>
+                  <span>DIRECT-TO-VAULT CLOUDFLARE R2 MEDIA</span>
+                  <span className="text-[#d4af37]/40">•</span>
+                  <span>ETCHED ACROSS INFINITY</span>
+                  <span className="text-[#d4af37]/40">•</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
           {/* ===== TODAY'S ONEWISH: LUXURY ARCHIVAL KEEPSAKE LETTER ===== */}
           {todayOnewish && (
             <div className="mt-16 w-full max-w-4xl mx-auto archival-letter p-1 border border-[#d4af37]/35 bg-[#09090b] shadow-[0_0_45px_rgba(212,175,55,0.12)] relative rounded-sm">
@@ -623,49 +647,58 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* ===== TIERS SHOWCASE (Obsidian Luxe & Champagne Gold) ===== */}
+      {/* ===== TIERS SHOWCASE (Inspo Bento Architecture & Obsidian Luxe) ===== */}
       <section className="space-y-12 pt-16 border-t border-[#d4af37]/20">
         <div className="text-center space-y-3">
-          <h2 className="font-serif text-3xl font-bold text-[#f5f2eb] uppercase tracking-widest">The Tiers</h2>
-          <p className="text-[#b5afa6] text-sm uppercase tracking-wider">Two intentional constraints.</p>
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#14120e] border border-[#d4af37]/30 text-[#e5c07b] text-[10px] font-bold uppercase tracking-widest rounded-full">
+            <span>✦ TWO INTENTIONAL CONSTRAINTS</span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] uppercase tracking-widest">The Tiers</h2>
+          <p className="text-[#b5afa6] text-xs sm:text-sm uppercase tracking-wider font-mono">When wishing costs something you can never get back, love is proven.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Golden Wish Card */}
-          <div className="p-10 border border-[#d4af37]/30 hover:border-[#e5c07b] bg-[#09090c] transition-all flex flex-col justify-between shadow-[0_0_30px_rgba(212,175,55,0.08)] hover:shadow-[0_0_40px_rgba(212,175,55,0.18)] rounded-sm">
+          {/* Golden Wish Bento Card */}
+          <div className="p-8 sm:p-10 border border-[#d4af37]/35 hover:border-[#e5c07b] bg-gradient-to-b from-[#0d0d10] via-[#09090c] to-[#060608] transition-all flex flex-col justify-between shadow-[0_0_35px_rgba(212,175,55,0.08)] hover:shadow-[0_0_45px_rgba(212,175,55,0.18)] rounded-sm relative group overflow-hidden">
+            <div className="absolute top-0 right-0 px-3 py-1 bg-[#14120e] border-b border-l border-[#d4af37]/30 text-[9px] font-mono font-bold uppercase text-[#e5c07b] tracking-widest">
+              3 PER ACCOUNT
+            </div>
             <div>
               <div className="text-xs font-bold uppercase tracking-widest text-[#e5c07b] mb-6 flex items-center gap-2">
-                <span>✦</span> Tier I • 3 Per Lifetime
+                <span>✦</span> Tier I • Identity Vault
               </div>
-              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-4 uppercase">Golden Wish</h3>
+              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-3 uppercase tracking-wide">Golden Wish</h3>
               <p className="text-sm text-[#b5afa6] leading-relaxed mb-8">
-                Rare keepsake wish attached to your identity. Exactly 3 allowed per user account.
+                Rare keepsake wish attached to your identity forever. Exactly 3 allowed per user account. Enforced atomically via PostgreSQL locks.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('golden'); scrollToCreate(); }}
-              className="w-full py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-[0_0_18px_rgba(212,175,55,0.25)] rounded-sm"
+              className="w-full py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-xs hover:brightness-110 transition-all shadow-[0_0_20px_rgba(212,175,55,0.25)] rounded-sm"
             >
-              Create Golden
+              Create Golden Wish
             </button>
           </div>
 
-          {/* Onewish Spotlight Card */}
-          <div className="p-10 border border-[#e5c07b]/30 hover:border-[#e5c07b] bg-[#09090c] transition-all flex flex-col justify-between shadow-[0_0_30px_rgba(212,175,55,0.08)] hover:shadow-[0_0_40px_rgba(212,175,55,0.18)] rounded-sm">
+          {/* Onewish Spotlight Bento Card */}
+          <div className="p-8 sm:p-10 border border-[#e5c07b]/30 hover:border-[#e5c07b] bg-gradient-to-b from-[#0d0d10] via-[#09090c] to-[#060608] transition-all flex flex-col justify-between shadow-[0_0_35px_rgba(212,175,55,0.08)] hover:shadow-[0_0_45px_rgba(212,175,55,0.18)] rounded-sm relative group overflow-hidden">
+            <div className="absolute top-0 right-0 px-3 py-1 bg-[#14120e] border-b border-l border-[#d4af37]/30 text-[9px] font-mono font-bold uppercase text-[#e5c07b] tracking-widest">
+              1 SLOT / DAY
+            </div>
             <div>
               <div className="text-xs font-bold uppercase tracking-widest text-[#e5c07b] mb-6 flex items-center gap-2">
-                <span>✦</span> Tier II • 1 Slot / Day
+                <span>✦</span> Tier II • Global Registry
               </div>
-              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-4 uppercase">Onewish Spotlight</h3>
+              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-3 uppercase tracking-wide">Onewish Spotlight</h3>
               <p className="text-sm text-[#b5afa6] leading-relaxed mb-8">
-                Claim the front-page spotlight for a specific calendar date worldwide. Never fades.
+                Claim the front-page spotlight for a specific calendar date worldwide. Enforced by unique SQL constraint. Once sealed, it belongs to you across infinity.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('onewish'); scrollToCreate(); }}
               className="w-full py-4 border border-[#d4af37] text-[#e5c07b] hover:bg-[#d4af37]/15 font-bold uppercase tracking-widest text-xs transition-all rounded-sm"
             >
-              Book Onewish
+              Book Onewish Spotlight
             </button>
           </div>
         </div>
