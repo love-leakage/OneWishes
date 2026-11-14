@@ -3,17 +3,24 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Heart, X, Image as ImageIcon, Film, Upload } from 'lucide-react';
+import { ArrowRight, Heart, X, Image as ImageIcon, Film, Upload, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { JarLoader } from '@/components/JarLoader';
 import { WishLikeButton } from '@/components/WishLikeButton';
 import { WishMediaGallery } from '@/components/WishMediaGallery';
 import { sounds } from '@/lib/sounds';
+import { compressMedia, formatBytes } from '@/lib/compressMedia';
 
 interface MediaPreview {
+  id: string;
   file: File;
   previewUrl: string;
   type: 'image' | 'video';
+  originalSize: number;
+  compressedSize: number;
+  r2Url?: string;
+  isUploading?: boolean;
+  uploadError?: string;
 }
 
 export default function HomePage() {
@@ -157,40 +164,28 @@ export default function HomePage() {
       }
     }
 
+    // 1. Verify if any media is still in the middle of compressing or uploading
+    const stillUploading = mediaList.some(m => m.isUploading);
+    if (stillUploading) {
+      setIsSubmitting(false);
+      setStatusMsg('Please wait a moment while media finishes uploading to vault...');
+      return;
+    }
+
+    // 2. Strict Check: Only attach media items currently confirmed in mediaList
+    const activeMediaItems = mediaList.filter(m => m.r2Url);
+
     let finalMediaUrl: string | null = null;
     let finalMediaType: 'image' | 'video' | null = null;
 
-    if (mediaList.length > 0) {
-      setStatusMsg(`Sealing & uploading ${mediaList.length} media ${mediaList.length > 1 ? 'files' : 'file'}...`);
-      try {
-        const uploadPromises = mediaList.map(async (item) => {
-          const res = await fetch(`/api/upload?filename=${encodeURIComponent(item.file.name)}&type=${encodeURIComponent(item.file.type)}`, {
-            method: 'POST',
-            body: item.file,
-            headers: {
-              'Content-Type': item.file.type
-            }
-          });
-          const resData = await res.json();
-          if (!resData.url) {
-            throw new Error(resData.error || 'Failed to upload media file');
-          }
-          return { url: resData.url, type: item.type };
-        });
-
-        const uploadedItems = await Promise.all(uploadPromises);
-        if (uploadedItems.length === 1) {
-          finalMediaUrl = uploadedItems[0].url;
-          finalMediaType = uploadedItems[0].type;
-        } else {
-          finalMediaUrl = JSON.stringify(uploadedItems);
-          finalMediaType = uploadedItems.some(u => u.type === 'video') ? 'video' : 'image';
-        }
-      } catch (err: any) {
-        setIsSubmitting(false);
-        setStatusMsg(`Media upload failed: ${err.message || 'Network error'}`);
-        return;
-      }
+    if (activeMediaItems.length === 1) {
+      finalMediaUrl = activeMediaItems[0].r2Url!;
+      finalMediaType = activeMediaItems[0].type;
+    } else if (activeMediaItems.length > 1) {
+      finalMediaUrl = JSON.stringify(
+        activeMediaItems.map(m => ({ url: m.r2Url, type: m.type }))
+      );
+      finalMediaType = activeMediaItems.some(m => m.type === 'video') ? 'video' : 'image';
     }
 
     setStatusMsg('Saving your wish in the vault...');
@@ -265,35 +260,113 @@ export default function HomePage() {
     }
   };
 
-  const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
+  const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawFiles = Array.from(e.target.files || []);
+    if (rawFiles.length === 0) return;
+
+    // Reset input value so same files can be re-selected if removed
+    e.target.value = '';
 
     const currentVideos = mediaList.filter(m => m.type === 'video').length;
-    const newVideos = files.filter(f => f.type.startsWith('video/')).length;
+    const newVideos = rawFiles.filter(f => f.type.startsWith('video/')).length;
 
     if (currentVideos + newVideos > 1) {
       setStatusMsg('Only 1 video is allowed per wish (along with up to 4 photos).');
       return;
     }
 
-    if (mediaList.length + files.length > 5) {
+    if (mediaList.length + rawFiles.length > 5) {
       setStatusMsg('Maximum 5 media items allowed (e.g. 5 photos, or 1 video + 4 photos).');
       return;
     }
 
-    const newPreviews: MediaPreview[] = files.map(file => ({
-      file,
-      previewUrl: URL.createObjectURL(file),
-      type: file.type.startsWith('video/') ? 'video' : 'image',
-    }));
-
-    setMediaList(prev => [...prev, ...newPreviews].slice(0, 5));
     setStatusMsg(null);
+
+    // Create item placeholders with preview immediately for smooth UI
+    const pendingItems: MediaPreview[] = rawFiles.map(file => {
+      const id = `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+      return {
+        id,
+        file,
+        previewUrl: URL.createObjectURL(file),
+        type: file.type.startsWith('video/') ? 'video' : 'image',
+        originalSize: file.size,
+        compressedSize: file.size,
+        isUploading: true,
+      };
+    });
+
+    setMediaList(prev => [...prev, ...pendingItems].slice(0, 5));
+
+    // Process compression and upload in parallel for each item
+    pendingItems.forEach(async (item) => {
+      try {
+        // 1. Smart compression (lossless appearance, WebP/JPEG, capped dimension, preserves GIFs/Videos)
+        const { file: optimizedFile, originalSize, compressedSize } = await compressMedia(item.file);
+
+        // 2. Upload to Cloudflare R2 via upload API route
+        const res = await fetch(`/api/upload?filename=${encodeURIComponent(optimizedFile.name)}&type=${encodeURIComponent(optimizedFile.type)}`, {
+          method: 'POST',
+          body: optimizedFile,
+          headers: {
+            'Content-Type': optimizedFile.type,
+          },
+        });
+
+        const resData = await res.json();
+        if (!res.ok || !resData.url) {
+          throw new Error(resData.error || 'Upload failed');
+        }
+
+        // 3. Update state if item still exists in mediaList (user might have clicked remove while uploading)
+        setMediaList(prev => {
+          const exists = prev.some(m => m.id === item.id);
+          if (!exists) {
+            // User removed item while it was uploading - immediately purge from R2
+            fetch(`/api/upload?url=${encodeURIComponent(resData.url)}`, { method: 'DELETE' }).catch(() => {});
+            return prev;
+          }
+          return prev.map(m => m.id === item.id ? {
+            ...m,
+            file: optimizedFile,
+            originalSize,
+            compressedSize,
+            r2Url: resData.url,
+            isUploading: false,
+          } : m);
+        });
+      } catch (err: any) {
+        setMediaList(prev => prev.map(m => m.id === item.id ? {
+          ...m,
+          isUploading: false,
+          uploadError: err.message || 'Upload error',
+        } : m));
+      }
+    });
   };
 
-  const removeMediaItem = (idx: number) => {
-    setMediaList(prev => prev.filter((_, i) => i !== idx));
+  const removeMediaItem = async (id: string) => {
+    const target = mediaList.find(m => m.id === id);
+    if (!target) return;
+
+    // Revoke object URL from memory
+    try {
+      URL.revokeObjectURL(target.previewUrl);
+    } catch {}
+
+    // Immediately remove from UI
+    setMediaList(prev => prev.filter(m => m.id !== id));
+
+    // If already uploaded to R2, immediately delete from R2 storage
+    if (target.r2Url) {
+      try {
+        await fetch(`/api/upload?url=${encodeURIComponent(target.r2Url)}`, {
+          method: 'DELETE',
+        });
+      } catch (err) {
+        console.warn('Failed to delete removed media from R2:', err);
+      }
+    }
   };
 
   return (
@@ -548,22 +621,50 @@ export default function HomePage() {
 
                 {/* Selected Media Thumbnails Grid */}
                 {mediaList.length > 0 && (
-                  <div className="grid grid-cols-5 gap-2 mt-3">
-                    {mediaList.map((item, idx) => (
-                      <div key={idx} className="relative aspect-square border border-[#1a1d1b] bg-[#0c0d0d] overflow-hidden group">
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-3">
+                    {mediaList.map((item) => (
+                      <div key={item.id} className="relative aspect-square border border-[#241727] bg-[#0c0810] overflow-hidden group rounded-sm shadow-md">
                         {item.type === 'video' ? (
-                          <div className="w-full h-full flex flex-col items-center justify-center bg-black/80 text-[#e4c067]">
-                            <Film className="w-5 h-5 mb-1" />
-                            <span className="text-[8px] font-bold uppercase tracking-wider">Video</span>
+                          <div className="w-full h-full flex flex-col items-center justify-center bg-black/80 text-[#ff4d8d]">
+                            <Film className="w-6 h-6 mb-1" />
+                            <span className="text-[9px] font-bold uppercase tracking-wider">Video</span>
+                            <span className="text-[8px] text-[#b5a5b5] font-mono mt-0.5">{formatBytes(item.compressedSize)}</span>
                           </div>
                         ) : (
-                          <img src={item.previewUrl} alt={`Upload ${idx + 1}`} className="w-full h-full object-cover" />
+                          <img src={item.previewUrl} alt="Upload preview" className="w-full h-full object-cover" />
                         )}
+
+                        {/* Uploading / Optimizing Overlay */}
+                        {item.isUploading && (
+                          <div className="absolute inset-0 bg-black/80 backdrop-blur-[2px] flex flex-col items-center justify-center text-center p-1 z-10">
+                            <Loader2 className="w-5 h-5 text-[#ff4d8d] animate-spin mb-1" />
+                            <span className="text-[8px] font-bold text-[#fbf8f5] uppercase tracking-wider">Optimizing</span>
+                            <span className="text-[7px] text-[#ff6b8b] uppercase font-mono">Uploading R2</span>
+                          </div>
+                        )}
+
+                        {/* Ready badge with size info */}
+                        {!item.isUploading && item.r2Url && (
+                          <div className="absolute bottom-0 inset-x-0 bg-black/85 backdrop-blur-[2px] py-0.5 px-1 flex items-center justify-between text-[8px] font-mono border-t border-[#241727] z-10">
+                            <span className="text-[#00ffaa] flex items-center gap-0.5">
+                              <CheckCircle2 className="w-2.5 h-2.5" /> Ready
+                            </span>
+                            <span className="text-[#b5a5b5]">{formatBytes(item.compressedSize)}</span>
+                          </div>
+                        )}
+
+                        {/* Error overlay */}
+                        {item.uploadError && (
+                          <div className="absolute inset-0 bg-red-950/85 backdrop-blur-[2px] flex flex-col items-center justify-center text-center p-1 z-10">
+                            <span className="text-[8px] font-bold text-red-300">Upload Failed</span>
+                          </div>
+                        )}
+
                         <button
                           type="button"
-                          onClick={() => removeMediaItem(idx)}
-                          className="absolute top-1 right-1 p-1 bg-black/80 hover:bg-red-900/80 text-white rounded-full transition-colors opacity-90 hover:opacity-100"
-                          title="Remove item"
+                          onClick={() => removeMediaItem(item.id)}
+                          className="absolute top-1 right-1 p-1 bg-black/80 hover:bg-red-600 text-white rounded-full transition-colors opacity-90 hover:opacity-100 z-20 shadow"
+                          title="Remove item & delete from R2"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -574,7 +675,7 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb] mb-2">
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#fbf8f5] mb-2">
                   Message
                 </label>
                 <textarea
@@ -583,7 +684,7 @@ export default function HomePage() {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="WRITE SOMETHING MEANINGFUL..."
                   required
-                  className="w-full px-4 py-4 bg-[#080909] border border-[#1a1d1b] text-[#f5f2eb] placeholder-[#424844] focus:outline-none focus:border-[#e4c067] transition-colors resize-none uppercase tracking-wide text-sm"
+                  className="w-full px-4 py-4 bg-[#08050a] border border-[#241727] text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors resize-none uppercase tracking-wide text-sm"
                 />
               </div>
 

@@ -101,8 +101,35 @@ export const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/';
+    try {
+      // 1. Immediately wipe component state so UI updates instantly
+      setUser(null);
+      setProfile(null);
+
+      // 2. Clear all cached storage keys immediately
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('onewishes_cached_profile');
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('sb-') || key.startsWith('onewishes_')) {
+            localStorage.removeItem(key);
+          }
+        });
+        sessionStorage.clear();
+        window.dispatchEvent(new CustomEvent('onewishes:profile-updated', { detail: null }));
+      }
+
+      // 3. Perform Supabase sign out with 800ms safety timeout to prevent hanging
+      await Promise.race([
+        supabase.auth.signOut(),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ]);
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      if (typeof window !== 'undefined') {
+        window.location.replace('/');
+      }
+    }
   };
 
   const navItems = [
