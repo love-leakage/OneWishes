@@ -16,8 +16,8 @@
 
   body {
     background-color: #050505;
-    color: #fbf8f5;
-    @apply font-sans min-h-screen antialiased selection:bg-[#ff4d8d] selection:text-white;
+    color: #f5f2eb;
+    @apply font-sans min-h-screen antialiased selection:bg-[#d4af37] selection:text-[#050505];
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -25,7 +25,7 @@
   }
 }
 
-/* Cyber-Luxury Custom Scrollbar */
+/* Obsidian Luxe Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -33,16 +33,16 @@
   background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #231826;
+  background: #1e1e24;
   border-radius: 3px;
-  border: 1px solid #36223b;
+  border: 1px solid #332d1e;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff4d8d;
-  box-shadow: 0 0 10px rgba(255, 77, 141, 0.6);
+  background: #d4af37;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
 }
 
-/* GPU Hardware-Accelerated Marquee Animations (Smooth 120fps, Zero JS Overhead) */
+/* GPU Hardware-Accelerated Marquee Animations */
 @keyframes marquee-left {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
@@ -54,17 +54,17 @@
 }
 
 .animate-marquee-left {
-  animation: marquee-left 32s linear infinite;
+  animation: marquee-left 34s linear infinite;
   will-change: transform;
 }
 
 .animate-marquee-right {
-  animation: marquee-right 36s linear infinite;
+  animation: marquee-right 38s linear infinite;
   will-change: transform;
 }
 
 /* Motion Graphics Keyframes */
-@keyframes glow-pulse {
+@keyframes gold-pulse {
   0%, 100% {
     opacity: 0.35;
     transform: scale(0.98);
@@ -84,33 +84,28 @@
   }
 }
 
-@keyframes gradient-flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 3.5s ease-in-out infinite;
+.animate-gold-pulse {
+  animation: gold-pulse 3.5s ease-in-out infinite;
 }
 
 .animate-float {
   animation: float-gentle 4s ease-in-out infinite;
 }
 
-.text-gradient-rose {
-  background: linear-gradient(135deg, #ff758c 0%, #ff4d8d 50%, #ff2a85 100%);
+/* Luxury Typography Gradients */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #fdfbf7 0%, #e5c07b 40%, #d4af37 75%, #b89028 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-coral {
-  background: linear-gradient(135deg, #ffa07a 0%, #ff6b8b 50%, #f84f9c 100%);
+.text-gradient-champagne {
+  background: linear-gradient(135deg, #ffffff 0%, #f3e5ab 50%, #e5c07b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Cinematic Montage EFX Keyframes */
+/* Cinematic Montage & Archival Letter Effects */
 @keyframes kenburns-pan {
   0% {
     transform: scale(1) translate3d(0, 0, 0);
@@ -128,3 +123,14 @@
   will-change: transform;
 }
 
+/* Archival Keepsake Letterpress styling */
+.archival-letter {
+  background: radial-gradient(circle at 50% 0%, #111014 0%, #08080a 100%);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(212, 175, 55, 0.08);
+}
+
+.archival-letter:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(212, 175, 55, 0.16);
+}

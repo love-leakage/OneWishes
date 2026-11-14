@@ -58,7 +58,7 @@ export default function GalleryPage() {
       let fetchedWishes: Wish[] | null = null;
 
       // Strategy 1: First-party edge API route (/api/gallery)
-      // Fast, immune to client-side ad-blockers, edge-cached by Cloudflare
+      // Fast, edge-cached by Cloudflare to preserve Worker CPU
       try {
         const res = await fetch('/api/gallery', {
           signal: controller.signal,
@@ -72,7 +72,6 @@ export default function GalleryPage() {
           }
         }
       } catch (apiErr) {
-        // Fall through to Strategy 2
         console.warn('First-party API /api/gallery failed, trying direct Supabase fallback:', apiErr);
       }
 
@@ -98,14 +97,16 @@ export default function GalleryPage() {
         } catch (e) {}
       }
     } catch (err: any) {
-      console.error('Failed to load gallery wishes:', err);
-      // Only show error if we have no cached wishes to display
-      setWishes((prev) => {
-        if (prev.length === 0) {
-          setLoadError('Unable to load public wishes. Please check your internet connection and try again.');
+      console.error('Gallery fetch error:', err);
+      // Fallback to sessionStorage if network fails
+      try {
+        const cached = sessionStorage.getItem('onewishes_gallery_cache');
+        if (cached) {
+          setWishes(JSON.parse(cached));
+          return;
         }
-        return prev;
-      });
+      } catch (e) {}
+      setLoadError(err.name === 'AbortError' ? 'Gallery request timed out' : (err.message || 'Error loading gallery'));
     } finally {
       clearTimeout(timeoutId);
       setLoading(false);
@@ -114,19 +115,15 @@ export default function GalleryPage() {
   }, []);
 
   useEffect(() => {
-    // Step 1: Immediate hydration from sessionStorage for instant 0ms load
+    // Instant hydration from cache
     try {
       const cached = sessionStorage.getItem('onewishes_gallery_cache');
       if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setWishes(parsed);
-          setLoading(false);
-        }
+        setWishes(JSON.parse(cached));
+        setLoading(false);
       }
     } catch (e) {}
 
-    // Step 2: Fresh background fetch
     loadGallery(false);
   }, [loadGallery]);
 
@@ -143,28 +140,28 @@ export default function GalleryPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
       <div className="space-y-4 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#ff4d8d]/10 border border-[#ff4d8d]/30 text-[#ff4d8d] text-[10px] font-bold uppercase tracking-widest rounded-full">
-          <Sparkles className="w-3 h-3" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#14120e] border border-[#d4af37]/35 text-[#e5c07b] text-[10px] font-bold uppercase tracking-widest rounded-full">
+          <Sparkles className="w-3 h-3 text-[#d4af37]" />
           <span>Public Keepsake Showcase</span>
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#fbf8f5] uppercase tracking-tighter">
+        <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#f5f2eb] uppercase tracking-tighter">
           Public Showcase
         </h1>
-        <p className="text-[#b5a5b5] text-sm uppercase tracking-widest">
-          Explore heartfelt keepsake wishes sent across infinity.
+        <p className="text-[#b5afa6] text-sm uppercase tracking-widest">
+          Explore heartfelt keepsake wishes sealed across infinity.
         </p>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-t border-b border-[#211624] py-6">
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-t border-b border-[#d4af37]/20 py-6">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-4 w-4 h-4 text-[#ff4d8d]" />
+          <Search className="absolute left-4 top-3.5 w-4 h-4 text-[#e5c07b]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="SEARCH BY RECIPIENT OR SENDER..."
-            className="w-full pl-12 pr-4 py-3 bg-[#08050a] border border-[#241727] text-xs text-[#fbf8f5] placeholder-[#5a485e] focus:outline-none focus:border-[#ff4d8d] transition-colors uppercase tracking-widest"
+            className="w-full pl-12 pr-4 py-3 bg-[#070709] border border-[#d4af37]/20 text-xs text-[#f5f2eb] placeholder-[#605a54] focus:outline-none focus:border-[#d4af37] transition-colors uppercase tracking-widest rounded-sm"
           />
         </div>
 
@@ -174,10 +171,10 @@ export default function GalleryPage() {
               <button
                 key={t}
                 onClick={() => setTierFilter(t)}
-                className={`px-5 py-2.5 border text-xs font-bold uppercase tracking-widest transition-all ${
+                className={`px-5 py-2.5 border text-xs font-bold uppercase tracking-widest transition-all rounded-sm ${
                   tierFilter === t
-                    ? 'bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white border-transparent shadow-[0_0_16px_rgba(248,79,156,0.35)]'
-                    : 'bg-[#0d0910] text-[#b5a5b5] border-[#241727] hover:text-[#fbf8f5] hover:border-[#ff4d8d]/50'
+                    ? 'bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] border-transparent shadow-[0_0_16px_rgba(212,175,55,0.35)]'
+                    : 'bg-[#09090c] text-[#b5afa6] border-[#d4af37]/20 hover:text-[#f5f2eb] hover:border-[#d4af37]/50'
                 }`}
               >
                 {t}
@@ -189,9 +186,9 @@ export default function GalleryPage() {
             onClick={() => loadGallery(true)}
             disabled={isRefreshing}
             title="Refresh showcase"
-            className="p-2.5 bg-[#0d0910] border border-[#241727] text-[#b5a5b5] hover:text-[#ff4d8d] hover:border-[#ff4d8d]/50 transition-colors disabled:opacity-50"
+            className="p-2.5 bg-[#09090c] border border-[#d4af37]/20 text-[#b5afa6] hover:text-[#e5c07b] hover:border-[#d4af37]/50 transition-colors disabled:opacity-50 rounded-sm"
           >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#ff4d8d]' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#e5c07b]' : ''}`} />
           </button>
         </div>
       </div>
@@ -203,24 +200,24 @@ export default function GalleryPage() {
         </div>
       ) : loadError && wishes.length === 0 ? (
         <div className="py-20 text-center space-y-6 max-w-md mx-auto">
-          <div className="w-12 h-12 mx-auto rounded-full bg-[#ff4d8d]/10 border border-[#ff4d8d]/30 flex items-center justify-center text-[#ff4d8d]">
+          <div className="w-12 h-12 mx-auto rounded-full bg-[#14120e] border border-[#d4af37]/35 flex items-center justify-center text-[#e5c07b]">
             <AlertCircle className="w-6 h-6" />
           </div>
           <div className="space-y-2">
-            <h3 className="text-lg font-bold uppercase tracking-wider text-[#fbf8f5]">Could Not Load Gallery</h3>
-            <p className="text-xs text-[#b5a5b5] uppercase tracking-widest leading-relaxed">
+            <h3 className="text-lg font-bold uppercase tracking-wider text-[#f5f2eb]">Could Not Load Gallery</h3>
+            <p className="text-xs text-[#b5afa6] uppercase tracking-widest leading-relaxed">
               {loadError}
             </p>
           </div>
           <button
             onClick={() => loadGallery(true)}
-            className="px-6 py-3 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(248,79,156,0.35)] hover:brightness-110 transition-all"
+            className="px-6 py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(212,175,55,0.35)] hover:brightness-110 transition-all rounded-sm"
           >
             Try Again
           </button>
         </div>
       ) : filteredWishes.length === 0 ? (
-        <div className="text-[#b5a5b5] text-center py-20 text-sm uppercase tracking-widest font-bold border border-dashed border-[#241727] p-12">
+        <div className="text-[#b5afa6] text-center py-20 text-sm uppercase tracking-widest font-bold border border-dashed border-[#d4af37]/25 p-12 rounded-sm">
           No public wishes match your search. Be the first to create one!
         </div>
       ) : (
@@ -238,27 +235,27 @@ export default function GalleryPage() {
               <Link
                 key={w.id}
                 href={wishHref}
-                className="p-6 sm:p-8 bg-[#0d0910] border border-[#26182a] hover:border-[#ff4d8d]/50 transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_0_30px_rgba(248,79,156,0.18)] min-h-[320px]"
+                className="p-6 sm:p-8 bg-[#09090c] border border-[#d4af37]/25 hover:border-[#e5c07b] transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_0_30px_rgba(212,175,55,0.12)] min-h-[320px] rounded-sm"
               >
                 <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-[#211624] pb-4">
+                  <div className="flex items-center justify-between border-b border-[#d4af37]/20 pb-4">
                     <span
-                      className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest ${
+                      className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-sm ${
                         w.tier === 'golden'
-                          ? 'bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white'
-                          : 'bg-[#ff6b8b] text-[#050505]'
+                          ? 'bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505]'
+                          : 'bg-[#e5c07b] text-[#050505]'
                       }`}
                     >
                       {w.tier}
                     </span>
-                    <span className="flex items-center gap-1.5 text-xs text-[#ff4d8d]">
-                      <Heart className="w-4 h-4 fill-current" />
+                    <span className="flex items-center gap-1.5 text-xs text-[#e5c07b]">
+                      <Heart className="w-4 h-4 fill-current text-[#d4af37]" />
                       <span className="font-bold">{w.likes_count || 0}</span>
                     </span>
                   </div>
 
                   {mediaPreview && (
-                    <div className="relative w-full h-44 overflow-hidden bg-[#08050a] border border-[#ff4d8d]/30 rounded-sm shadow-[0_0_20px_rgba(248,79,156,0.15)] group-hover:border-[#ff4d8d] transition-all">
+                    <div className="relative w-full h-44 overflow-hidden bg-[#070709] border border-[#d4af37]/30 rounded-sm shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:border-[#e5c07b] transition-all">
                       <img
                         src={mediaPreview}
                         alt={`Keepsake to ${w.to_name}`}
@@ -266,22 +263,22 @@ export default function GalleryPage() {
                         className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 filter contrast-[1.05] saturate-[1.12]"
                       />
                       <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_40px_rgba(0,0,0,0.85)]" />
-                      <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 backdrop-blur-sm border border-[#ff4d8d]/30 text-[8px] font-mono text-[#ff4d8d] uppercase tracking-widest rounded-full">
-                        ✦ EFX MONTAGE
+                      <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 backdrop-blur-sm border border-[#d4af37]/35 text-[8px] font-mono text-[#e5c07b] uppercase tracking-widest rounded-full">
+                        ✦ ARCHIVAL EFX
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0d0910] via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#09090c] via-transparent to-transparent pointer-events-none" />
                     </div>
                   )}
 
-                  <h3 className="font-bold text-xl text-[#fbf8f5] uppercase tracking-wider group-hover:text-[#ff758c] transition-colors">
+                  <h3 className="font-bold text-xl text-[#f5f2eb] uppercase tracking-wider group-hover:text-[#e5c07b] transition-colors">
                     TO: {w.to_name}
                   </h3>
-                  <p className="text-sm text-[#b5a5b5] leading-relaxed line-clamp-4 font-serif italic uppercase">
+                  <p className="text-sm text-[#b5afa6] leading-relaxed line-clamp-4 font-serif italic uppercase">
                     &ldquo;{w.message}&rdquo;
                   </p>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-[#211624] text-right text-xs text-[#ff4d8d] font-bold uppercase tracking-widest">
+                <div className="pt-6 mt-6 border-t border-[#d4af37]/20 text-right text-xs text-[#e5c07b] font-bold uppercase tracking-widest">
                   FROM: {w.from_name}
                 </div>
               </Link>

@@ -142,7 +142,7 @@ export const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#050505]/95 backdrop-blur-md border-b border-[#211624] transition-all">
+    <header className="sticky top-0 z-50 w-full bg-[#050505]/95 backdrop-blur-md border-b border-[#d4af37]/20 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* Logo */}
@@ -150,9 +150,9 @@ export const Navbar = () => {
           <img 
             src="/logo-tight.png" 
             alt="OneWishes Logo" 
-            className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(248,79,156,0.6)] transition-transform group-hover:scale-105" 
+            className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(212,175,55,0.45)] transition-transform group-hover:scale-105" 
           />
-          <span className="font-serif font-black text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#fbf8f5] via-[#ff6b8b] to-[#f84f9c] transition-opacity">
+          <span className="font-serif font-black text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37] transition-opacity">
             ONEWISHES
           </span>
         </Link>
@@ -166,12 +166,12 @@ export const Navbar = () => {
                 key={item.href}
                 href={item.href}
                 className={`text-xs font-semibold tracking-widest uppercase transition-colors relative py-1 ${
-                  isActive ? 'text-[#ff4d8d] font-bold' : 'text-[#b5a5b5] hover:text-[#fbf8f5]'
+                  isActive ? 'text-[#e5c07b] font-bold' : 'text-[#b5afa6] hover:text-[#f5f2eb]'
                 }`}
               >
                 {item.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#ff6b8b] via-[#f84f9c] to-[#ff2a85] rounded-full shadow-[0_0_8px_#ff4d8d]" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] rounded-full shadow-[0_0_8px_#d4af37]" />
                 )}
               </Link>
             );
@@ -184,42 +184,42 @@ export const Navbar = () => {
           <button
             onClick={() => sounds.toggle()}
             title={soundOn ? 'Sound On' : 'Sound Muted'}
-            className="p-2 border border-[#241727] rounded-full text-[#b5a5b5] hover:text-[#fbf8f5] hover:border-[#ff4d8d]/50 bg-[#0d0910] transition-all"
+            className="p-2 border border-[#d4af37]/20 rounded-full text-[#b5afa6] hover:text-[#f5f2eb] hover:border-[#d4af37]/50 bg-[#0d0d10] transition-all"
           >
-            {soundOn ? <Volume2 className="w-4 h-4 text-[#ff4d8d]" /> : <VolumeX className="w-4 h-4" />}
+            {soundOn ? <Volume2 className="w-4 h-4 text-[#e5c07b]" /> : <VolumeX className="w-4 h-4" />}
           </button>
 
           {user ? (
             <div className="flex items-center gap-3">
               <Link 
                 href={profile?.username ? `/${profile.username}` : '/profile'} 
-                className="flex items-center gap-2 border border-[#241727] py-1.5 px-3 rounded-full hover:border-[#ff4d8d]/60 bg-[#0d0910] transition-all group shadow-sm"
+                className="flex items-center gap-2 border border-[#d4af37]/30 py-1.5 px-3 rounded-full hover:border-[#e5c07b] bg-[#0d0d10] transition-all group shadow-sm"
               >
                 {user.user_metadata?.avatar_url ? (
                   <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full" />
                 ) : (
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white flex items-center justify-center font-bold text-[10px] uppercase">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#d4af37] to-[#e5c07b] text-[#050505] flex items-center justify-center font-bold text-[10px] uppercase">
                     {(profile?.username || user.email?.charAt(0))?.substring(0, 1)}
                   </div>
                 )}
                 {profile?.username ? (
-                  <span className="text-xs font-bold tracking-wider uppercase text-[#fbf8f5] group-hover:text-[#ff4d8d] transition-colors">
+                  <span className="text-xs font-bold tracking-wider uppercase text-[#f5f2eb] group-hover:text-[#e5c07b] transition-colors">
                     @{profile.username}
                   </span>
                 ) : (
-                  <span className="text-[10px] font-bold tracking-wider uppercase text-[#ff4d8d]">
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-[#e5c07b]">
                     Set Handle
                   </span>
                 )}
               </Link>
-              <button onClick={handleLogout} className="text-[#b5a5b5] hover:text-[#fbf8f5] p-1.5 transition-colors" title="Log Out">
+              <button onClick={handleLogout} className="text-[#b5afa6] hover:text-[#f5f2eb] p-1.5 transition-colors" title="Log Out">
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
           ) : (
             <button
               onClick={handleGoogleLogin}
-              className="px-5 py-2 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold uppercase text-xs tracking-wider hover:opacity-95 shadow-[0_0_18px_rgba(248,79,156,0.35)] transition-all"
+              className="px-5 py-2 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase text-xs tracking-wider hover:opacity-95 shadow-[0_0_18px_rgba(212,175,55,0.35)] transition-all"
             >
               Sign In
             </button>
@@ -231,7 +231,7 @@ export const Navbar = () => {
           {user && (
             <Link 
               href={profile?.username ? `/${profile.username}` : '/profile'} 
-              className="flex items-center gap-1 border border-[#241727] py-1 px-2 rounded-full bg-[#0d0910] text-[11px] font-bold uppercase tracking-wider text-[#ff4d8d] max-w-[120px] truncate"
+              className="flex items-center gap-1 border border-[#d4af37]/30 py-1 px-2 rounded-full bg-[#0d0d10] text-[11px] font-bold uppercase tracking-wider text-[#e5c07b] max-w-[120px] truncate"
             >
               <span className="truncate">@{profile?.username || 'Profile'}</span>
             </Link>
@@ -240,24 +240,24 @@ export const Navbar = () => {
           <button
             onClick={() => sounds.toggle()}
             title={soundOn ? 'Sound On' : 'Sound Muted'}
-            className="p-2 border border-[#241727] rounded-full text-[#b5a5b5] hover:text-[#fbf8f5] bg-[#0d0910]"
+            className="p-2 border border-[#d4af37]/20 rounded-full text-[#b5afa6] hover:text-[#f5f2eb] bg-[#0d0d10]"
           >
-            {soundOn ? <Volume2 className="w-4 h-4 text-[#ff4d8d]" /> : <VolumeX className="w-4 h-4" />}
+            {soundOn ? <Volume2 className="w-4 h-4 text-[#e5c07b]" /> : <VolumeX className="w-4 h-4" />}
           </button>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-[#fbf8f5] p-2 border border-[#241727] rounded-lg bg-[#0d0910] hover:border-[#ff4d8d]/50"
+            className="text-[#f5f2eb] p-2 border border-[#d4af37]/20 rounded-lg bg-[#0d0d10] hover:border-[#d4af37]/50"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-[#ff4d8d]" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-5 h-5 text-[#e5c07b]" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu Dropdown Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#211624] bg-[#070608] px-5 py-6 space-y-4 shadow-2xl">
+        <div className="lg:hidden border-t border-[#d4af37]/20 bg-[#070709] px-5 py-6 space-y-4 shadow-2xl">
           <div className="space-y-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
@@ -268,8 +268,8 @@ export const Navbar = () => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`block py-2.5 px-3 rounded-lg text-sm font-bold uppercase tracking-wider transition-all ${
                     isActive 
-                      ? 'bg-[#150d18] text-[#ff4d8d] border-l-2 border-[#ff4d8d]' 
-                      : 'text-[#b5a5b5] hover:text-[#fbf8f5] hover:bg-[#0d0910]'
+                      ? 'bg-[#14120e] text-[#e5c07b] border-l-2 border-[#d4af37]' 
+                      : 'text-[#b5afa6] hover:text-[#f5f2eb] hover:bg-[#0d0d10]'
                   }`}
                 >
                   {item.label}
@@ -278,13 +278,13 @@ export const Navbar = () => {
             })}
           </div>
 
-          <div className="pt-4 border-t border-[#211624] space-y-3">
+          <div className="pt-4 border-t border-[#d4af37]/20 space-y-3">
             {user ? (
               <div className="flex items-center justify-between pt-2">
                 <Link 
                   href={profile?.username ? `/${profile.username}` : '/profile'} 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 border border-[#241727] py-2 px-4 rounded-full bg-[#0d0910] text-xs font-bold uppercase tracking-wider text-[#fbf8f5]"
+                  className="flex items-center gap-2.5 border border-[#d4af37]/30 py-2 px-4 rounded-full bg-[#0d0d10] text-xs font-bold uppercase tracking-wider text-[#f5f2eb]"
                 >
                   {user.user_metadata?.avatar_url && (
                     <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full" />
@@ -294,7 +294,7 @@ export const Navbar = () => {
 
                 <button 
                   onClick={() => { handleLogout(); setMobileMenuOpen(false); }} 
-                  className="inline-flex items-center gap-1.5 text-xs text-[#b5a5b5] hover:text-[#fbf8f5] p-2 font-mono uppercase"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#b5afa6] hover:text-[#f5f2eb] p-2 font-mono uppercase"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
@@ -303,7 +303,7 @@ export const Navbar = () => {
             ) : (
               <button
                 onClick={() => { handleGoogleLogin(); setMobileMenuOpen(false); }}
-                className="w-full py-3.5 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold uppercase tracking-wider text-xs shadow-lg"
+                className="w-full py-3.5 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-wider text-xs shadow-lg"
               >
                 Sign In with Google
               </button>
@@ -312,7 +312,7 @@ export const Navbar = () => {
             <div className="pt-2 text-center">
               <a 
                 href="mailto:admin@onewishes.com" 
-                className="text-[11px] font-mono text-[#7a6a7a] hover:text-[#ff4d8d] transition-colors"
+                className="text-[11px] font-mono text-[#7a756f] hover:text-[#e5c07b] transition-colors"
               >
                 admin@onewishes.com
               </a>

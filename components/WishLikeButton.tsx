@@ -8,82 +8,103 @@ import { sounds } from '@/lib/sounds';
 interface WishLikeButtonProps {
   wishId: string;
   initialLikes?: number;
-  className?: string;
   showText?: boolean;
+  className?: string;
 }
 
-export function WishLikeButton({
+export const WishLikeButton: React.FC<WishLikeButtonProps> = ({
   wishId,
   initialLikes = 0,
-  className = '',
   showText = false,
-}: WishLikeButtonProps) {
-  const [likes, setLikes] = useState(initialLikes);
-  const [hasLiked, setHasLiked] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
+  className = '',
+}) => {
+  const [likes, setLikes] = useState<number>(initialLikes);
+  const [hasLiked, setHasLiked] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showSignInPrompt, setShowSignInPrompt] = useState<boolean>(false);
 
   useEffect(() => {
     setLikes(initialLikes);
   }, [initialLikes]);
 
+  // Check if current user has already liked this wish
   useEffect(() => {
-    async function checkLikedStatus() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user && typeof window !== 'undefined') {
-        const likedWishes = JSON.parse(localStorage.getItem(`onewishes_liked_${session.user.id}`) || '[]');
-        if (likedWishes.includes(wishId)) {
+    let isMounted = true;
+    async function checkLikeStatus() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          // If not logged in, check local storage for guest like history
+          if (typeof window !== 'undefined') {
+            const guestLikes = JSON.parse(localStorage.getItem('onewishes_liked_wishes') || '[]');
+            if (isMounted && guestLikes.includes(wishId)) {
+              setHasLiked(true);
+            }
+          }
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('wish_likes')
+          .select('id')
+          .eq('wish_id', wishId)
+          .eq('user_id', session.user.id)
+          .maybeSingle();
+
+        if (!error && data && isMounted) {
           setHasLiked(true);
         }
+      } catch (err) {
+        // Silently catch network or schema errors
       }
     }
-    checkLikedStatus();
+
+    checkLikeStatus();
+    return () => { isMounted = false; };
   }, [wishId]);
 
   const handleLike = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (loading) return;
+    if (loading || hasLiked) return;
 
-    // 1. Check if user is logged in
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
       setShowSignInPrompt(true);
       return;
     }
 
-    // 2. Check if already liked by this user
-    const storageKey = `onewishes_liked_${session.user.id}`;
-    const likedWishes: string[] = JSON.parse(localStorage.getItem(storageKey) || '[]');
-
-    if (likedWishes.includes(wishId)) {
-      // Already liked
-      sounds.playHeart();
-      return;
-    }
-
-    // 3. User is logged in & hasn't liked yet -> increment!
-    setLoading(true);
-    sounds.playHeart();
-    setLikes((prev) => prev + 1);
+    // Optimistic UI update
     setHasLiked(true);
+    setLikes((prev) => prev + 1);
+    sounds.playHeart();
 
+    // Cache locally
     try {
-      // Save locally so the user cannot spam
-      likedWishes.push(wishId);
-      localStorage.setItem(storageKey, JSON.stringify(likedWishes));
+      const guestLikes = JSON.parse(localStorage.getItem('onewishes_liked_wishes') || '[]');
+      if (!guestLikes.includes(wishId)) {
+        guestLikes.push(wishId);
+        localStorage.setItem('onewishes_liked_wishes', JSON.stringify(guestLikes));
+      }
+    } catch (e) {}
 
-      // Call Supabase atomic RPC with graceful direct fallback
-      const { data, error } = await supabase.rpc('increment_wish_likes', { target_wish_id: wishId });
-      if (!error && typeof data === 'number') {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.rpc('increment_wish_likes', {
+        target_wish_id: wishId,
+      });
+
+      if (error) {
+        console.warn('RPC like increment failed, falling back to direct table insert:', error);
+        await supabase.from('wish_likes').insert([
+          { wish_id: wishId, user_id: session.user.id }
+        ]);
+      } else if (typeof data === 'number') {
         setLikes(data);
-      } else if (error) {
-        // Fallback: direct update if RPC is not present
-        await supabase.from('wishes').update({ likes_count: likes + 1 }).eq('id', wishId);
       }
     } catch (err) {
-      console.error('Error updating like count:', err);
+      console.error('Failed to register like:', err);
     } finally {
       setLoading(false);
     }
@@ -105,12 +126,12 @@ export function WishLikeButton({
         disabled={loading}
         title={hasLiked ? 'You loved this wish' : 'Sign in to love this wish'}
         className={`flex items-center gap-1.5 transition-all group ${
-          hasLiked ? 'text-[#ff4d8d] scale-105 drop-shadow-[0_0_8px_rgba(255,77,141,0.5)]' : 'text-[#b5a5b5] hover:text-[#ff758c]'
+          hasLiked ? 'text-[#e5c07b] scale-105 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]' : 'text-[#b5afa6] hover:text-[#f5f2eb]'
         } ${className}`}
       >
         <Heart
           className={`w-4 h-4 transition-transform group-hover:scale-125 ${
-            hasLiked ? 'fill-current text-[#ff4d8d]' : 'fill-none'
+            hasLiked ? 'fill-current text-[#d4af37]' : 'fill-none'
           }`}
         />
         <span className="font-mono text-xs font-bold">{likes}</span>
@@ -125,29 +146,29 @@ export function WishLikeButton({
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="max-w-sm w-full bg-[#0d0910] border border-[#241727] p-6 text-center space-y-4 shadow-[0_0_40px_rgba(0,0,0,0.9)] animate-in fade-in zoom-in-95 duration-200"
+            className="max-w-sm w-full bg-[#09090c] border border-[#d4af37]/30 p-6 text-center space-y-4 shadow-[0_0_40px_rgba(0,0,0,0.9)] animate-in fade-in zoom-in-95 duration-200 rounded-sm"
           >
-            <div className="w-12 h-12 mx-auto rounded-full bg-[#ff4d8d]/15 flex items-center justify-center text-[#ff4d8d] shadow-[0_0_16px_rgba(255,77,141,0.3)]">
-              <Heart className="w-6 h-6 fill-current" />
+            <div className="w-12 h-12 mx-auto rounded-full bg-[#14120e] border border-[#d4af37]/40 flex items-center justify-center text-[#e5c07b] shadow-[0_0_16px_rgba(212,175,55,0.3)]">
+              <Heart className="w-6 h-6 fill-current text-[#d4af37]" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif text-lg font-bold text-[#fbf8f5] uppercase tracking-wide">
+              <h3 className="font-serif text-lg font-bold text-[#f5f2eb] uppercase tracking-wide">
                 Sign In to Love Wishes
               </h3>
-              <p className="text-xs text-[#b5a5b5] leading-relaxed">
+              <p className="text-xs text-[#b5afa6] leading-relaxed">
                 Every wish is rare and personal. Sign in with Google to seal your love on this wish.
               </p>
             </div>
             <div className="pt-2 flex flex-col gap-2">
               <button
                 onClick={handleSignIn}
-                className="w-full py-3 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(255,77,141,0.3)] hover:opacity-95"
+                className="w-full py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(212,175,55,0.3)] hover:opacity-95 rounded-sm"
               >
                 Sign In with Google
               </button>
               <button
                 onClick={() => setShowSignInPrompt(false)}
-                className="w-full py-2 text-[11px] text-[#7a6a7a] hover:text-[#fbf8f5] font-bold uppercase tracking-wider transition-colors"
+                className="w-full py-2 text-[11px] text-[#7a756f] hover:text-[#f5f2eb] font-bold uppercase tracking-wider transition-colors"
               >
                 Cancel
               </button>
@@ -157,4 +178,4 @@ export function WishLikeButton({
       )}
     </div>
   );
-}
+};

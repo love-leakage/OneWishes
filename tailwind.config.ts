@@ -9,20 +9,31 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#020617',
-        card: '#0f172a',
-        gold: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          400: '#fbbf24',
-          500: '#e4c067',
-          600: '#d97706',
+        background: '#050505',
+        card: '#0b0b0d',
+        obsidian: {
+          950: '#030303',
+          900: '#050505',
+          850: '#08080a',
+          800: '#0d0d10',
+          700: '#141418',
+          600: '#1e1e24',
+          500: '#2b2b33',
         },
-        brand: {
-          indigo: '#6366f1',
-          rose: '#f43f5e',
-          purple: '#8b5cf6'
-        }
+        gold: {
+          50: '#fdfbf7',
+          100: '#f9f5ec',
+          200: '#f2e7d0',
+          300: '#ecd5aa',
+          400: '#e5c07b',
+          500: '#d4af37',
+          600: '#b89028',
+          700: '#946f1c',
+          800: '#755518',
+          900: '#5e4316',
+        },
+        alabaster: '#f5f2eb',
+        parchment: '#b5afa6',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'sans-serif'],
@@ -35,7 +46,7 @@ const config: Config = {
       keyframes: {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+          '50%': { transform: 'translateY(-8px)' },
         }
       }
     },

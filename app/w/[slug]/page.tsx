@@ -45,7 +45,7 @@ export default function ViewWishPage() {
         }
 
         if (data) {
-          // Automatically redirect to canonical path as specified by user rules
+          // Automatically redirect to canonical path
           if (data.tier === 'onewish') {
             const { data: booking } = await supabase
               .from('onewish_bookings')
@@ -94,7 +94,7 @@ export default function ViewWishPage() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <JarLoader text="ONEWISHES" subtext="Unsealing wish letter..." />
+        <JarLoader text="ONEWISHES" subtext="Unsealing keepsake letter..." />
       </div>
     );
   }
@@ -102,9 +102,9 @@ export default function ViewWishPage() {
   if (!wish) {
     return (
       <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-        <h2 className="font-serif text-4xl font-bold text-[#fbf8f5] uppercase tracking-tighter">This letter never arrived</h2>
-        <p className="text-[#b5a5b5] text-sm uppercase tracking-widest">The wish link may have expired or was typed incorrectly.</p>
-        <Link href="/" className="inline-block px-8 py-4 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-all shadow-lg">
+        <h2 className="font-serif text-4xl font-bold text-[#f5f2eb] uppercase tracking-tighter">This letter never arrived</h2>
+        <p className="text-[#b5afa6] text-sm uppercase tracking-widest">The wish link may have expired or was typed incorrectly.</p>
+        <Link href="/" className="inline-block px-8 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-all shadow-lg rounded-sm">
           Return to Home
         </Link>
       </div>
@@ -112,51 +112,65 @@ export default function ViewWishPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-24 space-y-12">
+    <div className="max-w-4xl mx-auto px-4 py-24 space-y-12">
       <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
+        initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="p-10 sm:p-16 border border-[#ff4d8d]/35 bg-[#0d0910] shadow-[0_0_40px_rgba(248,79,156,0.15)] space-y-10 relative overflow-hidden"
+        className="archival-letter p-1 border border-[#d4af37]/35 bg-[#09090b] shadow-[0_0_45px_rgba(212,175,55,0.12)] relative rounded-sm"
       >
-        <div className="flex items-center justify-between border-b border-[#211624] pb-6">
-          <div className="text-sm font-bold tracking-widest text-[#b5a5b5] uppercase">
-            TO: {wish.to_name.toUpperCase()}
+        {/* Corner Accents */}
+        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]/70" />
+        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]/70" />
+        <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]/70" />
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]/70" />
+
+        <div className="bg-[#050507] p-8 sm:p-14 border border-[#d4af37]/20 space-y-8 relative">
+          <div className="flex items-center justify-between border-b border-[#d4af37]/25 pb-6">
+            <div className="text-sm font-bold tracking-[0.2em] text-[#e5c07b] uppercase">
+              FOR: {wish.to_name.toUpperCase()}
+            </div>
+            <span className="px-3.5 py-1 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_12px_rgba(212,175,55,0.35)] rounded-sm">
+              {wish.tier} KEEPSAKE
+            </span>
           </div>
-          <span className={`px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest ${
-            wish.tier === 'golden' ? 'bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white shadow-[0_0_12px_rgba(248,79,156,0.35)]' : 'bg-[#ff6b8b] text-[#050505]'
-          }`}>
-            {wish.tier}
-          </span>
-        </div>
 
-        <p className="font-serif text-2xl sm:text-4xl text-[#fbf8f5] leading-loose uppercase italic tracking-wide">
-          "{wish.message}"
-        </p>
+          <div className="relative py-4 px-2 sm:px-6">
+            <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -top-4 left-0 select-none">“</span>
+            <p className="font-serif text-2xl sm:text-4xl text-[#f5f2eb] leading-relaxed uppercase italic tracking-wide text-center">
+              {wish.message}
+            </p>
+            <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -bottom-8 right-0 select-none">”</span>
+          </div>
 
-        {wish.media_url && (
-          <WishMediaGallery mediaUrl={wish.media_url} mediaType={wish.media_type} />
-        )}
+          {wish.media_url && (
+            <div className="rounded-sm overflow-hidden border border-[#d4af37]/30 shadow-2xl">
+              <WishMediaGallery mediaUrl={wish.media_url} mediaType={wish.media_type} />
+            </div>
+          )}
 
-        <div className="pt-8 mt-8 border-t border-[#211624] flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="text-sm text-[#fbf8f5] font-bold uppercase tracking-widest">FROM: {wish.from_name}</div>
+          <div className="pt-8 mt-8 border-t border-[#d4af37]/20 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="text-sm text-[#f5f2eb] font-bold uppercase tracking-widest">
+              SEALED BY: {wish.from_name}
+            </div>
 
-          <WishLikeButton wishId={wish.id} initialLikes={wish.likes_count} showText />
+            <WishLikeButton wishId={wish.id} initialLikes={wish.likes_count} showText />
+          </div>
         </div>
       </motion.div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-12">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
         <button
           onClick={handleCopyLink}
-          className="inline-flex items-center gap-3 px-8 py-4 border border-[#241727] hover:border-[#ff4d8d]/50 text-[#fbf8f5] font-bold text-xs uppercase tracking-widest transition-colors w-full sm:w-auto justify-center bg-[#0d0910]"
+          className="inline-flex items-center gap-3 px-8 py-4 border border-[#d4af37]/30 hover:border-[#e5c07b] text-[#f5f2eb] font-bold text-xs uppercase tracking-widest transition-colors w-full sm:w-auto justify-center bg-[#09090c] rounded-sm"
         >
-          <Share2 className="w-4 h-4 text-[#ff4d8d]" />
-          <span>{copied ? 'LINK COPIED' : 'COPY LINK'}</span>
+          <Share2 className="w-4 h-4 text-[#e5c07b]" />
+          <span>{copied ? 'LINK COPIED' : 'COPY ARCHIVE LINK'}</span>
         </button>
 
         <Link
           href="/#create-section"
-          className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-[#ff5376] to-[#f84f9c] text-white font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-all w-full sm:w-auto shadow-lg"
+          className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-all w-full sm:w-auto shadow-lg rounded-sm"
         >
           <span>Write Your Own</span>
           <ArrowRight className="w-4 h-4" />

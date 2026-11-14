@@ -26,67 +26,66 @@ export function JarLoader({
 
   const content = (
     <div className={`flex flex-col items-center justify-center text-center select-none ${containerPadding}`}>
-      {/* ===== MOTION GRAPHICS INFINITY EMBLEM STAGE ===== */}
+      {/* ===== MOTION GRAPHICS INFINITY EMBLEM STAGE (CHAMPAGNE GOLD) ===== */}
       <div className="relative flex items-center justify-center">
         {/* 1. Deep Volumetric Ambient Glows */}
         <motion.div
           animate={{
             scale: [0.92, 1.3, 0.92],
-            opacity: [0.35, 0.7, 0.35],
+            opacity: [0.25, 0.6, 0.25],
           }}
           transition={{
-            duration: 2.6,
+            duration: 2.8,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          className="absolute inset-0 rounded-full bg-gradient-to-r from-[#ff5376] via-[#f84f9c] to-[#ff2a85] blur-3xl pointer-events-none"
+          className="absolute inset-0 rounded-full bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b89028] blur-3xl pointer-events-none"
         />
 
         {/* 2. Secondary High-Frequency Core Glow */}
         <motion.div
           animate={{
-            scale: [1, 1.22, 1],
-            opacity: [0.4, 0.85, 0.4],
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.75, 0.3],
           }}
           transition={{
-            duration: 1.6,
+            duration: 1.8,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          className="absolute w-36 h-36 rounded-full bg-[#f84f9c] blur-2xl pointer-events-none"
+          className="absolute w-36 h-36 rounded-full bg-[#d4af37] blur-2xl pointer-events-none"
         />
 
-        {/* 3. Orbiting Infinity Stardust Tracers */}
+        {/* 3. Orbiting Infinity Golden Stardust Tracers */}
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
           className="absolute w-52 h-52 rounded-full pointer-events-none"
         >
           <motion.span
             animate={{ scale: [0.8, 1.5, 0.8], opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-[#ffa07a] to-[#ff4d8d] shadow-[0_0_14px_#ff4d8d]"
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-gradient-to-r from-[#fff3d1] to-[#e5c07b] shadow-[0_0_14px_#e5c07b]"
           />
           <motion.span
             animate={{ scale: [1.3, 0.7, 1.3], opacity: [0.9, 0.4, 0.9] }}
-            transition={{ duration: 1.7, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
-            className="absolute bottom-2 right-4 w-2 h-2 rounded-full bg-white shadow-[0_0_10px_#ffffff]"
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+            className="absolute bottom-2 right-4 w-2 h-2 rounded-full bg-[#f5f2eb] shadow-[0_0_10px_#ffffff]"
           />
         </motion.div>
 
         {/* 4. Counter-Orbiting Laser Comet */}
         <motion.div
           animate={{ rotate: -360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: 'linear' }}
           className="absolute w-60 h-60 rounded-full pointer-events-none"
         >
-          <span className="absolute top-6 right-8 w-2 h-2 rounded-full bg-[#f84f9c] shadow-[0_0_18px_#f84f9c]" />
-          <span className="absolute bottom-6 left-8 w-1.5 h-1.5 rounded-full bg-[#ffa07a] shadow-[0_0_10px_#ffa07a]" />
+          <span className="absolute top-6 right-8 w-2 h-2 rounded-full bg-[#e5c07b] shadow-[0_0_18px_#d4af37]" />
+          <span className="absolute bottom-6 left-8 w-1.5 h-1.5 rounded-full bg-[#fff3d1] shadow-[0_0_10px_#fff3d1]" />
         </motion.div>
 
-        {/* 5. Animated Vector Infinity Laser Loop & Core */}
+        {/* 5. Animated Vector Infinity Gold Laser Loop & Core */}
         <div className="relative z-10 flex items-center justify-center">
-          {/* Kinetic Master Infinity Logo Emblem */}
           <motion.div
             animate={{
               y: [-5, 5, -5],
@@ -107,12 +106,12 @@ export function JarLoader({
               className="absolute -top-3 -left-3 pointer-events-none overflow-visible"
             >
               <defs>
-                <linearGradient id="neonLaserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ff4d8d" stopOpacity="0.9" />
-                  <stop offset="50%" stopColor="#f84f9c" stopOpacity="1" />
-                  <stop offset="100%" stopColor="#ffa07a" stopOpacity="0.8" />
+                <linearGradient id="goldLaserGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#fff3d1" stopOpacity="0.9" />
+                  <stop offset="50%" stopColor="#e5c07b" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#d4af37" stopOpacity="0.8" />
                 </linearGradient>
-                <filter id="laserGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <filter id="goldLaserGlow" x="-50%" y="-50%" width="200%" height="200%">
                   <feGaussianBlur stdDeviation="4" result="blur" />
                   <feMerge>
                     <feMergeNode in="blur" />
@@ -121,20 +120,20 @@ export function JarLoader({
                 </filter>
               </defs>
 
-              {/* Glowing Infinity Track */}
+              {/* Glowing Golden Infinity Track */}
               <motion.path
                 d="M 120,65 C 90,15 30,15 30,65 C 30,115 90,115 120,65 C 150,15 210,15 210,65 C 210,115 150,115 120,65 Z"
                 fill="none"
-                stroke="url(#neonLaserGrad)"
+                stroke="url(#goldLaserGrad)"
                 strokeWidth="2.5"
                 strokeLinecap="round"
-                filter="url(#laserGlow)"
+                filter="url(#goldLaserGlow)"
                 strokeDasharray="40 180"
                 animate={{
                   strokeDashoffset: [0, -440],
                 }}
                 transition={{
-                  duration: 2.4,
+                  duration: 2.5,
                   repeat: Infinity,
                   ease: 'linear',
                 }}
@@ -159,12 +158,12 @@ export function JarLoader({
               />
             </svg>
 
-            {/* High-Resolution Transparent Infinity Logo */}
+            {/* High-Resolution Champagne Gold Infinity Logo */}
             <img
               src="/logo-tight.png"
               alt="OneWishes Infinity"
               style={{ width: emblemW, height: 'auto' }}
-              className="relative z-10 object-contain drop-shadow-[0_0_28px_rgba(248,79,156,0.75)] select-none pointer-events-none"
+              className="relative z-10 object-contain drop-shadow-[0_0_28px_rgba(212,175,55,0.7)] select-none pointer-events-none"
             />
 
             {/* Holographic Vertical Sweep Beam */}
@@ -174,7 +173,7 @@ export function JarLoader({
                 opacity: [0, 0.9, 0],
               }}
               transition={{
-                duration: 2,
+                duration: 2.2,
                 repeat: Infinity,
                 ease: 'easeInOut',
                 repeatDelay: 0.5,
@@ -185,7 +184,7 @@ export function JarLoader({
         </div>
       </div>
 
-      {/* ===== KINETIC TYPOGRAPHY & LASER PROGRESS ===== */}
+      {/* ===== KINETIC TYPOGRAPHY & GOLD SCANNER ===== */}
       <div className="mt-8 space-y-3">
         {/* Kinetic Title with Letter-Spacing Motion */}
         <motion.div
@@ -194,11 +193,11 @@ export function JarLoader({
             opacity: [0.9, 1, 0.9],
           }}
           transition={{
-            duration: 2.5,
+            duration: 2.6,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          className={`font-serif font-black tracking-[0.32em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#fbf8f5] via-[#ff6b8b] to-[#f84f9c] ${textClass} drop-shadow-[0_0_18px_rgba(248,79,156,0.45)]`}
+          className={`font-serif font-black tracking-[0.32em] uppercase text-gradient-gold ${textClass} drop-shadow-[0_0_18px_rgba(212,175,55,0.45)]`}
         >
           {text}
         </motion.div>
@@ -207,22 +206,22 @@ export function JarLoader({
         {subtext && (
           <motion.p
             animate={{ opacity: [0.65, 1, 0.65] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            className="text-[11px] sm:text-xs font-mono tracking-widest uppercase text-[#b5a5b5] max-w-xs mx-auto"
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            className="text-[11px] sm:text-xs font-mono tracking-widest uppercase text-[#b5afa6] max-w-xs mx-auto"
           >
             {subtext}
           </motion.p>
         )}
 
-        {/* Laser Scanner Progress Bar */}
-        <div className="w-40 sm:w-48 h-[2px] bg-[#1a141d] mx-auto overflow-hidden relative mt-4 rounded-full border border-[#2d1f2e]">
+        {/* Gold Scanner Progress Bar */}
+        <div className="w-40 sm:w-48 h-[2px] bg-[#141416] mx-auto overflow-hidden relative mt-4 rounded-full border border-[#2b2b33]">
           <motion.div
-            className="absolute top-0 bottom-0 w-16 bg-gradient-to-r from-transparent via-[#ff4d8d] to-transparent shadow-[0_0_12px_#ff4d8d]"
+            className="absolute top-0 bottom-0 w-16 bg-gradient-to-r from-transparent via-[#e5c07b] to-transparent shadow-[0_0_12px_#d4af37]"
             animate={{
               x: [-64, 192],
             }}
             transition={{
-              duration: 1.3,
+              duration: 1.4,
               repeat: Infinity,
               ease: 'easeInOut',
             }}

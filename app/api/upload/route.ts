@@ -10,6 +10,46 @@ const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '9ec76d7157aaab
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'onewishes-media';
 const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://pub-0352e4f2bd9f47b09ea1e45720a8a004.r2.dev';
 
+/**
+ * GET: Fast Presigned URL generator (< 1ms Worker CPU)
+ * Allows client browser to upload directly to Cloudflare R2 storage without hitting Worker CPU limits.
+ */
+export async function GET(req: NextRequest) {
+  try {
+    const filename = req.nextUrl.searchParams.get('filename') || 'upload.png';
+    const contentType = req.nextUrl.searchParams.get('type') || 'application/octet-stream';
+    const ext = filename.split('.').pop() || 'png';
+    const cleanExt = ext.replace(/[^a-zA-Z0-9]/g, '');
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${cleanExt}`;
+
+    const aws = new AwsClient({
+      accessKeyId: R2_ACCESS_KEY_ID,
+      secretAccessKey: R2_SECRET_ACCESS_KEY,
+      service: 's3',
+    });
+
+    const targetUrl = `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${R2_BUCKET_NAME}/${fileName}`;
+    const signedReq = await aws.sign(targetUrl, {
+      method: 'PUT',
+      aws: { signQuery: true },
+    });
+
+    const publicUrl = `${R2_PUBLIC_URL}/${fileName}`;
+
+    return NextResponse.json({
+      uploadUrl: signedReq.url,
+      publicUrl,
+      filename: fileName,
+    });
+  } catch (error: any) {
+    console.error('Presign URL Error:', error);
+    return NextResponse.json({ error: error.message || 'Presign failed' }, { status: 500 });
+  }
+}
+
+/**
+ * POST: Fallback server-side upload
+ */
 export async function POST(req: NextRequest) {
   try {
     const filename = req.nextUrl.searchParams.get('filename') || 'upload.png';
@@ -23,7 +63,8 @@ export async function POST(req: NextRequest) {
     }
     
     const ext = filename.split('.').pop() || 'png';
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
+    const cleanExt = ext.replace(/[^a-zA-Z0-9]/g, '');
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${cleanExt}`;
     
     // 1. Try Native Cloudflare R2 Binding first (0ms CPU, instant edge write)
     try {
@@ -71,6 +112,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
+/**
+ * DELETE: Immediate purge of media from R2 storage
+ */
 export async function DELETE(req: NextRequest) {
   try {
     const rawUrl = req.nextUrl.searchParams.get('url');
