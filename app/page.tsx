@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Heart, X, Image as ImageIcon, Film, Upload, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Heart, X, Image as ImageIcon, Film, Upload, Loader2, Sparkles, CheckCircle2, Shield, Calendar, Lock, Globe, Clock, Infinity as InfinityIcon } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { JarLoader } from '@/components/JarLoader';
 import { WishLikeButton } from '@/components/WishLikeButton';
@@ -492,13 +492,17 @@ export default function HomePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 pt-16 pb-24">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 pt-12 pb-28 relative">
       
+      {/* Ambient Moving Gold Lighting Orbs (Inspo Luxe Atmosphere) */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-gradient-to-b from-[#d4af37]/15 via-[#e5c07b]/05 to-transparent blur-[120px] pointer-events-none rounded-full animate-ambient-glow -z-10" />
+      <div className="absolute top-[800px] right-0 w-[450px] h-[400px] bg-gradient-to-br from-[#d4af37]/10 via-transparent to-transparent blur-[140px] pointer-events-none rounded-full animate-ambient-glow -z-10" />
+
       {/* ===== KINETIC HERO SECTION (Obsidian Luxe & Champagne Gold) ===== */}
-      <section className="flex flex-col items-center justify-start pt-20 text-center min-h-[50vh] space-y-12 relative overflow-hidden">
+      <section className="flex flex-col items-center justify-start pt-16 text-center min-h-[50vh] space-y-12 relative overflow-hidden">
         
-        {/* Kinetic Background Text (GPU CSS Hardware Accelerated) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col justify-center opacity-[0.04] select-none">
+        {/* Kinetic Background Marquee Text */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col justify-center opacity-[0.035] select-none">
           <div className="flex whitespace-nowrap animate-marquee-left font-serif text-[15vw] font-bold uppercase leading-none tracking-tighter text-[#e5c07b]">
             <span className="mr-8">ONEWISHES ONEWISHES ONEWISHES ONEWISHES</span>
             <span className="mr-8">ONEWISHES ONEWISHES ONEWISHES ONEWISHES</span>
@@ -513,26 +517,57 @@ export default function HomePage() {
         </div>
 
         <motion.div 
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-8 relative z-10"
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="space-y-10 relative z-10 max-w-5xl mx-auto"
         >
-          {/* Obsidian Luxe Heading */}
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-black leading-[0.9] text-[#f5f2eb] uppercase tracking-tighter">
+          {/* Eyebrow Pill */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[#d4af37]/35 bg-[#0a0a0d]/90 shadow-[0_0_20px_rgba(212,175,55,0.15)] text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
+            <Sparkles className="w-3 h-3 text-[#d4af37]" />
+            <span>ARTIFICIAL SCARCITY PROTOCOL</span>
+          </div>
+
+          {/* Obsidian Luxe Display Heading */}
+          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-[0.9] text-[#f5f2eb] uppercase tracking-tighter">
             A WISH <br/> 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37] drop-shadow-[0_0_35px_rgba(212,175,55,0.35)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37] drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
               WORTH
             </span> SENDING
           </h1>
 
-          <p className="text-[#b5afa6] text-sm md:text-base uppercase tracking-widest max-w-lg mx-auto leading-loose font-bold">
-            ARTIFICIAL SCARCITY. <br/> So the ones you wish know what it cost you.
+          <p className="text-[#b5afa6] text-xs sm:text-sm md:text-base uppercase tracking-[0.25em] max-w-xl mx-auto leading-relaxed font-mono">
+            When wishing costs something you can never reclaim, <br className="hidden sm:block" />
+            the ones you wish know what it cost you.
           </p>
+
+          {/* Inspo-Engineered Stat Row Archetype */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-4 pb-2 border-y border-[#d4af37]/20 select-none">
+            <div className="px-4 py-3 flex flex-col items-center justify-center border-r border-[#d4af37]/15 last:border-r-0">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">3</span>
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Lifetime Seals</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Per Account</span>
+            </div>
+            <div className="px-4 py-3 flex flex-col items-center justify-center md:border-r border-[#d4af37]/15">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">1 / 365</span>
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Calendar Spotlight</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">1 Slot Worldwide</span>
+            </div>
+            <div className="px-4 py-3 flex flex-col items-center justify-center border-r border-[#d4af37]/15">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">0ms</span>
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Direct R2 Vault</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Presigned Speed</span>
+            </div>
+            <div className="px-4 py-3 flex flex-col items-center justify-center">
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">∞</span>
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Archival Lock</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Permanent Provenance</span>
+            </div>
+          </div>
 
           {/* Inspo-Engineered Interactive Marquee Loop */}
           <div 
-            className="w-full max-w-4xl mx-auto overflow-hidden py-3 border-y border-[#d4af37]/25 relative select-none"
+            className="w-full max-w-4xl mx-auto overflow-hidden py-3 border-b border-[#d4af37]/20 relative select-none"
             style={{
               maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
               WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
@@ -554,26 +589,50 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <button
+              onClick={scrollToCreate}
+              className="px-9 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-xs sm:text-sm hover:opacity-95 hover:shadow-[0_0_35px_rgba(212,175,55,0.45)] transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(212,175,55,0.3)] rounded-full"
+            >
+              <span>Write a Keepsake Wish</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => {
+                document.getElementById('inspo-bento')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-7 py-4 border border-[#d4af37]/35 hover:border-[#e5c07b] text-[#f5f2eb] hover:text-[#e5c07b] font-mono uppercase tracking-widest text-xs transition-all rounded-full bg-[#0a0a0d]/60 backdrop-blur-sm"
+            >
+              Explore Protocol Rules ↓
+            </button>
+          </div>
+
           {/* ===== TODAY'S ONEWISH: LUXURY ARCHIVAL KEEPSAKE LETTER ===== */}
           {todayOnewish && (
-            <div className="mt-16 w-full max-w-4xl mx-auto archival-letter p-1 border border-[#d4af37]/35 bg-[#09090b] shadow-[0_0_45px_rgba(212,175,55,0.12)] relative rounded-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-16 w-full max-w-4xl mx-auto archival-letter p-1 border border-[#d4af37]/40 bg-[#09090b] shadow-[0_0_55px_rgba(212,175,55,0.15)] relative rounded-sm"
+            >
               {/* Corner Accents */}
-              <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]/70" />
-              <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]/70" />
-              <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]/70" />
-              <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]/70" />
+              <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-[#d4af37]" />
+              <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-[#d4af37]" />
+              <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-[#d4af37]" />
+              <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 border-[#d4af37]" />
 
-              <div className="bg-[#050507] p-8 sm:p-12 border border-[#d4af37]/20 relative">
+              <div className="bg-[#050507] p-8 sm:p-12 border border-[#d4af37]/25 relative">
                 
                 {/* Wax-Seal Archival Crest Badge */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-[#d4af37]/25 pb-6 mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#d4af37] via-[#e5c07b] to-[#8c6d23] text-[#050505] flex items-center justify-center font-serif font-black text-xs shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                    <div className="w-9 h-9 rounded-full wax-seal-badge text-[#050505] flex items-center justify-center font-serif font-black text-sm shadow-[0_0_18px_rgba(212,175,55,0.45)]">
                       ✦
                     </div>
                     <div>
                       <div className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#e5c07b]">
-                        ARCHIVAL SPOTLIGHT
+                        GLOBAL ARCHIVAL SPOTLIGHT
                       </div>
                       <div className="text-[10px] font-mono text-[#b5afa6]">
                         {new Date().toISOString().split('T')[0]} • WORLDWIDE KEEPSAKE
@@ -583,7 +642,7 @@ export default function HomePage() {
 
                   <Link
                     href={`/${new Date().toISOString().split('T')[0]}`}
-                    className="px-4 py-1.5 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_14px_rgba(212,175,55,0.35)] hover:brightness-110 transition-all rounded-sm flex items-center gap-1.5"
+                    className="px-4 py-2 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_14px_rgba(212,175,55,0.35)] hover:brightness-110 transition-all rounded-sm flex items-center gap-1.5"
                   >
                     <span>View Date Archive</span>
                     <ArrowRight className="w-3 h-3" />
@@ -599,7 +658,7 @@ export default function HomePage() {
                     >
                       FOR: {todayOnewish.to_name.toUpperCase()} {todayOnewish.to_username ? `(@${todayOnewish.to_username})` : ''}
                     </Link>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#8c827a]">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#8c827a] px-2.5 py-0.5 border border-[#d4af37]/20 rounded-full">
                       ONEWISH TIER
                     </span>
                   </div>
@@ -632,101 +691,176 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
-
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-10">
-            <button
-              onClick={scrollToCreate}
-              className="px-9 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-sm hover:opacity-95 hover:shadow-[0_0_30px_rgba(212,175,55,0.45)] transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(212,175,55,0.3)] rounded-full"
-            >
-              <span>Write a Keepsake Wish</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
         </motion.div>
       </section>
 
-      {/* ===== TIERS SHOWCASE (Inspo Bento Architecture & Obsidian Luxe) ===== */}
-      <section className="space-y-12 pt-16 border-t border-[#d4af37]/20">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#14120e] border border-[#d4af37]/30 text-[#e5c07b] text-[10px] font-bold uppercase tracking-widest rounded-full">
-            <span>✦ TWO INTENTIONAL CONSTRAINTS</span>
+      {/* ===== INSPO BENTO GRID (Editorial Architecture & Micro-Interactions) ===== */}
+      <section id="inspo-bento" className="pt-16 space-y-12 border-t border-[#d4af37]/20">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#14120e] border border-[#d4af37]/35 text-[#e5c07b] text-[10px] font-mono font-bold uppercase tracking-widest rounded-full">
+            <span>✦ THE ARCHIVAL PROTOCOL</span>
           </div>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] uppercase tracking-widest">The Tiers</h2>
-          <p className="text-[#b5afa6] text-xs sm:text-sm uppercase tracking-wider font-mono">When wishing costs something you can never get back, love is proven.</p>
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#f5f2eb] uppercase tracking-tight">
+            Engineered For Permanence
+          </h2>
+          <p className="text-[#b5afa6] text-xs sm:text-sm uppercase tracking-wider font-mono">
+            Every layer crafted with intentional restraint to honor human connection.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Golden Wish Bento Card */}
-          <div className="p-8 sm:p-10 border border-[#d4af37]/35 hover:border-[#e5c07b] bg-gradient-to-b from-[#0d0d10] via-[#09090c] to-[#060608] transition-all flex flex-col justify-between shadow-[0_0_35px_rgba(212,175,55,0.08)] hover:shadow-[0_0_45px_rgba(212,175,55,0.18)] rounded-sm relative group overflow-hidden">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-[#14120e] border-b border-l border-[#d4af37]/30 text-[9px] font-mono font-bold uppercase text-[#e5c07b] tracking-widest">
-              3 PER ACCOUNT
-            </div>
-            <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-[#e5c07b] mb-6 flex items-center gap-2">
-                <span>✦</span> Tier I • Identity Vault
+        {/* 6-Tile Irregular Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          
+          {/* Tile 1: Lead Tile (Spans 2 columns, 2 rows) */}
+          <motion.article 
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.3 }}
+            className="md:col-span-2 md:row-span-2 inspo-bento-card p-8 sm:p-12 flex flex-col justify-between rounded-sm relative overflow-hidden"
+          >
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
+                  01 / CORE THESIS
+                </span>
+                <span className="px-2.5 py-0.5 bg-[#d4af37]/15 border border-[#d4af37]/30 text-[#e5c07b] text-[9px] font-mono uppercase tracking-widest rounded-full">
+                  SCARCITY BY DESIGN
+                </span>
               </div>
-              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-3 uppercase tracking-wide">Golden Wish</h3>
-              <p className="text-sm text-[#b5afa6] leading-relaxed mb-8">
-                Rare keepsake wish attached to your identity forever. Exactly 3 allowed per user account. Enforced atomically via PostgreSQL locks.
+              <h3 className="font-serif text-3xl sm:text-5xl font-bold text-[#f5f2eb] leading-[1.08] tracking-tight">
+                When wishing costs what you can never get back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37]">love is proven</span>.
+              </h3>
+              <p className="text-sm sm:text-base text-[#b5afa6] leading-relaxed max-w-xl">
+                Disposable messaging apps generate billions of disposable texts every day. They disappear in 24 hours and mean even less. OneWishes re-engineers digital intention: every wish is mathematically capped, cryptographically sealed, and etched into an unalterable global register.
+              </p>
+            </div>
+
+            <div className="pt-8 mt-8 border-t border-[#d4af37]/20 flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3 text-xs font-mono text-[#e5c07b]">
+                <Shield className="w-4 h-4 text-[#d4af37]" />
+                <span>POSTGRESQL ROW LOCKS • ZERO DUPLICATES</span>
+              </div>
+              <button
+                onClick={scrollToCreate}
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#f5f2eb] hover:text-[#e5c07b] transition-colors"
+              >
+                <span>Compose in Archival Studio</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </motion.article>
+
+          {/* Tile 2: Tier I Golden Wish */}
+          <motion.article 
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.3 }}
+            className="inspo-bento-card p-8 flex flex-col justify-between rounded-sm relative"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
+                  02 / TIER I
+                </span>
+                <span className="px-2 py-0.5 bg-[#d4af37]/15 border border-[#d4af37]/30 text-[#e5c07b] text-[8.5px] font-mono font-bold uppercase tracking-widest rounded-full">
+                  3 PER SOUL
+                </span>
+              </div>
+              <h4 className="font-serif text-2xl font-bold text-[#f5f2eb] uppercase tracking-wide mb-2">
+                The Golden Wish
+              </h4>
+              <p className="text-xs text-[#b5afa6] leading-relaxed">
+                Bound directly to a recipient's unique handle. Accessible in perpetuity via <code className="text-[#e5c07b] font-mono">/goldenwish/@user/count</code>.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('golden'); scrollToCreate(); }}
-              className="w-full py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-xs hover:brightness-110 transition-all shadow-[0_0_20px_rgba(212,175,55,0.25)] rounded-sm"
+              className="mt-6 w-full py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-[11px] rounded-sm hover:brightness-110 transition-all shadow-[0_0_15px_rgba(212,175,55,0.25)]"
             >
-              Create Golden Wish
+              Select Golden Tier
             </button>
-          </div>
+          </motion.article>
 
-          {/* Onewish Spotlight Bento Card */}
-          <div className="p-8 sm:p-10 border border-[#e5c07b]/30 hover:border-[#e5c07b] bg-gradient-to-b from-[#0d0d10] via-[#09090c] to-[#060608] transition-all flex flex-col justify-between shadow-[0_0_35px_rgba(212,175,55,0.08)] hover:shadow-[0_0_45px_rgba(212,175,55,0.18)] rounded-sm relative group overflow-hidden">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-[#14120e] border-b border-l border-[#d4af37]/30 text-[9px] font-mono font-bold uppercase text-[#e5c07b] tracking-widest">
-              1 SLOT / DAY
-            </div>
+          {/* Tile 3: Tier II Onewish Spotlight */}
+          <motion.article 
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.3 }}
+            className="inspo-bento-card p-8 flex flex-col justify-between rounded-sm relative"
+          >
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-[#e5c07b] mb-6 flex items-center gap-2">
-                <span>✦</span> Tier II • Global Registry
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
+                  03 / TIER II
+                </span>
+                <span className="px-2 py-0.5 bg-[#e5c07b]/15 border border-[#e5c07b]/30 text-[#e5c07b] text-[8.5px] font-mono font-bold uppercase tracking-widest rounded-full">
+                  1 SLOT / DAY
+                </span>
               </div>
-              <h3 className="font-serif text-3xl font-bold text-[#f5f2eb] mb-3 uppercase tracking-wide">Onewish Spotlight</h3>
-              <p className="text-sm text-[#b5afa6] leading-relaxed mb-8">
-                Claim the front-page spotlight for a specific calendar date worldwide. Enforced by unique SQL constraint. Once sealed, it belongs to you across infinity.
+              <h4 className="font-serif text-2xl font-bold text-[#f5f2eb] uppercase tracking-wide mb-2">
+                Onewish Spotlight
+              </h4>
+              <p className="text-xs text-[#b5afa6] leading-relaxed">
+                Claim the front-page spotlight for a specific calendar date worldwide. Enforced by unique SQL constraint. Once claimed, it is yours forever.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('onewish'); scrollToCreate(); }}
-              className="w-full py-4 border border-[#d4af37] text-[#e5c07b] hover:bg-[#d4af37]/15 font-bold uppercase tracking-widest text-xs transition-all rounded-sm"
+              className="mt-6 w-full py-3 border border-[#d4af37] text-[#e5c07b] hover:bg-[#d4af37]/15 font-bold uppercase tracking-widest text-[11px] rounded-sm transition-all"
             >
-              Book Onewish Spotlight
+              Select Onewish Tier
             </button>
-          </div>
-        </div>
-      </section>
+          </motion.article>
 
-      {/* ===== PHILOSOPHY / A NOTE ON OUR NAME ===== */}
-      <section className="py-8 border-t border-[#d4af37]/20">
-        <div className="max-w-3xl mx-auto p-8 sm:p-12 border border-[#d4af37]/25 bg-[#09090c] text-center space-y-6 shadow-[0_0_30px_rgba(212,175,55,0.06)] relative overflow-hidden rounded-sm">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#050505] border border-[#d4af37]/40 rounded-full text-[11px] font-bold uppercase tracking-widest text-[#e5c07b]">
-            ✦ A Note On Our Name
-          </div>
+          {/* Tile 4: R2 Presigned Archival Engine (Spans 2 columns) */}
+          <motion.article 
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.3 }}
+            className="md:col-span-2 inspo-bento-card p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-sm"
+          >
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
+                  04 / STORAGE ARCHITECTURE
+                </span>
+                <span className="px-2 py-0.5 bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-[8.5px] font-mono uppercase tracking-wider rounded-full">
+                  LOSSLESS
+                </span>
+              </div>
+              <h4 className="font-serif text-2xl font-bold text-[#f5f2eb] uppercase tracking-wide">
+                Direct-to-R2 Archival Vault
+              </h4>
+              <p className="text-xs text-[#b5afa6] max-w-lg leading-relaxed">
+                Images and videos compress client-side to 80-150KB without visual loss, bypassing worker CPU timeouts with direct presigned S3 URLs to Cloudflare R2.
+              </p>
+            </div>
+            <div className="shrink-0 flex sm:flex-col items-center justify-center gap-1 bg-[#14120e] p-4 border border-[#d4af37]/20 rounded-sm">
+              <span className="font-serif text-3xl font-bold text-[#e5c07b]">&lt;1ms</span>
+              <span className="text-[9px] font-mono uppercase tracking-widest text-[#7a756f]">Worker CPU</span>
+            </div>
+          </motion.article>
 
-          <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#f5f2eb] uppercase tracking-tight leading-snug">
-            "Grammar says <span className="italic text-[#b5afa6]">One Wish</span>. <br className="hidden sm:block" />
-            Feelings don't follow grammar."
-          </h2>
+          {/* Tile 5: The Philosophy & Name Origin */}
+          <motion.article 
+            whileHover={{ y: -3 }}
+            transition={{ duration: 0.3 }}
+            className="inspo-bento-card p-8 flex flex-col justify-between rounded-sm"
+          >
+            <div>
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
+                05 / BRAND MANIFESTO
+              </span>
+              <h4 className="font-serif text-xl font-bold text-[#f5f2eb] uppercase tracking-wide mt-3 mb-2">
+                Feelings Don't Follow Grammar
+              </h4>
+              <p className="text-xs text-[#b5afa6] leading-relaxed italic font-serif">
+                "We made a mistake in our name — but don't make the mistake of leaving your memories unsaid."
+              </p>
+            </div>
+            <div className="pt-4 border-t border-[#d4af37]/20 text-[9px] font-mono uppercase tracking-widest text-[#e5c07b]">
+              One person wishes • Lasts forever
+            </div>
+          </motion.article>
 
-          <p className="text-sm sm:text-base text-[#b5afa6] leading-relaxed max-w-xl mx-auto">
-            Yes, we might have broken English rules with our name. But in a world full of temporary stories and disposable texts, we built this with one truth:
-          </p>
-
-          <p className="text-base sm:text-lg font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37] tracking-wide max-w-xl mx-auto leading-relaxed">
-            "We made a mistake in our name — but don't make the mistake of leaving your memories unsaid."
-          </p>
-
-          <div className="pt-4 border-t border-[#d4af37]/20 text-[11px] uppercase tracking-widest text-[#e5c07b] font-mono font-bold">
-            When ONE person WISHES with all their heart, it lasts forever.
-          </div>
         </div>
       </section>
 
@@ -973,38 +1107,73 @@ export default function HomePage() {
           </div>
 
           {/* Live Preview Card (Archival Keepsake Letter Format) */}
-          <div className="lg:col-span-5 flex flex-col pt-16">
-            <div className="p-8 sm:p-10 border border-[#d4af37]/35 bg-[#08080a] flex-1 flex flex-col justify-between shadow-[0_0_35px_rgba(212,175,55,0.1)] min-h-[500px] relative rounded-sm">
-              {/* Golden Corner Accents */}
-              <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-[#d4af37]" />
-              <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-[#d4af37]" />
-              <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-[#d4af37]" />
-              <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-[#d4af37]" />
-
-              <div>
-                <div className="text-xs font-bold tracking-widest text-[#b5afa6] uppercase mb-8 border-b border-[#d4af37]/20 pb-4 flex items-center justify-between">
-                  <span>TO: {toName ? toName.toUpperCase() : (toUsername ? `@${toUsername}` : 'MAYA')}</span>
-                  <span className="text-[#e5c07b] text-base">✦</span>
-                </div>
-                
-                {mediaList.length > 0 && (
-                  <div className="mb-8 rounded-sm overflow-hidden border border-[#d4af37]/20">
-                    <WishMediaGallery
-                      mediaUrl={JSON.stringify(mediaList.map((m) => ({ url: m.previewUrl, type: m.type })))}
-                    />
-                  </div>
-                )}
-
-                <p className="font-serif text-2xl text-[#f5f2eb] leading-loose uppercase tracking-wide italic">
-                  "{message || 'MAY YOUR PATH BE CLEAR, AND EVERY DREAM YOU CARRY FIND ITS LIGHT.'}"
-                </p>
+          <div className="lg:col-span-5 flex flex-col pt-8 lg:pt-0">
+            <div className="sticky top-28 space-y-4">
+              <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.2em] text-[#e5c07b]">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#00ffaa] animate-pulse" /> LIVE KEEPSAKE PREVIEW
+                </span>
+                <span>{selectedTier === 'golden' ? 'TIER I • GOLDEN' : 'TIER II • ONEWISH'}</span>
               </div>
 
-              <div className="pt-8 border-t border-[#d4af37]/20 flex flex-col gap-3 text-[#f5f2eb] text-xs">
-                <span className="font-bold tracking-widest uppercase">FROM: {fromName || 'ALEX'}</span>
-                <span className="uppercase text-[10px] font-bold tracking-widest text-[#e5c07b]">
-                  TIER: {selectedTier} • ARCHIVAL KEEPSAKE
-                </span>
+              <div className="p-8 sm:p-10 border border-[#d4af37]/40 bg-[#08080a] flex flex-col justify-between shadow-[0_0_45px_rgba(212,175,55,0.12)] min-h-[520px] relative rounded-sm archival-letter">
+                {/* Golden Corner Accents */}
+                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]" />
+                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]" />
+                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]" />
+                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]" />
+
+                <div>
+                  {/* Archival Preview Header with Wax Seal */}
+                  <div className="border-b border-[#d4af37]/25 pb-4 mb-6 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full wax-seal-badge text-[#050505] flex items-center justify-center font-serif font-black text-xs shadow">
+                        ✦
+                      </div>
+                      <div>
+                        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#e5c07b]">
+                          {selectedTier === 'golden' ? 'GOLDEN VAULT KEEPSAKE' : 'GLOBAL SPOTLIGHT'}
+                        </div>
+                        <div className="text-[9px] font-mono text-[#8c827a]">
+                          {selectedTier === 'onewish' ? (bookingDate || 'SELECT DATE') : 'ETERNAL REGISTRY'}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-[9px] font-mono text-[#8c827a] uppercase tracking-widest border border-[#d4af37]/20 px-2 py-0.5 rounded-full">
+                      UNSEALED
+                    </span>
+                  </div>
+
+                  <div className="text-xs font-bold tracking-widest text-[#b5afa6] uppercase mb-6 flex items-center justify-between">
+                    <span>TO: {toName ? toName.toUpperCase() : (toUsername ? `@${toUsername.toUpperCase()}` : 'MAYA')}</span>
+                  </div>
+                  
+                  {mediaList.length > 0 && (
+                    <div className="mb-6 rounded-sm overflow-hidden border border-[#d4af37]/30 shadow-md">
+                      <WishMediaGallery
+                        mediaUrl={JSON.stringify(mediaList.map((m) => ({ url: m.previewUrl, type: m.type })))}
+                      />
+                    </div>
+                  )}
+
+                  <div className="relative py-2">
+                    <span className="text-[#d4af37]/25 font-serif text-5xl leading-none absolute -top-4 left-0 select-none">“</span>
+                    <p className="font-serif text-2xl sm:text-3xl text-[#f5f2eb] leading-relaxed uppercase tracking-wide italic text-center px-4">
+                      {message || 'MAY YOUR PATH BE CLEAR, AND EVERY DREAM YOU CARRY FIND ITS LIGHT.'}
+                    </p>
+                    <span className="text-[#d4af37]/25 font-serif text-5xl leading-none absolute -bottom-6 right-0 select-none">”</span>
+                  </div>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-[#d4af37]/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
+                  <div className="flex items-center gap-1.5 font-bold tracking-widest uppercase text-[#f5f2eb]">
+                    <span className="text-[#8c827a]">SEALED BY:</span>
+                    <span className="text-[#e5c07b]">{fromName || (currentUserProfile?.username ? `@${currentUserProfile.username}` : '@ALEX')}</span>
+                  </div>
+                  <span className="text-[9px] font-mono text-[#7a756f] uppercase">
+                    ONEWISHES.COM
+                  </span>
+                </div>
               </div>
             </div>
           </div>

@@ -134,3 +134,42 @@
   border-color: rgba(212, 175, 55, 0.45);
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(212, 175, 55, 0.16);
 }
+
+/* Ambient Radial Glow & Glass Shimmer */
+@keyframes ambient-glow {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translate(25px, -20px) scale(1.15);
+    opacity: 0.35;
+  }
+}
+
+.animate-ambient-glow {
+  animation: ambient-glow 14s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Glass Border Glow for Inspo Bento */
+.inspo-bento-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(18, 17, 22, 0.7) 0%, rgba(8, 8, 11, 0.9) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.inspo-bento-card:hover {
+  border-color: rgba(229, 192, 123, 0.5);
+  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.14);
+  transform: translateY(-2px);
+}
+
+/* Wax Seal Metallic Sheen */
+.wax-seal-badge {
+  background: radial-gradient(circle at 35% 35%, #f7e7b4 0%, #d4af37 40%, #87671d 100%);
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
