@@ -282,67 +282,83 @@ export default function HomePage() {
 
     setStatusMsg(null);
 
-    // Create item placeholders with preview immediately for smooth UI
-    const pendingItems: MediaPreview[] = rawFiles.map(file => {
-      const id = `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-      return {
-        id,
-        file,
-        previewUrl: URL.createObjectURL(file),
-        type: file.type.startsWith('video/') ? 'video' : 'image',
-        originalSize: file.size,
-        compressedSize: file.size,
-        isUploading: true,
-      };
-    });
+    const pendingItems: MediaPreview[] = rawFiles.map(file => ({
+      id: `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+      file,
+      previewUrl: URL.createObjectURL(file),
+      type: file.type.startsWith('video/') ? 'video' : 'image',
+      originalSize: file.size,
+      compressedSize: file.size,
+      isUploading: true,
+    }));
 
     setMediaList(prev => [...prev, ...pendingItems].slice(0, 5));
 
-    // Process compression and upload in parallel for each item
-    pendingItems.forEach(async (item) => {
-      try {
-        // 1. Smart compression (lossless appearance, WebP/JPEG, capped dimension, preserves GIFs/Videos)
-        const { file: optimizedFile, originalSize, compressedSize } = await compressMedia(item.file);
-
-        // 2. Upload to Cloudflare R2 via upload API route
-        const res = await fetch(`/api/upload?filename=${encodeURIComponent(optimizedFile.name)}&type=${encodeURIComponent(optimizedFile.type)}`, {
-          method: 'POST',
-          body: optimizedFile,
-          headers: {
-            'Content-Type': optimizedFile.type,
-          },
-        });
-
-        const resData = await res.json();
-        if (!res.ok || !resData.url) {
-          throw new Error(resData.error || 'Upload failed');
-        }
-
-        // 3. Update state if item still exists in mediaList (user might have clicked remove while uploading)
-        setMediaList(prev => {
-          const exists = prev.some(m => m.id === item.id);
-          if (!exists) {
-            // User removed item while it was uploading - immediately purge from R2
-            fetch(`/api/upload?url=${encodeURIComponent(resData.url)}`, { method: 'DELETE' }).catch(() => {});
-            return prev;
-          }
-          return prev.map(m => m.id === item.id ? {
-            ...m,
-            file: optimizedFile,
-            originalSize,
-            compressedSize,
-            r2Url: resData.url,
-            isUploading: false,
-          } : m);
-        });
-      } catch (err: any) {
-        setMediaList(prev => prev.map(m => m.id === item.id ? {
-          ...m,
-          isUploading: false,
-          uploadError: err.message || 'Upload error',
-        } : m));
-      }
+    // Upload items with fast compression and abort timeouts
+    pendingItems.forEach(item => {
+      uploadSingleMediaItem(item);
     });
+  };
+
+  const uploadSingleMediaItem = async (item: MediaPreview) => {
+    setMediaList(prev => prev.map(m => m.id === item.id ? { ...m, isUploading: true, uploadError: undefined } : m));
+
+    try {
+      // 1. Ultra-fast compression (80-150KB target, resilient timeouts)
+      const { file: optimizedFile, originalSize, compressedSize } = await compressMedia(item.file);
+
+      // 2. Abort controller with 20-second timeout to prevent hanging forever
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 20000);
+
+      const res = await fetch(`/api/upload?filename=${encodeURIComponent(optimizedFile.name)}&type=${encodeURIComponent(optimizedFile.type)}`, {
+        method: 'POST',
+        body: optimizedFile,
+        headers: {
+          'Content-Type': optimizedFile.type,
+        },
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+
+      const resData = await res.json();
+      if (!res.ok || !resData.url) {
+        throw new Error(resData.error || 'Upload failed');
+      }
+
+      setMediaList(prev => {
+        const exists = prev.some(m => m.id === item.id);
+        if (!exists) {
+          // If removed while uploading, purge immediately from R2
+          fetch(`/api/upload?url=${encodeURIComponent(resData.url)}`, { method: 'DELETE' }).catch(() => {});
+          return prev;
+        }
+        return prev.map(m => m.id === item.id ? {
+          ...m,
+          file: optimizedFile,
+          originalSize,
+          compressedSize,
+          r2Url: resData.url,
+          isUploading: false,
+          uploadError: undefined,
+        } : m);
+      });
+    } catch (err: any) {
+      const isTimeout = err.name === 'AbortError';
+      const msg = isTimeout ? 'Timed out. Tap retry' : (err.message || 'Upload error');
+      setMediaList(prev => prev.map(m => m.id === item.id ? {
+        ...m,
+        isUploading: false,
+        uploadError: msg,
+      } : m));
+    }
+  };
+
+  const retryUpload = (id: string) => {
+    const item = mediaList.find(m => m.id === id);
+    if (item) {
+      uploadSingleMediaItem(item);
+    }
   };
 
   const removeMediaItem = async (id: string) => {
@@ -653,10 +669,19 @@ export default function HomePage() {
                           </div>
                         )}
 
-                        {/* Error overlay */}
-                        {item.uploadError && (
-                          <div className="absolute inset-0 bg-red-950/85 backdrop-blur-[2px] flex flex-col items-center justify-center text-center p-1 z-10">
-                            <span className="text-[8px] font-bold text-red-300">Upload Failed</span>
+                        {/* Error overlay with retry */}
+                        {item.uploadError && !item.isUploading && (
+                          <div className="absolute inset-0 bg-red-950/90 backdrop-blur-[2px] flex flex-col items-center justify-center text-center p-1 z-10 space-y-1">
+                            <span className="text-[7.5px] font-bold text-red-200 uppercase leading-tight line-clamp-1">
+                              {item.uploadError}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => retryUpload(item.id)}
+                              className="text-[7.5px] font-bold bg-[#ff4d8d] hover:bg-[#ff2a85] text-white px-2 py-0.5 rounded-sm uppercase tracking-wider transition-colors shadow"
+                            >
+                              Retry
+                            </button>
                           </div>
                         )}
 

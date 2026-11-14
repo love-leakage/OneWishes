@@ -15,7 +15,16 @@ directory = ".open-next/assets"
 binding = "ASSETS"
 run_worker_first = false
 
-# Uncomment if you enable ISR caching:
-# [[kv_namespaces]]
-# binding = "NEXT_CACHE_KV"
-# id = "your-kv-namespace-id"
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "onewishes-media"
+
+[vars]
+R2_ACCOUNT_ID = "345d185c9fe7e00e3d8a0a134d5e2cd0"
+R2_ACCESS_KEY_ID = "bcef4664319f027b53bd0b7888c4318b"
+R2_SECRET_ACCESS_KEY = "9ec76d7157aaab298f97f006e0b2d7ed6906508223e591ef658a1f9d049ad88e"
+R2_BUCKET_NAME = "onewishes-media"
+NEXT_PUBLIC_R2_PUBLIC_URL = "https://pub-0352e4f2bd9f47b09ea1e45720a8a004.r2.dev"
+NEXT_PUBLIC_SUPABASE_URL = "https://arygiubgshkzlqhmdszc.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFyeWdpdWJnc2hremxxaG1kc3pjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MTQyODAsImV4cCI6MjEwNTQ5MDI4MH0.a6hQXXa6Ti8JzKrWdGmOjIHm931M9FIvxUWDYWHfIVA"
+
