@@ -142,8 +142,9 @@ export const Navbar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#050505]/95 backdrop-blur-md border-b border-[#d4af37]/20 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div className="sticky top-4 z-50 w-full px-3 sm:px-6 pointer-events-none">
+      <header className="pointer-events-auto max-w-6xl mx-auto rounded-full bg-[#08080b]/85 backdrop-blur-2xl border border-[#d4af37]/25 shadow-[0_12px_40px_rgba(0,0,0,0.85)] transition-all px-4 sm:px-6 py-2.5">
+        <div className="flex items-center justify-between">
         
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
@@ -320,6 +321,7 @@ export const Navbar = () => {
           </div>
         </div>
       )}
-    </header>
+      </header>
+    </div>
   );
 };

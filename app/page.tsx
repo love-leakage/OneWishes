@@ -589,41 +589,42 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Action CTAs */}
+          {/* Action CTAs (High-End Nested 'Button-in-Button' Island Architecture) */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <button
               onClick={scrollToCreate}
-              className="px-9 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-xs sm:text-sm hover:opacity-95 hover:shadow-[0_0_35px_rgba(212,175,55,0.45)] transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(212,175,55,0.3)] rounded-full"
+              className="group relative inline-flex items-center gap-4 pl-8 pr-2.5 py-2.5 rounded-full bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-xs sm:text-sm shadow-[0_0_30px_rgba(212,175,55,0.35)] hover:shadow-[0_0_45px_rgba(212,175,55,0.55)] active:scale-[0.98] transition-all"
             >
               <span>Write a Keepsake Wish</span>
-              <ArrowRight className="w-4 h-4" />
+              <span className="w-9 h-9 rounded-full bg-black/15 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                <ArrowRight className="w-4 h-4 text-[#050505]" />
+              </span>
             </button>
             <button
               onClick={() => {
                 document.getElementById('inspo-bento')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="px-7 py-4 border border-[#d4af37]/35 hover:border-[#e5c07b] text-[#f5f2eb] hover:text-[#e5c07b] font-mono uppercase tracking-widest text-xs transition-all rounded-full bg-[#0a0a0d]/60 backdrop-blur-sm"
+              className="px-7 py-3.5 border border-[#d4af37]/35 hover:border-[#e5c07b] text-[#f5f2eb] hover:text-[#e5c07b] font-mono uppercase tracking-widest text-xs transition-all rounded-full bg-[#0a0a0d]/70 backdrop-blur-md active:scale-[0.98]"
             >
               Explore Protocol Rules ↓
             </button>
           </div>
 
-          {/* ===== TODAY'S ONEWISH: LUXURY ARCHIVAL KEEPSAKE LETTER ===== */}
+          {/* ===== TODAY'S ONEWISH: DOUBLE-BEZEL ARCHIVAL KEEPSAKE LETTER ===== */}
           {todayOnewish && (
             <motion.div 
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-16 w-full max-w-4xl mx-auto archival-letter p-1 border border-[#d4af37]/40 bg-[#09090b] shadow-[0_0_55px_rgba(212,175,55,0.15)] relative rounded-sm"
+              className="mt-16 w-full max-w-4xl mx-auto p-1.5 sm:p-2.5 rounded-[2rem] bg-white/[0.02] border border-[#d4af37]/35 shadow-[0_12px_50px_rgba(0,0,0,0.85)] relative"
             >
-              {/* Corner Accents */}
-              <div className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 border-[#d4af37]" />
-              <div className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 border-[#d4af37]" />
-              <div className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 border-[#d4af37]" />
-              <div className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 border-[#d4af37]" />
+              <div className="archival-letter p-8 sm:p-12 rounded-[calc(2rem-0.5rem)] bg-[#050507] border border-[#d4af37]/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] relative">
+                {/* Corner Accents */}
+                <div className="absolute top-4 left-4 w-3.5 h-3.5 border-t-2 border-l-2 border-[#d4af37]" />
+                <div className="absolute top-4 right-4 w-3.5 h-3.5 border-t-2 border-r-2 border-[#d4af37]" />
+                <div className="absolute bottom-4 left-4 w-3.5 h-3.5 border-b-2 border-l-2 border-[#d4af37]" />
+                <div className="absolute bottom-4 right-4 w-3.5 h-3.5 border-b-2 border-r-2 border-[#d4af37]" />
 
-              <div className="bg-[#050507] p-8 sm:p-12 border border-[#d4af37]/25 relative">
-                
                 {/* Wax-Seal Archival Crest Badge */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-[#d4af37]/25 pb-6 mb-8">
                   <div className="flex items-center gap-3">
@@ -642,7 +643,7 @@ export default function HomePage() {
 
                   <Link
                     href={`/${new Date().toISOString().split('T')[0]}`}
-                    className="px-4 py-2 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_14px_rgba(212,175,55,0.35)] hover:brightness-110 transition-all rounded-sm flex items-center gap-1.5"
+                    className="px-4 py-2 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_14px_rgba(212,175,55,0.35)] hover:brightness-110 active:scale-[0.98] transition-all rounded-full flex items-center gap-1.5"
                   >
                     <span>View Date Archive</span>
                     <ArrowRight className="w-3 h-3" />
@@ -658,14 +659,14 @@ export default function HomePage() {
                     >
                       FOR: {todayOnewish.to_name.toUpperCase()} {todayOnewish.to_username ? `(@${todayOnewish.to_username})` : ''}
                     </Link>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#8c827a] px-2.5 py-0.5 border border-[#d4af37]/20 rounded-full">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#8c827a] px-3 py-1 border border-[#d4af37]/25 rounded-full bg-[#0d0d10]">
                       ONEWISH TIER
                     </span>
                   </div>
                   
                   {/* Cinematic Letterbox Media Montage */}
                   {todayOnewish.media_url && (
-                    <div className="rounded-sm overflow-hidden border border-[#d4af37]/30 shadow-2xl">
+                    <div className="rounded-xl overflow-hidden border border-[#d4af37]/30 shadow-2xl">
                       <WishMediaGallery mediaUrl={todayOnewish.media_url} mediaType={todayOnewish.media_type} />
                     </div>
                   )}
@@ -1095,9 +1096,12 @@ export default function HomePage() {
 
               <button
                 type="submit"
-                className="w-full py-5 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-sm tracking-widest uppercase hover:opacity-95 transition-all mt-6 shadow-[0_0_25px_rgba(212,175,55,0.35)] rounded-sm"
+                className="group relative w-full py-3.5 pl-8 pr-3 rounded-full bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs sm:text-sm tracking-widest uppercase hover:shadow-[0_0_35px_rgba(212,175,55,0.45)] active:scale-[0.98] transition-all mt-6 shadow-[0_0_25px_rgba(212,175,55,0.35)] flex items-center justify-between"
               >
-                Seal & Send Keepsake Wish
+                <span className="mx-auto pl-6">Seal & Send Keepsake Wish</span>
+                <span className="w-9 h-9 rounded-full bg-black/15 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                  <ArrowRight className="w-4 h-4 text-[#050505]" />
+                </span>
               </button>
 
               {statusMsg && (
@@ -1116,63 +1120,66 @@ export default function HomePage() {
                 <span>{selectedTier === 'golden' ? 'TIER I • GOLDEN' : 'TIER II • ONEWISH'}</span>
               </div>
 
-              <div className="p-8 sm:p-10 border border-[#d4af37]/40 bg-[#08080a] flex flex-col justify-between shadow-[0_0_45px_rgba(212,175,55,0.12)] min-h-[520px] relative rounded-sm archival-letter">
-                {/* Golden Corner Accents */}
-                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]" />
-                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]" />
-                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]" />
-                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]" />
+              {/* Double-Bezel Outer Shell */}
+              <div className="p-1.5 sm:p-2 rounded-[2rem] bg-white/[0.02] border border-[#d4af37]/35 shadow-[0_12px_45px_rgba(0,0,0,0.85)] relative">
+                <div className="archival-letter p-8 sm:p-10 rounded-[calc(2rem-0.5rem)] bg-[#050507] border border-[#d4af37]/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] flex flex-col justify-between min-h-[520px] relative">
+                  {/* Golden Corner Accents */}
+                  <div className="absolute top-4 left-4 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]" />
+                  <div className="absolute top-4 right-4 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]" />
+                  <div className="absolute bottom-4 left-4 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]" />
+                  <div className="absolute bottom-4 right-4 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]" />
 
-                <div>
-                  {/* Archival Preview Header with Wax Seal */}
-                  <div className="border-b border-[#d4af37]/25 pb-4 mb-6 flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full wax-seal-badge text-[#050505] flex items-center justify-center font-serif font-black text-xs shadow">
-                        ✦
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#e5c07b]">
-                          {selectedTier === 'golden' ? 'GOLDEN VAULT KEEPSAKE' : 'GLOBAL SPOTLIGHT'}
+                  <div>
+                    {/* Archival Preview Header with Wax Seal */}
+                    <div className="border-b border-[#d4af37]/25 pb-4 mb-6 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full wax-seal-badge text-[#050505] flex items-center justify-center font-serif font-black text-xs shadow">
+                          ✦
                         </div>
-                        <div className="text-[9px] font-mono text-[#8c827a]">
-                          {selectedTier === 'onewish' ? (bookingDate || 'SELECT DATE') : 'ETERNAL REGISTRY'}
+                        <div>
+                          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#e5c07b]">
+                            {selectedTier === 'golden' ? 'GOLDEN VAULT KEEPSAKE' : 'GLOBAL SPOTLIGHT'}
+                          </div>
+                          <div className="text-[9px] font-mono text-[#8c827a]">
+                            {selectedTier === 'onewish' ? (bookingDate || 'SELECT DATE') : 'ETERNAL REGISTRY'}
+                          </div>
                         </div>
                       </div>
+                      <span className="text-[9px] font-mono text-[#8c827a] uppercase tracking-widest border border-[#d4af37]/20 px-2 py-0.5 rounded-full">
+                        UNSEALED
+                      </span>
                     </div>
-                    <span className="text-[9px] font-mono text-[#8c827a] uppercase tracking-widest border border-[#d4af37]/20 px-2 py-0.5 rounded-full">
-                      UNSEALED
+
+                    <div className="text-xs font-bold tracking-widest text-[#b5afa6] uppercase mb-6 flex items-center justify-between">
+                      <span>TO: {toName ? toName.toUpperCase() : (toUsername ? `@${toUsername.toUpperCase()}` : 'MAYA')}</span>
+                    </div>
+                    
+                    {mediaList.length > 0 && (
+                      <div className="mb-6 rounded-xl overflow-hidden border border-[#d4af37]/30 shadow-md">
+                        <WishMediaGallery
+                          mediaUrl={JSON.stringify(mediaList.map((m) => ({ url: m.previewUrl, type: m.type })))}
+                        />
+                      </div>
+                    )}
+
+                    <div className="relative py-2">
+                      <span className="text-[#d4af37]/25 font-serif text-5xl leading-none absolute -top-4 left-0 select-none">“</span>
+                      <p className="font-serif text-2xl sm:text-3xl text-[#f5f2eb] leading-relaxed uppercase tracking-wide italic text-center px-4">
+                        {message || 'MAY YOUR PATH BE CLEAR, AND EVERY DREAM YOU CARRY FIND ITS LIGHT.'}
+                      </p>
+                      <span className="text-[#d4af37]/25 font-serif text-5xl leading-none absolute -bottom-6 right-0 select-none">”</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 mt-6 border-t border-[#d4af37]/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
+                    <div className="flex items-center gap-1.5 font-bold tracking-widest uppercase text-[#f5f2eb]">
+                      <span className="text-[#8c827a]">SEALED BY:</span>
+                      <span className="text-[#e5c07b]">{fromName || (currentUserProfile?.username ? `@${currentUserProfile.username}` : '@ALEX')}</span>
+                    </div>
+                    <span className="text-[9px] font-mono text-[#7a756f] uppercase">
+                      ONEWISHES.COM
                     </span>
                   </div>
-
-                  <div className="text-xs font-bold tracking-widest text-[#b5afa6] uppercase mb-6 flex items-center justify-between">
-                    <span>TO: {toName ? toName.toUpperCase() : (toUsername ? `@${toUsername.toUpperCase()}` : 'MAYA')}</span>
-                  </div>
-                  
-                  {mediaList.length > 0 && (
-                    <div className="mb-6 rounded-sm overflow-hidden border border-[#d4af37]/30 shadow-md">
-                      <WishMediaGallery
-                        mediaUrl={JSON.stringify(mediaList.map((m) => ({ url: m.previewUrl, type: m.type })))}
-                      />
-                    </div>
-                  )}
-
-                  <div className="relative py-2">
-                    <span className="text-[#d4af37]/25 font-serif text-5xl leading-none absolute -top-4 left-0 select-none">“</span>
-                    <p className="font-serif text-2xl sm:text-3xl text-[#f5f2eb] leading-relaxed uppercase tracking-wide italic text-center px-4">
-                      {message || 'MAY YOUR PATH BE CLEAR, AND EVERY DREAM YOU CARRY FIND ITS LIGHT.'}
-                    </p>
-                    <span className="text-[#d4af37]/25 font-serif text-5xl leading-none absolute -bottom-6 right-0 select-none">”</span>
-                  </div>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-[#d4af37]/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-                  <div className="flex items-center gap-1.5 font-bold tracking-widest uppercase text-[#f5f2eb]">
-                    <span className="text-[#8c827a]">SEALED BY:</span>
-                    <span className="text-[#e5c07b]">{fromName || (currentUserProfile?.username ? `@${currentUserProfile.username}` : '@ALEX')}</span>
-                  </div>
-                  <span className="text-[9px] font-mono text-[#7a756f] uppercase">
-                    ONEWISHES.COM
-                  </span>
                 </div>
               </div>
             </div>
