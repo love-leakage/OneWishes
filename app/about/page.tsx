@@ -77,7 +77,7 @@ export default function AboutPage() {
               The Golden Wish
             </h3>
             <p className="text-sm text-[#b5afa6] leading-relaxed">
-              Every verified citizen receives exactly three Golden Wishes for their entire lifetime. No subscriptions, no in-app purchases, no second chances. When you use one, it is permanently deducted via atomic PostgreSQL locks.
+              Every verified citizen receives exactly three Golden Wishes for their entire lifetime. No subscriptions, no in-app purchases, no second chances. When you seal one, it is permanently engraved into our immutable eternal ledger.
             </p>
             <div className="pt-4 border-t border-[#d4af37]/20 text-xs font-mono text-[#e5c07b]">
               Reserved for the 3 people who defined your existence.
@@ -92,7 +92,7 @@ export default function AboutPage() {
               The Onewish Spotlight
             </h3>
             <p className="text-sm text-[#b5afa6] leading-relaxed">
-              Every calendar date worldwide has exactly one slot on the front page of onewishes.com. Enforced by strict SQL UNIQUE constraints, once a date is claimed, no human on Earth can ever overwrite it.
+              Every calendar date worldwide has exactly one slot on the front page of onewishes.com. Enforced by absolute chronological exclusivity, once a date is claimed, no human on Earth can ever overwrite it.
             </p>
             <div className="pt-4 border-t border-[#d4af37]/20 text-xs font-mono text-[#e5c07b]">
               Etched into the global digital registry for eternity.

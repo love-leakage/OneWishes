@@ -19,9 +19,9 @@ export default function GoldenPage() {
       </p>
 
       <div className="p-12 border border-[#d4af37]/25 bg-[#09090c] text-left space-y-6 max-w-3xl mx-auto shadow-2xl rounded-sm">
-        <h3 className="font-serif text-2xl font-bold text-[#f5f2eb] uppercase tracking-widest">Server-Side Scarcity Enforcement</h3>
+        <h3 className="font-serif text-2xl font-bold text-[#f5f2eb] uppercase tracking-widest">The Covenant of Scarcity</h3>
         <p className="text-sm text-[#b5afa6] leading-relaxed uppercase tracking-widest">
-          Every Golden wish claim is atomically locked and decremented in PostgreSQL (`claim_golden_wish()`). You cannot create a 4th Golden Wish from a new browser or device once your 3 credits are used.
+          Every Golden wish claim is an unbreakable sacred covenant recorded in our eternal registry. You cannot create a 4th Golden Wish from any device once your 3 lifetime seals are committed.
         </p>
       </div>
 

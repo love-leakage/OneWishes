@@ -492,17 +492,29 @@ export default function HomePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 pt-12 pb-28 relative">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-36 pt-12 pb-32 relative overflow-hidden">
       
-      {/* Ambient Moving Gold Lighting Orbs (Inspo Luxe Atmosphere) */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-gradient-to-b from-[#d4af37]/15 via-[#e5c07b]/05 to-transparent blur-[120px] pointer-events-none rounded-full animate-ambient-glow -z-10" />
-      <div className="absolute top-[800px] right-0 w-[450px] h-[400px] bg-gradient-to-br from-[#d4af37]/10 via-transparent to-transparent blur-[140px] pointer-events-none rounded-full animate-ambient-glow -z-10" />
+      {/* ===== LAYERED PARALLAX BACKGROUND ARCHITECTURE ===== */}
+      {/* Parallax Layer 1: Celestial Golden Stardust Particles (Slow Drift) */}
+      <div className="absolute inset-0 pointer-events-none -z-20 overflow-hidden opacity-35 select-none animate-celestial-drift">
+        <div className="absolute top-[8%] left-[12%] w-1.5 h-1.5 rounded-full bg-[#f3e5ab] shadow-[0_0_12px_#d4af37]" />
+        <div className="absolute top-[18%] right-[15%] w-1 h-1 rounded-full bg-[#e5c07b] shadow-[0_0_8px_#d4af37]" />
+        <div className="absolute top-[35%] left-[22%] w-2 h-2 rounded-full bg-[#d4af37] shadow-[0_0_14px_#d4af37] opacity-80" />
+        <div className="absolute top-[48%] right-[28%] w-1.5 h-1.5 rounded-full bg-[#f5f2eb] shadow-[0_0_10px_#f5f2eb]" />
+        <div className="absolute top-[65%] left-[8%] w-1 h-1 rounded-full bg-[#e5c07b] shadow-[0_0_8px_#d4af37]" />
+        <div className="absolute top-[78%] right-[10%] w-2 h-2 rounded-full bg-[#d4af37] shadow-[0_0_16px_#d4af37]" />
+        <div className="absolute top-[90%] left-[30%] w-1.5 h-1.5 rounded-full bg-[#f3e5ab] shadow-[0_0_10px_#d4af37]" />
+      </div>
+
+      {/* Parallax Layer 2: Moving Amber & Gold Atmospheric Light Nebulae */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[750px] h-[400px] bg-gradient-to-b from-[#d4af37]/18 via-[#e5c07b]/08 to-transparent blur-[140px] pointer-events-none rounded-full animate-ambient-glow -z-10" />
+      <div className="absolute top-[950px] right-0 w-[550px] h-[450px] bg-gradient-to-br from-[#d4af37]/12 via-[#8c6d23]/06 to-transparent blur-[160px] pointer-events-none rounded-full animate-celestial-drift-reverse -z-10" />
 
       {/* ===== KINETIC HERO SECTION (Obsidian Luxe & Champagne Gold) ===== */}
-      <section className="flex flex-col items-center justify-start pt-16 text-center min-h-[50vh] space-y-12 relative overflow-hidden">
+      <section className="flex flex-col items-center justify-start pt-16 text-center min-h-[50vh] space-y-12 relative">
         
-        {/* Kinetic Background Marquee Text */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col justify-center opacity-[0.035] select-none">
+        {/* Parallax Layer 3: Kinetic Background Typographic River */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden flex flex-col justify-center opacity-[0.035] select-none -z-10">
           <div className="flex whitespace-nowrap animate-marquee-left font-serif text-[15vw] font-bold uppercase leading-none tracking-tighter text-[#e5c07b]">
             <span className="mr-8">ONEWISHES ONEWISHES ONEWISHES ONEWISHES</span>
             <span className="mr-8">ONEWISHES ONEWISHES ONEWISHES ONEWISHES</span>
@@ -516,6 +528,7 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* Parallax Layer 4: Foreground Hero Content with 3D Depth */}
         <motion.div 
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
@@ -525,7 +538,7 @@ export default function HomePage() {
           {/* Eyebrow Pill */}
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[#d4af37]/35 bg-[#0a0a0d]/90 shadow-[0_0_20px_rgba(212,175,55,0.15)] text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
             <Sparkles className="w-3 h-3 text-[#d4af37]" />
-            <span>ARTIFICIAL SCARCITY PROTOCOL</span>
+            <span>SACRED ARTIFICIAL SCARCITY PROTOCOL</span>
           </div>
 
           {/* Obsidian Luxe Display Heading */}
@@ -538,30 +551,30 @@ export default function HomePage() {
 
           <p className="text-[#b5afa6] text-xs sm:text-sm md:text-base uppercase tracking-[0.25em] max-w-xl mx-auto leading-relaxed font-mono">
             When wishing costs something you can never reclaim, <br className="hidden sm:block" />
-            the ones you wish know what it cost you.
+            the ones you love know what it cost you.
           </p>
 
-          {/* Inspo-Engineered Stat Row Archetype */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-4 pb-2 border-y border-[#d4af37]/20 select-none">
+          {/* Genuine Human-Grade Emotional Metrics Row (Zero Server Jargon) */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-6 pb-4 border-y border-[#d4af37]/20 select-none">
             <div className="px-4 py-3 flex flex-col items-center justify-center border-r border-[#d4af37]/15 last:border-r-0">
               <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">3</span>
               <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Lifetime Seals</span>
-              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Per Account</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Granted to Each Soul</span>
             </div>
             <div className="px-4 py-3 flex flex-col items-center justify-center md:border-r border-[#d4af37]/15">
               <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">1 / 365</span>
-              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Calendar Spotlight</span>
-              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">1 Slot Worldwide</span>
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Calendar Monument</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">1 Worldwide Frontpage</span>
             </div>
             <div className="px-4 py-3 flex flex-col items-center justify-center border-r border-[#d4af37]/15">
-              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">0ms</span>
-              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Direct R2 Vault</span>
-              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Presigned Speed</span>
+              <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">100%</span>
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Lossless Memories</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Pristine Archival Vault</span>
             </div>
             <div className="px-4 py-3 flex flex-col items-center justify-center">
               <span className="font-serif text-3xl sm:text-4xl font-bold text-[#f5f2eb] tracking-tight">∞</span>
-              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Archival Lock</span>
-              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Permanent Provenance</span>
+              <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#e5c07b] mt-1">Eternal Ledger</span>
+              <span className="text-[8px] text-[#7a756f] uppercase tracking-wider font-mono">Never Erased by Time</span>
             </div>
           </div>
 
@@ -576,13 +589,13 @@ export default function HomePage() {
             <div className="flex w-fit gap-10 whitespace-nowrap animate-marquee-left">
               {[0, 1, 2].map((i) => (
                 <span key={i} className="text-[10px] sm:text-[11px] font-mono tracking-[0.25em] uppercase text-[#e5c07b]/80 flex items-center gap-5">
-                  <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-[#d4af37]" /> 3 LIFETIME GOLDEN WISHES</span>
+                  <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-[#d4af37]" /> 3 SACRED LIFETIME SEALS</span>
                   <span className="text-[#d4af37]/40">•</span>
-                  <span>1 FRONTPAGE SPOTLIGHT PER CALENDAR DATE</span>
+                  <span>1 WORLDWIDE CALENDAR MONUMENT PER DATE</span>
                   <span className="text-[#d4af37]/40">•</span>
-                  <span>DIRECT-TO-VAULT CLOUDFLARE R2 MEDIA</span>
+                  <span>UNBREAKABLE SENTIMENTAL PROVENANCE</span>
                   <span className="text-[#d4af37]/40">•</span>
-                  <span>ETCHED ACROSS INFINITY</span>
+                  <span>PRESERVED ACROSS ETERNITY</span>
                   <span className="text-[#d4af37]/40">•</span>
                 </span>
               ))}
@@ -606,7 +619,7 @@ export default function HomePage() {
               }}
               className="px-7 py-3.5 border border-[#d4af37]/35 hover:border-[#e5c07b] text-[#f5f2eb] hover:text-[#e5c07b] font-mono uppercase tracking-widest text-xs transition-all rounded-full bg-[#0a0a0d]/70 backdrop-blur-md active:scale-[0.98]"
             >
-              Explore Protocol Rules ↓
+              Explore Archival Philosophy ↓
             </button>
           </div>
 
@@ -733,14 +746,14 @@ export default function HomePage() {
                 When wishing costs what you can never get back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37]">love is proven</span>.
               </h3>
               <p className="text-sm sm:text-base text-[#b5afa6] leading-relaxed max-w-xl">
-                Disposable messaging apps generate billions of disposable texts every day. They disappear in 24 hours and mean even less. OneWishes re-engineers digital intention: every wish is mathematically capped, cryptographically sealed, and etched into an unalterable global register.
+                Every day, people send billions of disposable texts and post stories that disappear in 24 hours. Because they cost nothing to make, they mean almost nothing to keep. OneWishes re-engineers human expression through scarcity: each wish is strictly limited, beautifully sealed, and preserved forever.
               </p>
             </div>
 
             <div className="pt-8 mt-8 border-t border-[#d4af37]/20 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3 text-xs font-mono text-[#e5c07b]">
                 <Shield className="w-4 h-4 text-[#d4af37]" />
-                <span>POSTGRESQL ROW LOCKS • ZERO DUPLICATES</span>
+                <span>IRREVERSIBLE DEDICATION • PERPETUAL PROVENANCE</span>
               </div>
               <button
                 onClick={scrollToCreate}
@@ -761,7 +774,7 @@ export default function HomePage() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
-                  02 / TIER I
+                  02 / INTIMATE BOND
                 </span>
                 <span className="px-2 py-0.5 bg-[#d4af37]/15 border border-[#d4af37]/30 text-[#e5c07b] text-[8.5px] font-mono font-bold uppercase tracking-widest rounded-full">
                   3 PER SOUL
@@ -771,12 +784,12 @@ export default function HomePage() {
                 The Golden Wish
               </h4>
               <p className="text-xs text-[#b5afa6] leading-relaxed">
-                Bound directly to a recipient's unique handle. Accessible in perpetuity via <code className="text-[#e5c07b] font-mono">/goldenwish/@user/count</code>.
+                Bound directly to a recipient's unique handle. A permanent token of devotion accessible anytime at <code className="text-[#e5c07b] font-mono">/goldenwish/@username/count</code>.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('golden'); scrollToCreate(); }}
-              className="mt-6 w-full py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-[11px] rounded-sm hover:brightness-110 transition-all shadow-[0_0_15px_rgba(212,175,55,0.25)]"
+              className="mt-6 w-full py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-widest text-[11px] rounded-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-[0_0_15px_rgba(212,175,55,0.25)]"
             >
               Select Golden Tier
             </button>
@@ -791,28 +804,28 @@ export default function HomePage() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
-                  03 / TIER II
+                  03 / WORLD MONUMENT
                 </span>
                 <span className="px-2 py-0.5 bg-[#e5c07b]/15 border border-[#e5c07b]/30 text-[#e5c07b] text-[8.5px] font-mono font-bold uppercase tracking-widest rounded-full">
-                  1 SLOT / DAY
+                  1 SLOT PER DAY
                 </span>
               </div>
               <h4 className="font-serif text-2xl font-bold text-[#f5f2eb] uppercase tracking-wide mb-2">
                 Onewish Spotlight
               </h4>
               <p className="text-xs text-[#b5afa6] leading-relaxed">
-                Claim the front-page spotlight for a specific calendar date worldwide. Enforced by unique SQL constraint. Once claimed, it is yours forever.
+                Claim the front-page spotlight for a specific calendar date worldwide. Celebrate birthdays, wedding anniversaries, or life tributes across history.
               </p>
             </div>
             <button
               onClick={() => { setSelectedTier('onewish'); scrollToCreate(); }}
-              className="mt-6 w-full py-3 border border-[#d4af37] text-[#e5c07b] hover:bg-[#d4af37]/15 font-bold uppercase tracking-widest text-[11px] rounded-sm transition-all"
+              className="mt-6 w-full py-3 border border-[#d4af37] text-[#e5c07b] hover:bg-[#d4af37]/15 font-bold uppercase tracking-widest text-[11px] rounded-sm active:scale-[0.98] transition-all"
             >
               Select Onewish Tier
             </button>
           </motion.article>
 
-          {/* Tile 4: R2 Presigned Archival Engine (Spans 2 columns) */}
+          {/* Tile 4: Timeless Heirloom Preservation (Spans 2 columns) */}
           <motion.article 
             whileHover={{ y: -3 }}
             transition={{ duration: 0.3 }}
@@ -821,22 +834,22 @@ export default function HomePage() {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#e5c07b]">
-                  04 / STORAGE ARCHITECTURE
+                  04 / HEIRLOOM PRESERVATION
                 </span>
                 <span className="px-2 py-0.5 bg-[#00ffaa]/10 border border-[#00ffaa]/30 text-[#00ffaa] text-[8.5px] font-mono uppercase tracking-wider rounded-full">
-                  LOSSLESS
+                  EVERLASTING
                 </span>
               </div>
               <h4 className="font-serif text-2xl font-bold text-[#f5f2eb] uppercase tracking-wide">
-                Direct-to-R2 Archival Vault
+                Pristine Memory Vault
               </h4>
               <p className="text-xs text-[#b5afa6] max-w-lg leading-relaxed">
-                Images and videos compress client-side to 80-150KB without visual loss, bypassing worker CPU timeouts with direct presigned S3 URLs to Cloudflare R2.
+                Photographs and moving video memories are kept in pristine museum quality. No compression artifacts, no expiring links, and no vanishing stories.
               </p>
             </div>
             <div className="shrink-0 flex sm:flex-col items-center justify-center gap-1 bg-[#14120e] p-4 border border-[#d4af37]/20 rounded-sm">
-              <span className="font-serif text-3xl font-bold text-[#e5c07b]">&lt;1ms</span>
-              <span className="text-[9px] font-mono uppercase tracking-widest text-[#7a756f]">Worker CPU</span>
+              <span className="font-serif text-3xl font-bold text-[#e5c07b]">100%</span>
+              <span className="text-[9px] font-mono uppercase tracking-widest text-[#7a756f]">Permanence</span>
             </div>
           </motion.article>
 
@@ -981,7 +994,7 @@ export default function HomePage() {
                           <div className="absolute inset-0 bg-black/80 backdrop-blur-[2px] flex flex-col items-center justify-center text-center p-1 z-10">
                             <Loader2 className="w-5 h-5 text-[#e5c07b] animate-spin mb-1" />
                             <span className="text-[8px] font-bold text-[#f5f2eb] uppercase tracking-wider">Vault Sync</span>
-                            <span className="text-[7px] text-[#d4af37] uppercase font-mono">Uploading R2</span>
+                            <span className="text-[7px] text-[#d4af37] uppercase font-mono">Immortalizing...</span>
                           </div>
                         )}
 
@@ -1015,7 +1028,7 @@ export default function HomePage() {
                           type="button"
                           onClick={() => removeMediaItem(item.id)}
                           className="absolute top-1 right-1 p-1 bg-black/80 hover:bg-red-600 text-white rounded-full transition-colors opacity-90 hover:opacity-100 z-20 shadow"
-                          title="Remove item & delete from R2"
+                          title="Remove item"
                         >
                           <X className="w-3 h-3" />
                         </button>
