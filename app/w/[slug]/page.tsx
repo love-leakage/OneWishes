@@ -112,46 +112,57 @@ export default function ViewWishPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-24 space-y-12">
+    <div className="max-w-4xl mx-auto px-4 py-20 space-y-12">
       <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="archival-letter p-1 border border-[#d4af37]/35 bg-[#09090b] shadow-[0_0_45px_rgba(212,175,55,0.12)] relative rounded-sm"
+        className="p-2 sm:p-3 rounded-[2.5rem] bg-gradient-to-b from-[#3a2f26]/60 via-[#1c1612]/70 to-[#0e0c0a] border border-[#dca766]/35 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.95)] relative group"
       >
-        {/* Corner Accents */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]/70" />
-        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]/70" />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]/70" />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]/70" />
+        {/* Brass Corner Brackets */}
+        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-[#dca766]/70 rounded-tl-sm pointer-events-none" />
+        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-[#dca766]/70 rounded-tr-sm pointer-events-none" />
+        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-[#dca766]/70 rounded-bl-sm pointer-events-none" />
+        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-[#dca766]/70 rounded-br-sm pointer-events-none" />
 
-        <div className="bg-[#050507] p-8 sm:p-14 border border-[#d4af37]/20 space-y-8 relative">
-          <div className="flex items-center justify-between border-b border-[#d4af37]/25 pb-6">
-            <div className="text-sm font-bold tracking-[0.2em] text-[#e5c07b] uppercase">
-              FOR: {wish.to_name.toUpperCase()}
+        <div className="rounded-[calc(2.5rem-0.75rem)] bg-[#120f0c] p-6 sm:p-12 md:p-16 border border-[#dca766]/20 relative overflow-hidden space-y-8">
+          <div className="flex items-center justify-between border-b border-[#3d332a]/80 pb-6">
+            <div className="space-y-1">
+              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#dca766]">
+                OFFICIAL KEEPSAKE LETTER
+              </span>
+              <div className="text-xl sm:text-2xl font-serif font-bold text-[#f7f3ea] uppercase">
+                FOR: {wish.to_name.toUpperCase()}
+              </div>
             </div>
-            <span className="px-3.5 py-1 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_12px_rgba(212,175,55,0.35)] rounded-sm">
-              {wish.tier} KEEPSAKE
-            </span>
+
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-full wax-seal-badge flex items-center justify-center text-[#120e0a] font-serif font-black text-xs shadow-[0_0_15px_rgba(220,167,102,0.4)]">
+                ✦
+              </div>
+              <span className="px-3 py-1 bg-[#1e1713] border border-[#dca766]/40 text-[#dca766] text-[10px] font-mono font-bold uppercase tracking-widest rounded-full">
+                {wish.tier} ARCHIVE
+              </span>
+            </div>
           </div>
 
           <div className="relative py-4 px-2 sm:px-6">
-            <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -top-4 left-0 select-none">“</span>
-            <p className="font-serif text-2xl sm:text-4xl text-[#f5f2eb] leading-relaxed uppercase italic tracking-wide text-center">
+            <span className="text-[#dca766]/20 font-serif text-7xl leading-none absolute -top-4 left-0 select-none">“</span>
+            <p className="font-serif text-2xl sm:text-4xl md:text-5xl text-[#f7f3ea] leading-[1.25] tracking-tight italic font-light text-center">
               {wish.message}
             </p>
-            <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -bottom-8 right-0 select-none">”</span>
+            <span className="text-[#dca766]/20 font-serif text-7xl leading-none absolute -bottom-8 right-0 select-none">”</span>
           </div>
 
           {wish.media_url && (
-            <div className="rounded-sm overflow-hidden border border-[#d4af37]/30 shadow-2xl">
+            <div className="rounded-xl overflow-hidden border border-[#dca766]/35 shadow-[0_15px_40px_rgba(0,0,0,0.85)] max-w-2xl mx-auto">
               <WishMediaGallery mediaUrl={wish.media_url} mediaType={wish.media_type} />
             </div>
           )}
 
-          <div className="pt-8 mt-8 border-t border-[#d4af37]/20 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="text-sm text-[#f5f2eb] font-bold uppercase tracking-widest">
-              SEALED BY: {wish.from_name}
+          <div className="pt-8 border-t border-[#3d332a]/80 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="font-mono text-xs text-[#bfae9c] uppercase">
+              SEALED BY: <span className="text-[#dca766] font-bold">{wish.from_name}</span>
             </div>
 
             <WishLikeButton wishId={wish.id} initialLikes={wish.likes_count} showText />
@@ -159,21 +170,21 @@ export default function ViewWishPage() {
         </div>
       </motion.div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
         <button
           onClick={handleCopyLink}
-          className="inline-flex items-center gap-3 px-8 py-4 border border-[#d4af37]/30 hover:border-[#e5c07b] text-[#f5f2eb] font-bold text-xs uppercase tracking-widest transition-colors w-full sm:w-auto justify-center bg-[#09090c] rounded-sm"
+          className="inline-flex items-center gap-2.5 px-8 py-3.5 border border-[#423528] hover:border-[#dca766] text-[#ede3d2] hover:text-[#f7f3ea] font-mono font-bold text-xs uppercase tracking-widest transition-colors w-full sm:w-auto justify-center bg-[#161310] rounded-full"
         >
-          <Share2 className="w-4 h-4 text-[#e5c07b]" />
-          <span>{copied ? 'LINK COPIED' : 'COPY ARCHIVE LINK'}</span>
+          <Share2 className="w-4 h-4 text-[#dca766]" />
+          <span>{copied ? 'LINK COPIED ✦' : 'SHARE ARCHIVE LINK'}</span>
         </button>
 
         <Link
-          href="/#create-section"
-          className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-all w-full sm:w-auto shadow-lg rounded-sm"
+          href="/#darkroom-studio"
+          className="inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-[#dca766] hover:bg-[#e8bc82] text-[#120e0a] font-mono font-bold text-xs uppercase tracking-widest hover:opacity-95 transition-all w-full sm:w-auto shadow-[0_10px_25px_rgba(220,167,102,0.35)] rounded-full active:scale-[0.98]"
         >
-          <span>Write Your Own</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>DEVELOP YOUR OWN</span>
+          <ArrowRight className="w-4 h-4 text-[#120e0a]" />
         </Link>
       </div>
     </div>

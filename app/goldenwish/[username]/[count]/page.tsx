@@ -72,55 +72,63 @@ export default function GoldenWishPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-24 space-y-12">
-      <div className="text-center space-y-4">
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37]">
+    <div className="max-w-4xl mx-auto px-4 py-20 space-y-12">
+      <div className="text-center space-y-3">
+        <div className="stamp-seal font-mono text-xs">
+          ★ SACRED LIFETIME COVENANT ★
+        </div>
+        <h1 className="font-serif text-3xl sm:text-5xl font-bold uppercase tracking-tight text-[#f7f3ea]">
           THE GOLDEN WISH
         </h1>
-        <p className="text-[#b5afa6] font-bold tracking-widest uppercase text-xs font-mono">
-          3 Per Lifetime • Archival Keepsake
+        <p className="text-[#bfae9c] font-mono tracking-widest uppercase text-xs">
+          Exposure {countIndex + 1} of 3 • Permanent Archival Keepsake
         </p>
       </div>
       
-      {/* Archival Keepsake Letter Box */}
+      {/* Museum-Grade Double-Bezel Keepsake Box */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.97 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="archival-letter p-1 border border-[#d4af37]/35 bg-[#09090b] shadow-[0_0_45px_rgba(212,175,55,0.12)] space-y-10 relative overflow-hidden rounded-sm"
+        className="p-2 sm:p-3 rounded-[2.5rem] bg-gradient-to-b from-[#3a2f26]/60 via-[#1c1612]/70 to-[#0e0c0a] border border-[#dca766]/35 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.95)] relative group"
       >
-        {/* Corner Accents */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]/70" />
-        <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]/70" />
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]/70" />
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]/70" />
+        {/* Brass Corner Accents */}
+        <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-[#dca766]/70 rounded-tl-sm pointer-events-none" />
+        <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-[#dca766]/70 rounded-tr-sm pointer-events-none" />
+        <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-[#dca766]/70 rounded-bl-sm pointer-events-none" />
+        <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-[#dca766]/70 rounded-br-sm pointer-events-none" />
 
-        <div className="bg-[#050507] p-8 sm:p-14 border border-[#d4af37]/20 space-y-8 relative">
-          <div className="flex items-center justify-between border-b border-[#d4af37]/25 pb-6">
-            <Link href={`/${wish.to_username}`} className="text-sm font-bold tracking-[0.2em] text-[#e5c07b] uppercase hover:text-[#f5f2eb] transition-colors">
+        <div className="rounded-[calc(2.5rem-0.75rem)] bg-[#120f0c] p-6 sm:p-12 md:p-16 border border-[#dca766]/20 space-y-8 relative overflow-hidden">
+          <div className="flex items-center justify-between border-b border-[#3d332a]/80 pb-6">
+            <Link href={`/${wish.to_username}`} className="text-base sm:text-xl font-serif font-bold tracking-wide text-[#f7f3ea] uppercase hover:text-[#dca766] transition-colors">
               FOR: {wish.to_name.toUpperCase()} (@{wish.to_username})
             </Link>
-            <span className="px-3.5 py-1 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_12px_rgba(212,175,55,0.35)] rounded-sm">
-              GOLDEN KEEPSAKE
-            </span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full wax-seal-badge flex items-center justify-center text-[#120e0a] font-serif font-black text-xs shadow">
+                ✦
+              </div>
+              <span className="px-3 py-1 bg-[#1e1713] border border-[#dca766]/40 text-[#dca766] text-[10px] font-mono font-bold uppercase tracking-widest rounded-full">
+                GOLDEN ROLL
+              </span>
+            </div>
           </div>
 
           <div className="relative py-4 px-2 sm:px-6">
-            <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -top-4 left-0 select-none">“</span>
-            <p className="font-serif text-2xl sm:text-4xl text-[#f5f2eb] leading-relaxed uppercase italic tracking-wide text-center">
+            <span className="text-[#dca766]/20 font-serif text-7xl leading-none absolute -top-4 left-0 select-none">“</span>
+            <p className="font-serif text-2xl sm:text-4xl md:text-5xl text-[#f7f3ea] leading-[1.25] tracking-tight italic font-light text-center">
               {wish.message}
             </p>
-            <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -bottom-8 right-0 select-none">”</span>
+            <span className="text-[#dca766]/20 font-serif text-7xl leading-none absolute -bottom-8 right-0 select-none">”</span>
           </div>
 
           {wish.media_url && (
-            <div className="rounded-sm overflow-hidden border border-[#d4af37]/30 shadow-2xl">
+            <div className="rounded-xl overflow-hidden border border-[#dca766]/35 shadow-[0_15px_40px_rgba(0,0,0,0.85)] max-w-2xl mx-auto">
               <WishMediaGallery mediaUrl={wish.media_url} mediaType={wish.media_type} />
             </div>
           )}
 
-          <div className="pt-8 mt-8 border-t border-[#d4af37]/20 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <Link href={`/${wish.sender_username}`} className="text-sm text-[#f5f2eb] font-bold uppercase tracking-widest hover:text-[#e5c07b] transition-colors">
-              SEALED BY: @{wish.sender_username}
+          <div className="pt-8 border-t border-[#3d332a]/80 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <Link href={`/${wish.sender_username}`} className="font-mono text-xs text-[#bfae9c] uppercase hover:text-[#dca766] transition-colors">
+              SEALED BY: <strong className="text-[#dca766]">@{wish.sender_username}</strong>
             </Link>
             <WishLikeButton wishId={wish.id} initialLikes={wish.likes_count} showText />
           </div>

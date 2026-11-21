@@ -235,51 +235,51 @@ export default function GalleryPage() {
               <Link
                 key={w.id}
                 href={wishHref}
-                className="p-6 sm:p-8 bg-[#09090c] border border-[#d4af37]/25 hover:border-[#e5c07b] transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_0_30px_rgba(212,175,55,0.12)] min-h-[320px] rounded-sm"
+                className="p-1 rounded-2xl bg-gradient-to-b from-[#3a2f26]/40 via-[#1c1612]/60 to-[#0e0c0a] border border-[#423528] hover:border-[#dca766] transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_15px_40px_rgba(220,167,102,0.15)] min-h-[340px]"
               >
-                <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-[#d4af37]/20 pb-4">
-                    <span
-                      className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-sm ${
-                        w.tier === 'golden'
-                          ? 'bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505]'
-                          : 'bg-[#e5c07b] text-[#050505]'
-                      }`}
-                    >
-                      {w.tier}
-                    </span>
-                    <span className="flex items-center gap-1.5 text-xs text-[#e5c07b]">
-                      <Heart className="w-4 h-4 fill-current text-[#d4af37]" />
-                      <span className="font-bold">{w.likes_count || 0}</span>
-                    </span>
+                <div className="p-6 sm:p-7 rounded-[calc(1rem-2px)] bg-[#14110e] flex flex-col justify-between h-full space-y-5">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-[#3d332a]/60 pb-3">
+                      <span className="px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-widest rounded-full bg-[#1e1713] border border-[#dca766]/30 text-[#dca766]">
+                        {w.tier === 'golden' ? 'GOLDEN ROLL' : 'MASTER NEGATIVE'}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-xs text-[#dca766] font-mono">
+                        <Heart className="w-3.5 h-3.5 fill-current text-[#dca766]" />
+                        <span className="font-bold">{w.likes_count || 0}</span>
+                      </span>
+                    </div>
+
+                    {mediaPreview && (
+                      <div className="relative w-full h-44 overflow-hidden bg-[#090807] border border-[#423528] rounded-xl shadow-md group-hover:border-[#dca766] transition-all">
+                        <img
+                          src={mediaPreview}
+                          alt={`Keepsake to ${w.to_name}`}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 vintage-film-filter"
+                        />
+                        <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/80 backdrop-blur-sm border border-[#dca766]/35 text-[8px] font-mono text-[#dca766] uppercase tracking-widest rounded-full">
+                          ✦ 35MM ARCHIVE
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-1.5 text-left">
+                      <div className="text-[10px] font-mono text-[#a8713a] uppercase tracking-wider">
+                        DEDICATION
+                      </div>
+                      <h3 className="font-serif font-bold text-xl text-[#f7f3ea] uppercase tracking-wide group-hover:text-[#dca766] transition-colors">
+                        FOR: {w.to_name}
+                      </h3>
+                      <p className="text-sm text-[#bfae9c] leading-relaxed line-clamp-3 font-serif italic">
+                        &ldquo;{w.message}&rdquo;
+                      </p>
+                    </div>
                   </div>
 
-                  {mediaPreview && (
-                    <div className="relative w-full h-44 overflow-hidden bg-[#070709] border border-[#d4af37]/30 rounded-sm shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:border-[#e5c07b] transition-all">
-                      <img
-                        src={mediaPreview}
-                        alt={`Keepsake to ${w.to_name}`}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 filter contrast-[1.05] saturate-[1.12]"
-                      />
-                      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_40px_rgba(0,0,0,0.85)]" />
-                      <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 backdrop-blur-sm border border-[#d4af37]/35 text-[8px] font-mono text-[#e5c07b] uppercase tracking-widest rounded-full">
-                        ✦ ARCHIVAL EFX
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#09090c] via-transparent to-transparent pointer-events-none" />
-                    </div>
-                  )}
-
-                  <h3 className="font-bold text-xl text-[#f5f2eb] uppercase tracking-wider group-hover:text-[#e5c07b] transition-colors">
-                    TO: {w.to_name}
-                  </h3>
-                  <p className="text-sm text-[#b5afa6] leading-relaxed line-clamp-4 font-serif italic uppercase">
-                    &ldquo;{w.message}&rdquo;
-                  </p>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-[#d4af37]/20 text-right text-xs text-[#e5c07b] font-bold uppercase tracking-widest">
-                  FROM: {w.from_name}
+                  <div className="pt-4 border-t border-[#3d332a]/60 flex items-center justify-between text-xs font-mono">
+                    <span className="text-[#7a6a5d] text-[10px] uppercase">SEALED BY:</span>
+                    <span className="text-[#dca766] font-bold uppercase">{w.from_name}</span>
+                  </div>
                 </div>
               </Link>
             );
