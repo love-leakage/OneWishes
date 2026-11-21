@@ -143,7 +143,7 @@ export const Navbar = () => {
 
   return (
     <div className="sticky top-4 z-50 w-full px-3 sm:px-6 pointer-events-none">
-      <header className="pointer-events-auto max-w-6xl mx-auto rounded-full bg-[#08080b]/85 backdrop-blur-2xl border border-[#d4af37]/25 shadow-[0_12px_40px_rgba(0,0,0,0.85)] transition-all px-4 sm:px-6 py-2.5">
+      <header className="pointer-events-auto max-w-6xl mx-auto rounded-full bg-[#120f0d]/90 backdrop-blur-2xl border border-[#423528]/80 shadow-[0_12px_40px_rgba(0,0,0,0.85)] transition-all px-4 sm:px-6 py-2.5">
         <div className="flex items-center justify-between">
         
         {/* Logo */}
@@ -151,9 +151,9 @@ export const Navbar = () => {
           <img 
             src="/logo-tight.png" 
             alt="OneWishes Logo" 
-            className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(212,175,55,0.45)] transition-transform group-hover:scale-105" 
+            className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(220,167,102,0.45)] transition-transform group-hover:scale-105" 
           />
-          <span className="font-serif font-black text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f3e5ab] to-[#d4af37] transition-opacity">
+          <span className="font-serif font-black text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f7ecd5] to-[#dca766] transition-opacity">
             ONEWISHES
           </span>
         </Link>
@@ -166,13 +166,13 @@ export const Navbar = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-xs font-semibold tracking-widest uppercase transition-colors relative py-1 ${
-                  isActive ? 'text-[#e5c07b] font-bold' : 'text-[#b5afa6] hover:text-[#f5f2eb]'
+                className={`text-xs font-mono tracking-widest uppercase transition-colors relative py-1 ${
+                  isActive ? 'text-[#dca766] font-bold' : 'text-[#bfae9c] hover:text-[#f7f3ea]'
                 }`}
               >
                 {item.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] rounded-full shadow-[0_0_8px_#d4af37]" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#a8713a] via-[#dca766] to-[#e8bc82] rounded-full shadow-[0_0_8px_#dca766]" />
                 )}
               </Link>
             );
@@ -185,9 +185,9 @@ export const Navbar = () => {
           <button
             onClick={() => sounds.toggle()}
             title={soundOn ? 'Sound On' : 'Sound Muted'}
-            className="p-2 border border-[#d4af37]/20 rounded-full text-[#b5afa6] hover:text-[#f5f2eb] hover:border-[#d4af37]/50 bg-[#0d0d10] transition-all"
+            className="p-2 border border-[#423528]/60 rounded-full text-[#bfae9c] hover:text-[#f7f3ea] hover:border-[#dca766]/60 bg-[#1a1613] transition-all"
           >
-            {soundOn ? <Volume2 className="w-4 h-4 text-[#e5c07b]" /> : <VolumeX className="w-4 h-4" />}
+            {soundOn ? <Volume2 className="w-4 h-4 text-[#dca766]" /> : <VolumeX className="w-4 h-4" />}
           </button>
 
           {user ? (
