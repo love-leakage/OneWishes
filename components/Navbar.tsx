@@ -143,16 +143,23 @@ export const Navbar = () => {
 
   return (
     <div className="sticky top-4 z-50 w-full px-3 sm:px-6 pointer-events-none">
-      <header className="pointer-events-auto max-w-6xl mx-auto rounded-full bg-[#120f0d]/90 backdrop-blur-2xl border border-[#423528]/80 shadow-[0_12px_40px_rgba(0,0,0,0.85)] transition-all px-4 sm:px-6 py-2.5">
+      <header className="pointer-events-auto max-w-6xl mx-auto rounded-full bg-[#120f0d]/95 backdrop-blur-2xl border border-[#423528] shadow-[0_12px_45px_rgba(0,0,0,0.95)] transition-all px-4 sm:px-6 py-2.5 relative">
+        {/* Subtle vintage border highlight */}
+        <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#dca766]/35 to-transparent pointer-events-none" />
+
         <div className="flex items-center justify-between">
         
-        {/* Logo */}
+        {/* Logo with vintage film reel accent */}
         <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-          <img 
-            src="/logo-tight.png" 
-            alt="OneWishes Logo" 
-            className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(220,167,102,0.45)] transition-transform group-hover:scale-105" 
-          />
+          <div className="relative">
+            <img 
+              src="/logo-tight.png" 
+              alt="OneWishes Logo" 
+              className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(220,167,102,0.45)] transition-transform group-hover:scale-105" 
+            />
+            {/* Spinning vintage reel ring overlay on hover */}
+            <div className="absolute -inset-1 rounded-full border border-dashed border-[#dca766]/20 animate-reel-spin pointer-events-none" />
+          </div>
           <span className="font-serif font-black text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f7ecd5] to-[#dca766] transition-opacity">
             ONEWISHES
           </span>

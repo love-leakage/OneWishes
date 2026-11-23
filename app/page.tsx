@@ -491,26 +491,26 @@ export default function HomePage() {
   }).format(new Date());
 
   return (
-    <div className="min-h-screen bg-[#0d0b09] text-[#ede3d2] relative overflow-hidden film-grain-overlay selection:bg-[#dca766] selection:text-[#120e0a]">
+    <div className="min-h-screen bg-[#0c0a08] text-[#ede3d2] relative overflow-hidden film-grain-overlay selection:bg-[#dca766] selection:text-[#120e0a]">
       
-      {/* Ambient Darkroom Warmth */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[950px] h-[480px] bg-gradient-to-b from-[#dca766]/14 via-[#a8713a]/06 to-transparent blur-[160px] pointer-events-none -z-10" />
-      <div className="absolute top-[800px] -left-40 w-[600px] h-[500px] bg-gradient-to-tr from-[#8a4f22]/08 to-transparent blur-[180px] pointer-events-none -z-10" />
+      {/* Ambient Vintage Darkroom Lamp Warmth with Breathe Animation */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[980px] h-[500px] bg-gradient-to-b from-[#dca766]/15 via-[#a8713a]/08 to-transparent blur-[160px] pointer-events-none -z-10 animate-vintage-glow" />
+      <div className="absolute top-[800px] -left-40 w-[620px] h-[520px] bg-gradient-to-tr from-[#8a4f22]/10 to-transparent blur-[180px] pointer-events-none -z-10" />
 
-      {/* 35mm Film Sprocket Runner Ticker */}
-      <div className="border-b border-[#3d332a]/60 bg-[#090807]/90 py-2.5 overflow-hidden relative select-none">
+      {/* 35mm Film Sprocket Runner Ticker with Spinning Reel Glyphs */}
+      <div className="border-b border-[#3d332a]/70 bg-[#090806]/95 py-2.5 overflow-hidden relative select-none">
         <div className="flex whitespace-nowrap animate-marquee-left font-mono text-[10px] tracking-[0.25em] text-[#b8956e] uppercase">
           <span className="mx-6 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#dca766] inline-block animate-pulse" />
-            35MM FILM VAULT // ARCHIVE EST. 2026 // TIME CAPSULE REGISTRY
+            <span className="w-2.5 h-2.5 border border-dashed border-[#dca766] rounded-full inline-block animate-reel-spin" />
+            35MM ANALOG CHRONICLE // ARCHIVE EST. 2026 // TIME CAPSULE REGISTRY
           </span>
           <span className="mx-6">★ 3 SACRED LIFETIME EXPOSURES</span>
           <span className="mx-6">★ 1 CALENDAR MASTER NEGATIVE PER DATE</span>
           <span className="mx-6">★ UNBREAKABLE SENTIMENTAL PROVENANCE</span>
           <span className="mx-6">★ NEVER OVERWRITTEN • DEVELOPED FOR ETERNITY</span>
           <span className="mx-6 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#dca766] inline-block animate-pulse" />
-            35MM FILM VAULT // ARCHIVE EST. 2026 // TIME CAPSULE REGISTRY
+            <span className="w-2.5 h-2.5 border border-dashed border-[#dca766] rounded-full inline-block animate-reel-spin" />
+            35MM ANALOG CHRONICLE // ARCHIVE EST. 2026 // TIME CAPSULE REGISTRY
           </span>
           <span className="mx-6">★ 3 SACRED LIFETIME EXPOSURES</span>
           <span className="mx-6">★ 1 CALENDAR MASTER NEGATIVE PER DATE</span>
@@ -521,44 +521,44 @@ export default function HomePage() {
 
         {/* =========================================================================
             1. TOP HEROIC SPOTLIGHT: TODAY'S WORLDWIDE ONEWISH MONUMENT
-            (Placed right at the TOP as requested by user, with museum-grade aesthetics)
+            (Placed right at the TOP with vintage brass brackets & projector flicker)
            ========================================================================= */}
         <section className="space-y-6 pt-4">
           
-          {/* Eyebrow Status Pill */}
+          {/* Eyebrow Status Bar */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1 rounded-full border border-[#dca766]/35 bg-[#14110e]/90 shadow-[0_0_20px_rgba(220,167,102,0.12)] text-[10px] font-mono uppercase tracking-[0.25em] text-[#dca766]">
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-[#dca766]/35 bg-[#14110e]/95 shadow-[0_0_20px_rgba(220,167,102,0.12)] text-[10px] font-mono uppercase tracking-[0.25em] text-[#dca766]">
               <span className="w-2 h-2 rounded-full bg-[#00ffaa] animate-pulse" />
               <span>THE WORLD MONUMENT OF THE DAY • {todayFormatted.toUpperCase()}</span>
             </div>
 
             <div className="flex items-center gap-3 font-mono text-[10px] text-[#bfae9c] tracking-widest uppercase">
-              <span className="stamp-seal text-[9px] px-2 py-0.5 border-[#dca766] text-[#dca766]">
+              <div className="vintage-postmark text-[8px] py-0.5 px-2">
                 1 OF 1 WORLDWIDE
-              </span>
-              <span className="hidden md:inline">• ENFORCED CHRONOLOGICAL PROVENANCE</span>
+              </div>
+              <span className="hidden md:inline">• CHRONOLOGICAL PROVENANCE</span>
             </div>
           </div>
 
-          {/* Double-Bezel Museum Keepsake Showcase */}
-          <div className="p-2 sm:p-3 rounded-[2.5rem] bg-gradient-to-b from-[#3a2f26]/60 via-[#1c1612]/70 to-[#0e0c0a] border border-[#dca766]/35 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.95)] relative group">
+          {/* Vintage Double-Bezel Frame with Brass Brackets */}
+          <div className="p-2 sm:p-3.5 rounded-[2.5rem] bg-gradient-to-b from-[#3a2f26]/70 via-[#1c1612]/80 to-[#0e0c0a] border border-[#dca766]/40 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.95)] relative group">
             
-            {/* Brass Corner Brackets */}
-            <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-[#dca766]/70 rounded-tl-sm pointer-events-none" />
-            <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-[#dca766]/70 rounded-tr-sm pointer-events-none" />
-            <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-[#dca766]/70 rounded-bl-sm pointer-events-none" />
-            <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-[#dca766]/70 rounded-br-sm pointer-events-none" />
+            {/* Physical Vintage Brass Corner Accents */}
+            <div className="absolute top-4 left-4 w-4 h-4 vintage-brass-bracket-tl rounded-tl-sm pointer-events-none" />
+            <div className="absolute top-4 right-4 w-4 h-4 vintage-brass-bracket-tr rounded-tr-sm pointer-events-none" />
+            <div className="absolute bottom-4 left-4 w-4 h-4 vintage-brass-bracket-bl rounded-bl-sm pointer-events-none" />
+            <div className="absolute bottom-4 right-4 w-4 h-4 vintage-brass-bracket-br rounded-br-sm pointer-events-none" />
 
-            <div className="rounded-[calc(2.5rem-0.75rem)] bg-[#120f0c] p-6 sm:p-12 md:p-16 border border-[#dca766]/20 relative overflow-hidden flex flex-col justify-between min-h-[440px]">
+            <div className="rounded-[calc(2.5rem-0.75rem)] bg-[#120f0c] p-6 sm:p-12 md:p-16 border border-[#dca766]/25 relative overflow-hidden flex flex-col justify-between min-h-[440px]">
               
-              {/* Subtle Film Grain Texture in Keepsake */}
+              {/* Subtle Film Grain Texture */}
               <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#dca766_1px,transparent_1px)] [background-size:16px_16px]" />
 
               {todayOnewish ? (
                 /* When Today's Wish is Sealed */
                 <div className="space-y-10 relative z-10">
                   
-                  {/* Header Row: Dedication & Seal */}
+                  {/* Header Row: Dedication & Postmark Seal */}
                   <div className="border-b border-[#3d332a]/80 pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="space-y-1">
                       <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#dca766]">
@@ -570,7 +570,7 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full wax-seal-badge flex items-center justify-center text-[#120e0a] font-serif font-black text-sm shadow-[0_0_15px_rgba(220,167,102,0.4)]">
+                      <div className="w-10 h-10 rounded-full wax-seal-badge flex items-center justify-center text-[#120e0a] font-serif font-black text-sm shadow-[0_0_18px_rgba(220,167,102,0.45)] animate-stamp-impact">
                         ✦
                       </div>
                       <div className="text-right">
@@ -584,9 +584,10 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Cinematic Media Showcase (If Present) */}
+                  {/* Cinematic Media Showcase (If Present) with Washi Tape Mount */}
                   {todayOnewish.media_url && (
                     <div className="max-w-3xl mx-auto rounded-xl overflow-hidden border border-[#dca766]/35 shadow-[0_15px_40px_rgba(0,0,0,0.85)] relative">
+                      <div className="washi-tape" />
                       <WishMediaGallery
                         mediaUrl={todayOnewish.media_url}
                         mediaType={todayOnewish.media_type}
@@ -594,20 +595,20 @@ export default function HomePage() {
                     </div>
                   )}
 
-                  {/* High-Impact Fraunces Serif Message */}
-                  <div className="relative py-6 max-w-4xl mx-auto text-center px-4">
-                    <span className="text-[#dca766]/20 font-serif text-7xl sm:text-8xl leading-none absolute -top-8 left-0 select-none">“</span>
+                  {/* High-Impact Fraunces Serif Message with Soft Film Flutter */}
+                  <div className="relative py-6 max-w-4xl mx-auto text-center px-4 animate-film-flicker">
+                    <span className="text-[#dca766]/25 font-serif text-7xl sm:text-8xl leading-none absolute -top-8 left-0 select-none">“</span>
                     <p className="font-serif text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-[#f7f3ea] leading-[1.25] tracking-tight italic font-light">
                       {todayOnewish.message}
                     </p>
-                    <span className="text-[#dca766]/20 font-serif text-7xl sm:text-8xl leading-none absolute -bottom-10 right-0 select-none">”</span>
+                    <span className="text-[#dca766]/25 font-serif text-7xl sm:text-8xl leading-none absolute -bottom-10 right-0 select-none">”</span>
                   </div>
 
                   {/* Provenance Footer Bar */}
                   <div className="pt-8 border-t border-[#3d332a]/80 flex flex-col sm:flex-row items-center justify-between gap-6">
                     <div className="flex items-center gap-3 font-mono text-xs text-[#bfae9c]">
                       <span className="text-[#7a6a5d] uppercase">SEALED BY:</span>
-                      <span className="px-3 py-1 rounded-full bg-[#1e1713] border border-[#dca766]/30 text-[#dca766] font-bold tracking-wider uppercase">
+                      <span className="px-3.5 py-1 rounded-full bg-[#1e1713] border border-[#dca766]/30 text-[#dca766] font-bold tracking-wider uppercase">
                         {todayOnewish.from_name}
                       </span>
                     </div>
@@ -622,7 +623,7 @@ export default function HomePage() {
                         {copiedSpotlight ? (
                           <>
                             <Check className="w-3.5 h-3.5 text-[#00ffaa]" />
-                            <span className="text-[#00ffaa]">LINK COPIED</span>
+                            <span className="text-[#00ffaa]">LINK COPIED ✦</span>
                           </>
                         ) : (
                           <>
@@ -669,9 +670,9 @@ export default function HomePage() {
                         setBookingDate(getLocalDateString());
                         scrollToDarkroom();
                       }}
-                      className="px-8 py-4 rounded-full bg-[#dca766] hover:bg-[#e8bc82] text-[#120e0a] font-mono font-bold text-xs uppercase tracking-[0.2em] shadow-[0_10px_30px_rgba(220,167,102,0.35)] active:scale-[0.98] transition-all flex items-center gap-2"
+                      className="px-8 py-4 rounded-full bg-[#dca766] hover:bg-[#e8bc82] text-[#120e0a] font-mono font-bold text-xs uppercase tracking-[0.2em] shadow-[0_10px_30px_rgba(220,167,102,0.35)] active:scale-[0.98] transition-all flex items-center gap-2 group"
                     >
-                      <Sparkles className="w-4 h-4 text-[#120e0a]" />
+                      <Sparkles className="w-4 h-4 text-[#120e0a] group-hover:rotate-12 transition-transform" />
                       <span>CLAIM TODAY&apos;S SPOTLIGHT NOW</span>
                     </button>
 
@@ -690,7 +691,119 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            2. THE SACRED ARCHIVAL CANISTERS (THE COVENANT OF SCARCITY)
+            2. VINTAGE HERO MANIFESTO & POLAROID PHOTO STACKS
+            (Nostalgic 1900s Darkroom Narrative with Floating Polaroid Gallery)
+           ========================================================================= */}
+        <section className="flex flex-col items-center text-center space-y-12 pt-6">
+          
+          {/* Eyebrow Stamp */}
+          <div className="stamp-seal font-mono text-xs animate-stamp-impact">
+            ★ TIME CAPSULE ARCHIVE // 35MM NEGATIVE VAULT ★
+          </div>
+
+          {/* Hero Typography with Typewriter Cursor Animation */}
+          <div className="space-y-6 max-w-4xl mx-auto">
+            <h2 className="font-serif text-4xl sm:text-6xl md:text-7xl font-normal leading-[1.05] tracking-tight text-[#f7f3ea]">
+              Before memories dissolved into feeds, <br />
+              <span className="italic font-light text-[#dca766] underline decoration-[#a8713a]/50 decoration-wavy underline-offset-8">
+                love was committed to film.
+              </span>
+              <span className="animate-typewriter-caret text-[#dca766] ml-1 select-none">|</span>
+            </h2>
+
+            <p className="text-[#bfae9c] text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-mono uppercase tracking-wider">
+              We reject disposable feeds and fleeting notifications. OneWishes is an analog sanctuary: physical-feeling keepsakes, locked to 35mm film, preserved forever.
+            </p>
+          </div>
+
+          {/* Quick Action Badges */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <button
+              onClick={scrollToDarkroom}
+              className="px-8 py-4 rounded-full bg-[#dca766] hover:bg-[#e8bc82] text-[#120e0a] font-mono font-bold text-xs uppercase tracking-[0.2em] shadow-[0_10px_25px_-5px_rgba(220,167,102,0.4)] active:scale-[0.98] transition-all flex items-center gap-2.5 group"
+            >
+              <Camera className="w-4 h-4 text-[#120e0a]" />
+              <span>DEVELOP A KEEPSAKE</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </button>
+
+            <Link
+              href="/gallery"
+              className="px-8 py-4 rounded-full border border-[#524438] hover:border-[#dca766] text-[#ede3d2] hover:text-[#f7f3ea] font-mono text-xs uppercase tracking-[0.2em] bg-[#161310]/80 transition-all flex items-center gap-2"
+            >
+              <Film className="w-4 h-4 text-[#dca766]" />
+              <span>BROWSE FILM VAULT</span>
+            </Link>
+          </div>
+
+          {/* Vintage Polaroid Photo Stacks with Authentic Float Animation */}
+          <div className="pt-8 w-full max-w-5xl mx-auto">
+            <div className="relative py-8 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-6 min-h-[380px]">
+              
+              {/* Polaroid 1 (Left Tilt) */}
+              <div className="polaroid-card w-72 sm:w-80 rotate-[-4deg] relative shrink-0 animate-float">
+                <div className="washi-tape" />
+                <div className="aspect-[4/3] bg-[#1a1614] overflow-hidden mb-3 border border-black/10">
+                  <img
+                    src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?q=80&w=800&auto=format&fit=crop"
+                    alt="Analog moment"
+                    className="w-full h-full object-cover vintage-film-filter"
+                  />
+                </div>
+                <div className="text-left font-serif text-sm text-[#2b231d] italic px-1">
+                  “For Mom — the gentle lighthouse that guided all my storms.”
+                </div>
+                <div className="mt-2 text-right font-mono text-[9px] text-[#7a6a5d] tracking-wider">
+                  GOLDEN EXPOSURE 01/03 • REC. 2026
+                </div>
+              </div>
+
+              {/* Polaroid 2 (Center Hero Focus) */}
+              <div className="polaroid-card w-76 sm:w-84 rotate-[1.5deg] relative z-10 shrink-0 shadow-2xl">
+                <div className="washi-tape" />
+                <div className="aspect-[4/3] bg-[#1a1614] overflow-hidden mb-3 border border-black/10 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=800&auto=format&fit=crop"
+                    alt="Heirloom portrait"
+                    className="w-full h-full object-cover vintage-film-filter"
+                  />
+                  <div className="absolute top-2 left-2 stamp-seal font-mono text-[9px] px-2 py-0.5 bg-[#f8f4ec]/90">
+                    MASTER NEGATIVE
+                  </div>
+                </div>
+                <div className="text-left font-serif text-base text-[#1f1915] italic px-1 font-semibold">
+                  “You gave meaning to every sunrise we shared.”
+                </div>
+                <div className="mt-2 flex items-center justify-between font-mono text-[9px] text-[#7a6a5d] tracking-wider px-1">
+                  <span>TO: @MAYA</span>
+                  <span>SPOTLIGHT: NOV 23</span>
+                </div>
+              </div>
+
+              {/* Polaroid 3 (Right Tilt) */}
+              <div className="polaroid-card w-72 sm:w-80 rotate-[3.8deg] relative shrink-0 animate-float" style={{ animationDelay: '1.5s' }}>
+                <div className="washi-tape" />
+                <div className="aspect-[4/3] bg-[#1a1614] overflow-hidden mb-3 border border-black/10">
+                  <img
+                    src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop"
+                    alt="Coastline keepsake"
+                    className="w-full h-full object-cover vintage-film-filter"
+                  />
+                </div>
+                <div className="text-left font-serif text-sm text-[#2b231d] italic px-1">
+                  “Across miles, years, and silences. Still my compass.”
+                </div>
+                <div className="mt-2 text-right font-mono text-[9px] text-[#7a6a5d] tracking-wider">
+                  GOLDEN EXPOSURE 02/03 • REC. 2026
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            3. THE SACRED ARCHIVAL CANISTERS (THE COVENANT OF SCARCITY)
            ========================================================================= */}
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -710,7 +823,8 @@ export default function HomePage() {
             {/* Canister 01 */}
             <div className="bg-[#14110e] border border-[#423528] hover:border-[#dca766] p-8 sm:p-10 rounded-[2rem] relative transition-all group space-y-6 shadow-xl">
               <div className="flex items-center justify-between border-b border-[#3d332a] pb-4">
-                <span className="font-mono text-xs text-[#dca766] tracking-[0.2em] uppercase font-bold">
+                <span className="font-mono text-xs text-[#dca766] tracking-[0.2em] uppercase font-bold flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full border border-dashed border-[#dca766] inline-block group-hover:animate-reel-spin" />
                   CANISTER 01 // 35MM GOLD ROLL
                 </span>
                 <span className="stamp-seal font-mono text-[9px]">
@@ -745,7 +859,8 @@ export default function HomePage() {
             {/* Canister 02 */}
             <div className="bg-[#14110e] border border-[#423528] hover:border-[#dca766] p-8 sm:p-10 rounded-[2rem] relative transition-all group space-y-6 shadow-xl">
               <div className="flex items-center justify-between border-b border-[#3d332a] pb-4">
-                <span className="font-mono text-xs text-[#dca766] tracking-[0.2em] uppercase font-bold">
+                <span className="font-mono text-xs text-[#dca766] tracking-[0.2em] uppercase font-bold flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full border border-dashed border-[#dca766] inline-block group-hover:animate-reel-spin" />
                   CANISTER 02 // MASTER NEGATIVE
                 </span>
                 <span className="stamp-seal font-mono text-[9px]">
@@ -781,7 +896,7 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            3. THE DARKROOM STUDIO (WISH CREATION WORKBENCH)
+            4. THE DARKROOM STUDIO (WISH CREATION WORKBENCH)
            ========================================================================= */}
         <section id="darkroom-studio" className="scroll-mt-24 space-y-12">
           
@@ -851,7 +966,7 @@ export default function HomePage() {
                     onChange={(e) => setToName(e.target.value)}
                     placeholder="E.G. MAYA"
                     required
-                    className="w-full px-4 py-3.5 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-sm rounded-xl"
+                    className="w-full px-4 py-3.5 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-sm rounded-xl transition-colors"
                   />
                   {selectedTier === 'golden' && (
                     <input
@@ -859,7 +974,7 @@ export default function HomePage() {
                       value={toUsername}
                       onChange={(e) => setToUsername(e.target.value)}
                       placeholder="RECIPIENT USERNAME (OPTIONAL)"
-                      className="w-full px-4 py-3 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-xs rounded-xl mt-2"
+                      className="w-full px-4 py-3 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-xs rounded-xl mt-2 transition-colors"
                     />
                   )}
                 </div>
@@ -959,7 +1074,7 @@ export default function HomePage() {
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="WRITE SOMETHING TIMELESS..."
                     required
-                    className="w-full px-4 py-3.5 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-sm rounded-xl resize-none"
+                    className="w-full px-4 py-3.5 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-sm rounded-xl resize-none transition-colors"
                   />
                 </div>
 
@@ -974,7 +1089,7 @@ export default function HomePage() {
                     onChange={(e) => setFromName(e.target.value)}
                     placeholder={currentUserProfile?.username ? `@${currentUserProfile.username}` : "E.G. ALEX"}
                     required
-                    className="w-full px-4 py-3.5 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-sm rounded-xl"
+                    className="w-full px-4 py-3.5 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] placeholder-[#5a4d40] focus:outline-none focus:border-[#dca766] font-mono uppercase tracking-wider text-sm rounded-xl transition-colors"
                   />
                 </div>
 
@@ -1005,7 +1120,7 @@ export default function HomePage() {
                       min={getLocalDateString()}
                       onChange={(e) => setBookingDate(e.target.value)}
                       required
-                      className="w-full px-4 py-3 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] font-mono text-sm uppercase rounded-xl"
+                      className="w-full px-4 py-3 bg-[#090807] border border-[#3d332a] text-[#f7f3ea] font-mono text-sm uppercase rounded-xl transition-colors"
                     />
                   </div>
                 )}
@@ -1013,9 +1128,9 @@ export default function HomePage() {
                 {/* Submit Action */}
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-full bg-[#dca766] hover:bg-[#e8bc82] text-[#120e0a] font-mono font-bold text-xs uppercase tracking-[0.25em] shadow-[0_10px_30px_rgba(220,167,102,0.35)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-8"
+                  className="w-full py-4 rounded-full bg-[#dca766] hover:bg-[#e8bc82] text-[#120e0a] font-mono font-bold text-xs uppercase tracking-[0.25em] shadow-[0_10px_30px_rgba(220,167,102,0.35)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-8 group"
                 >
-                  <Camera className="w-4 h-4 text-[#120e0a]" />
+                  <Camera className="w-4 h-4 text-[#120e0a] group-hover:scale-110 transition-transform" />
                   <span>DEVELOP &amp; COMMIT TO ARCHIVE</span>
                 </button>
 
@@ -1044,10 +1159,10 @@ export default function HomePage() {
                 <div className="p-2 sm:p-2.5 rounded-[2rem] bg-gradient-to-b from-[#3a2f26]/60 via-[#1c1612]/70 to-[#0e0c0a] border border-[#dca766]/35 shadow-[0_20px_60px_-10px_rgba(0,0,0,0.9)] relative">
                   
                   {/* Brass Corner Accents */}
-                  <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2 border-[#dca766]/70 rounded-tl-sm pointer-events-none" />
-                  <div className="absolute top-3 right-3 w-3 h-3 border-t-2 border-r-2 border-[#dca766]/70 rounded-tr-sm pointer-events-none" />
-                  <div className="absolute bottom-3 left-3 w-3 h-3 border-b-2 border-l-2 border-[#dca766]/70 rounded-bl-sm pointer-events-none" />
-                  <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 border-[#dca766]/70 rounded-br-sm pointer-events-none" />
+                  <div className="absolute top-3 left-3 w-3 h-3 vintage-brass-bracket-tl rounded-tl-sm pointer-events-none" />
+                  <div className="absolute top-3 right-3 w-3 h-3 vintage-brass-bracket-tr rounded-tr-sm pointer-events-none" />
+                  <div className="absolute bottom-3 left-3 w-3 h-3 vintage-brass-bracket-bl rounded-bl-sm pointer-events-none" />
+                  <div className="absolute bottom-3 right-3 w-3 h-3 vintage-brass-bracket-br rounded-br-sm pointer-events-none" />
 
                   <div className="rounded-[calc(2rem-0.5rem)] bg-[#120f0c] p-6 sm:p-8 border border-[#dca766]/20 relative space-y-6">
                     

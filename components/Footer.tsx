@@ -41,8 +41,13 @@ export const Footer: React.FC = () => {
 
         {/* Sub-footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-[#3d332a]/40 text-xs text-[#7a6a5d]">
-          <div className="font-mono">
-            © {new Date().getFullYear()} onewishes.com • The 35mm Analog Keepsake Archive
+          <div className="flex items-center gap-3">
+            <div className="vintage-postmark text-[8px] py-0.5 px-2.5">
+              ARCHIVE EST. 2026
+            </div>
+            <div className="font-mono">
+              © {new Date().getFullYear()} onewishes.com • The 35mm Analog Keepsake Archive
+            </div>
           </div>
 
           <div className="flex items-center gap-6 font-mono text-[11px] uppercase tracking-wider">
