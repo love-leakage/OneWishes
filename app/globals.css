@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,18 +8,20 @@
   :root {
     --font-inter: 'Inter', sans-serif;
     --font-fraunces: 'Fraunces', serif;
+    --font-garamond: 'EB Garamond', Georgia, serif;
+    --font-courier: 'Courier Prime', monospace;
   }
 
   html {
     scroll-behavior: smooth;
-    background-color: #050505;
+    background-color: #0b0908;
     color-scheme: dark;
   }
 
   body {
-    background-color: #050505;
-    color: #f5f2eb;
-    @apply font-sans min-h-screen antialiased selection:bg-[#d4af37] selection:text-[#050505];
+    background-color: #0b0908;
+    color: #f5f0e6;
+    @apply font-sans min-h-screen antialiased selection:bg-[#c5a059] selection:text-[#0b0908];
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -25,21 +29,29 @@
   }
 }
 
-/* Obsidian Luxe Custom Scrollbar */
+.font-garamond {
+  font-family: 'EB Garamond', Georgia, serif;
+}
+
+.font-courier {
+  font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+/* Antique Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #0b0908;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e1e24;
+  background: #2a221d;
   border-radius: 3px;
-  border: 1px solid #332d1e;
+  border: 1px solid #4a3a2d;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+  background: #c5a059;
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.6);
 }
 
 /* GPU Hardware-Accelerated Marquee Animations */
@@ -94,333 +106,214 @@
 
 /* Luxury Typography Gradients */
 .text-gradient-gold {
-  background: linear-gradient(135deg, #fdfbf7 0%, #e5c07b 40%, #d4af37 75%, #b89028 100%);
+  background: linear-gradient(135deg, #fdfbf7 0%, #e5c07b 40%, #c5a059 75%, #8c6228 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.text-gradient-champagne {
-  background: linear-gradient(135deg, #ffffff 0%, #f3e5ab 50%, #e5c07b 100%);
+.text-gradient-silver {
+  background: linear-gradient(135deg, #ffffff 0%, #d8d8d8 50%, #999999 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Cinematic Montage & Archival Letter Effects */
-@keyframes kenburns-pan {
-  0% {
-    transform: scale(1) translate3d(0, 0, 0);
-  }
-  50% {
-    transform: scale(1.08) translate3d(-1%, -1.5%, 0);
-  }
-  100% {
-    transform: scale(1) translate3d(0, 0, 0);
-  }
+/* Museum Vignette Layering */
+.vignette-radial {
+  background: radial-gradient(circle at 50% 30%, transparent 40%, rgba(11, 9, 8, 0.85) 90%, #0b0908 100%);
 }
 
-.animate-montage {
-  animation: kenburns-pan 12s ease-in-out infinite alternate;
-  will-change: transform;
+.ambient-aurora {
+  background: radial-gradient(circle at 50% 0%, rgba(197, 160, 89, 0.12) 0%, rgba(125, 29, 35, 0.08) 35%, transparent 70%);
 }
 
-/* Archival Keepsake Letterpress styling */
-.archival-letter {
-  background: radial-gradient(circle at 50% 0%, #111014 0%, #08080a 100%);
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(212, 175, 55, 0.08);
+/* =========================================================================
+   HISTORICAL ERAS OF WISHING — GOOGLE STITCH DESIGN SYSTEM SPECIFICATION
+   ========================================================================= */
+
+/* 1. 1890s Carmine Wax Seal & Envelope Animations */
+@keyframes wax-fracture {
+  0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+  30% { transform: scale(1.08) rotate(-4deg); filter: brightness(1.2); }
+  60% { transform: scale(0.94) rotate(3deg); opacity: 0.85; }
+  100% { transform: scale(1.02) rotate(0deg); opacity: 1; }
 }
 
-.archival-letter:hover {
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(212, 175, 55, 0.16);
+.animate-wax-crack {
+  animation: wax-fracture 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-/* Ambient Radial Glow & Glass Shimmer */
-@keyframes ambient-glow {
+.wax-seal-emboss {
+  background: radial-gradient(circle at 35% 30%, #a8272f 0%, #7d1d23 60%, #4a0f13 100%);
+  box-shadow: 
+    inset 1px 1px 2px rgba(255, 255, 255, 0.4),
+    inset -1px -1px 3px rgba(0, 0, 0, 0.6),
+    0 8px 18px rgba(35, 25, 22, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(168, 39, 47, 0.5);
+}
+
+/* 2. 1930s Western Union Telegram & Morse Signals */
+@keyframes morse-pulse {
   0%, 100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.22;
+    opacity: 0.2;
+    transform: scale(0.95);
+    box-shadow: 0 0 0 rgba(197, 160, 89, 0);
   }
   50% {
-    transform: translate(25px, -20px) scale(1.15);
-    opacity: 0.35;
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 0 0 12px rgba(197, 160, 89, 0.8);
   }
 }
 
-.animate-ambient-glow {
-  animation: ambient-glow 14s ease-in-out infinite;
-  will-change: transform, opacity;
+.animate-morse-signal {
+  animation: morse-pulse 1.2s ease-in-out infinite;
 }
 
-/* Glass Border Glow for Inspo Bento */
-.inspo-bento-card {
-  position: relative;
-  background: linear-gradient(180deg, rgba(18, 17, 22, 0.7) 0%, rgba(8, 8, 11, 0.9) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.16);
-  backdrop-filter: blur(16px);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.vintage-telegram-paper {
+  background-color: #f2e6cb;
+  color: #241c18;
+  background-image: 
+    radial-gradient(#d3c2a0 0.75px, transparent 0.75px),
+    radial-gradient(#e4d6b8 0.75px, #f2e6cb 0.75px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  box-shadow: 
+    0 18px 45px -10px rgba(0, 0, 0, 0.8),
+    0 3px 10px rgba(0, 0, 0, 0.35),
+    inset 0 0 35px rgba(160, 126, 75, 0.2);
+  border: 1px solid rgba(176, 138, 68, 0.5);
 }
 
-.inspo-bento-card:hover {
-  border-color: rgba(229, 192, 123, 0.5);
-  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.14);
-  transform: translateY(-2px);
+/* Telegram punched ticker strip side holes */
+.punched-ticker-edge {
+  background-image: radial-gradient(circle, #0b0908 4px, transparent 4.5px);
+  background-size: 16px 20px;
+  background-repeat: repeat-y;
 }
 
-/* Wax Seal Metallic Sheen */
-.wax-seal-badge {
-  background: radial-gradient(circle at 35% 35%, #f7e7b4 0%, #d4af37 40%, #87671d 100%);
-  box-shadow: 0 0 18px rgba(212, 175, 55, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+/* 3. 1950s Par Avion Airmail Chevron Border & 3D Postcard Flip */
+.par-avion-chevrons {
+  background: repeating-linear-gradient(
+    135deg,
+    #a62626,
+    #a62626 14px,
+    #f8f4ec 14px,
+    #f8f4ec 20px,
+    #1d3557 20px,
+    #1d3557 34px,
+    #f8f4ec 34px,
+    #f8f4ec 40px
+  );
 }
 
-/* Layered Parallax Celestial Atmosphere */
-@keyframes celestial-drift {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(0.8deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+.perspective-1000 {
+  perspective: 1200px;
 }
 
-@keyframes celestial-drift-reverse {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(18px) rotate(-0.8deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
-}
-
-.animate-celestial-drift {
-  animation: celestial-drift 24s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-celestial-drift-reverse {
-  animation: celestial-drift-reverse 28s ease-in-out infinite;
-  will-change: transform;
-}
-
-/* 3D Perspective Card Tilt */
 .preserve-3d {
   transform-style: preserve-3d;
 }
 
-.perspective-1000 {
-  perspective: 1000px;
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Wax Seal Emboss Stamp */
-.wax-seal-emboss {
-  box-shadow: 
-    0 10px 25px -5px rgba(212, 175, 55, 0.45),
-    inset 0 2px 4px rgba(255, 255, 255, 0.7),
-    inset 0 -3px 6px rgba(0, 0, 0, 0.6);
-  border: 1.5px solid rgba(255, 245, 205, 0.6);
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }
 
-/* Keepsake Certificate Ribbon */
-.provenance-ribbon {
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.15) 20%, rgba(212, 175, 55, 0.15) 80%, transparent);
-}
-
-/* ============================================================
-   RETRO NOSTALGIC / FILM ARCHIVE SYSTEM
-   Warm Sepia, Vintage Polaroid Stacks, 35mm Sprockets & Ink Stamps
-   ============================================================ */
-
-/* Film Grain Texture Simulation */
-.film-grain-overlay {
-  background-image: radial-gradient(rgba(220, 167, 102, 0.04) 1px, transparent 0);
-  background-size: 24px 24px;
-}
-
-/* Authentic Vintage Polaroid Card */
-.polaroid-card {
-  background: #f8f4ec;
-  color: #1a1614;
-  padding: 12px 12px 34px 12px;
-  box-shadow: 
-    0 18px 40px -10px rgba(0, 0, 0, 0.75),
-    0 2px 10px rgba(0, 0, 0, 0.35),
-    inset 0 1px 1px rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(210, 195, 175, 0.6);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.polaroid-card:hover {
-  transform: translateY(-4px) scale(1.02) !important;
-  box-shadow: 
-    0 26px 50px -12px rgba(0, 0, 0, 0.85),
-    0 4px 16px rgba(220, 167, 102, 0.25);
-  z-index: 20;
-}
-
-/* Vintage Washi Tape Top Mount */
-.washi-tape {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-1deg);
-  width: 90px;
-  height: 24px;
-  background: rgba(235, 222, 198, 0.55);
-  backdrop-filter: blur(2px);
-  border-left: 2px dashed rgba(185, 155, 120, 0.45);
-  border-right: 2px dashed rgba(185, 155, 120, 0.45);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* Rubber Ink Archival Stamp */
-.stamp-seal {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px dashed #b84a39;
-  color: #c95644;
-  font-family: monospace;
-  font-weight: 900;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 4px;
-  box-shadow: inset 0 0 0 1px rgba(184, 74, 57, 0.15);
-  transform: rotate(-3deg);
-  user-select: none;
-  opacity: 0.9;
-}
-
-.stamp-seal-amber {
-  border-color: #dca766;
-  color: #e5b982;
-  box-shadow: inset 0 0 0 1px rgba(220, 167, 102, 0.2);
-}
-
-/* 35mm Film Negative Strip Track */
-.film-sprockets {
-  background-image: radial-gradient(circle, #0a0908 30%, transparent 35%);
-  background-size: 16px 16px;
-  background-repeat: repeat-x;
-}
-
-/* Vintage Sepia Tone Image Filter */
-.vintage-film-filter {
-  filter: contrast(1.08) saturate(0.85) sepia(0.22) brightness(0.96);
-}
-
-.vintage-film-filter:hover {
-  filter: contrast(1.05) saturate(1.02) sepia(0.08) brightness(1);
-}
-
-/* ============================================================
-   VINTAGE ANIMATIONS & PHYSICAL CRAFT SYSTEM
-   Film Projector Flutter, Reel Rotation, Typewriter Caret & Stamp Press
-   ============================================================ */
-
-/* 1. Vintage Film Projector Flicker (Subtle analog lamp jitter) */
-@keyframes film-projector-flicker {
-  0%, 100% {
-    opacity: 1;
-    filter: brightness(1) contrast(1);
+/* 4. 1970s Instant Polaroid Chemical Emulsion Develop Animation */
+@keyframes polaroid-chemical-develop {
+  0% {
+    filter: brightness(0.12) contrast(1.8) sepia(1) hue-rotate(190deg) blur(3px);
+    opacity: 0.85;
   }
-  15% {
-    opacity: 0.96;
-    filter: brightness(0.97) contrast(1.03);
-  }
-  30% {
-    opacity: 0.99;
-    filter: brightness(1.02) contrast(0.98);
-  }
-  48% {
-    opacity: 0.95;
-    filter: brightness(0.96) contrast(1.05);
+  35% {
+    filter: brightness(0.4) contrast(1.4) sepia(0.8) hue-rotate(90deg) blur(1.5px);
+    opacity: 0.92;
   }
   70% {
-    opacity: 1;
-    filter: brightness(1.01) contrast(0.99);
-  }
-  85% {
+    filter: brightness(0.85) contrast(1.15) sepia(0.4) hue-rotate(20deg) blur(0.5px);
     opacity: 0.97;
-    filter: brightness(0.98) contrast(1.02);
   }
+  100% {
+    filter: brightness(1) contrast(1.05) sepia(0.2) hue-rotate(0deg) blur(0px);
+    opacity: 1;
+  }
+}
+
+.animate-polaroid-develop {
+  animation: polaroid-chemical-develop 3.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.polaroid-frame {
+  background: #fbf9f4;
+  box-shadow: 
+    0 16px 38px -8px rgba(0, 0, 0, 0.75),
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    inset 0 0 12px rgba(180, 150, 110, 0.15);
+  border: 1px solid rgba(220, 205, 185, 0.8);
+}
+
+/* 5. Analog Film Projector Flicker */
+@keyframes film-projector-flicker {
+  0%, 100% { opacity: 0.97; filter: contrast(1.02) brightness(1); }
+  22% { opacity: 0.88; filter: contrast(1.08) brightness(1.06); }
+  45% { opacity: 0.98; filter: contrast(1.01) brightness(0.96); }
+  71% { opacity: 0.91; filter: contrast(1.05) brightness(1.03); }
+  89% { opacity: 0.99; filter: contrast(1) brightness(1); }
 }
 
 .animate-film-flicker {
-  animation: film-projector-flicker 5s steps(2, start) infinite;
+  animation: film-projector-flicker 0.28s infinite alternate;
 }
 
-/* 2. Analog Film Reel Rotation */
+/* 6. 35mm Film Reel Rotations */
 @keyframes reel-rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .animate-reel-spin {
-  animation: reel-rotation 24s linear infinite;
+  animation: reel-rotation 22s linear infinite;
+  transform-origin: center center;
 }
 
 .animate-reel-spin-reverse {
-  animation: reel-rotation 30s linear infinite reverse;
+  animation: reel-rotation 28s linear infinite reverse;
+  transform-origin: center center;
 }
 
-/* 3. Vintage Typewriter Blinking Caret */
+/* 7. Typewriter Caret Blink */
 @keyframes typewriter-caret-blink {
-  0%, 49% {
-    opacity: 1;
-  }
-  50%, 100% {
-    opacity: 0;
-  }
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 .animate-typewriter-caret {
-  animation: typewriter-caret-blink 0.9s infinite;
+  animation: typewriter-caret-blink 0.85s steps(1) infinite;
 }
 
-/* 4. Rubber Stamp Impact Impression */
+/* 8. Postal Rubber Stamp Impact */
 @keyframes stamp-press-impact {
-  0% {
-    transform: scale(1.3) rotate(-8deg);
-    opacity: 0;
-  }
-  60% {
-    transform: scale(0.95) rotate(-3deg);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1) rotate(-3deg);
-    opacity: 1;
-  }
+  0% { transform: scale(1.6) rotate(-15deg); opacity: 0; }
+  65% { transform: scale(0.95) rotate(-6deg); opacity: 0.95; }
+  100% { transform: scale(1) rotate(-8deg); opacity: 0.88; }
 }
 
 .animate-stamp-impact {
-  animation: stamp-press-impact 0.5s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+  animation: stamp-press-impact 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-/* 5. Vintage Darkroom Warmth Glow */
-@keyframes vintage-lamp-glow {
-  0%, 100% {
-    opacity: 0.14;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.26;
-    transform: scale(1.08);
-  }
-}
-
-.animate-vintage-glow {
-  animation: vintage-lamp-glow 7s ease-in-out infinite;
-}
-
-/* 6. Vintage Deckle-Edge Parchment Paper */
+/* 9. Vintage Parchment Texture */
 .vintage-parchment {
-  background-color: #f8f4ec;
-  color: #1a1614;
+  background-color: #f7f2e7;
+  color: #231916;
   background-image: 
     radial-gradient(#d6c7b2 0.75px, transparent 0.75px),
-    radial-gradient(#e3d7c5 0.75px, #f8f4ec 0.75px);
+    radial-gradient(#e3d7c5 0.75px, #f7f2e7 0.75px);
   background-size: 28px 28px;
   background-position: 0 0, 14px 14px;
   box-shadow: 
@@ -430,40 +323,36 @@
   border: 1px solid rgba(196, 168, 130, 0.6);
 }
 
-/* 7. Vintage Postal Cancellation Postmark */
+/* 10. Vintage Postal Cancellation Postmark Stamp */
 .vintage-postmark {
-  border: 1.5px solid #b84a39;
+  border: 1.5px solid #a62626;
   border-radius: 9999px;
-  color: #b84a39;
-  font-family: monospace;
+  color: #a62626;
+  font-family: 'Courier Prime', monospace;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 6px 14px;
   transform: rotate(-8deg);
   opacity: 0.88;
   user-select: none;
-  box-shadow: inset 0 0 0 1px rgba(184, 74, 57, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(166, 38, 38, 0.2);
 }
 
-/* 8. Brass Corner Accents for Physical Heirloom Framing */
+/* 11. Brass Corner Accents for Physical Framing */
 .vintage-brass-bracket-tl {
-  border-top: 2px solid #dca766;
-  border-left: 2px solid #dca766;
+  border-top: 2px solid #c5a059;
+  border-left: 2px solid #c5a059;
 }
 .vintage-brass-bracket-tr {
-  border-top: 2px solid #dca766;
-  border-right: 2px solid #dca766;
+  border-top: 2px solid #c5a059;
+  border-right: 2px solid #c5a059;
 }
 .vintage-brass-bracket-bl {
-  border-bottom: 2px solid #dca766;
-  border-left: 2px solid #dca766;
+  border-bottom: 2px solid #c5a059;
+  border-left: 2px solid #c5a059;
 }
 .vintage-brass-bracket-br {
-  border-bottom: 2px solid #dca766;
-  border-right: 2px solid #dca766;
+  border-bottom: 2px solid #c5a059;
+  border-right: 2px solid #c5a059;
 }
-
-
-
-

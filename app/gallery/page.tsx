@@ -3,8 +3,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import { Search, Heart, RefreshCw, AlertCircle, Sparkles } from 'lucide-react';
+import { Search, Heart, RefreshCw, AlertCircle, Stamp, Radio, Send, Camera, Sparkles } from 'lucide-react';
 import { JarLoader } from '@/components/JarLoader';
+import { sounds } from '@/lib/sounds';
 
 interface Wish {
   id: string;
@@ -48,6 +49,7 @@ export default function GalleryPage() {
   const loadGallery = useCallback(async (isManualRefresh = false) => {
     if (isManualRefresh) {
       setIsRefreshing(true);
+      sounds.playTypewriterStrike();
     }
 
     const controller = new AbortController();
@@ -57,8 +59,6 @@ export default function GalleryPage() {
       setLoadError(null);
       let fetchedWishes: Wish[] | null = null;
 
-      // Strategy 1: First-party edge API route (/api/gallery)
-      // Fast, edge-cached by Cloudflare to preserve Worker CPU
       try {
         const res = await fetch('/api/gallery', {
           signal: controller.signal,
@@ -72,10 +72,9 @@ export default function GalleryPage() {
           }
         }
       } catch (apiErr) {
-        console.warn('First-party API /api/gallery failed, trying direct Supabase fallback:', apiErr);
+        console.warn('API /api/gallery fallback to Supabase:', apiErr);
       }
 
-      // Strategy 2: Direct Supabase client fallback
       if (!fetchedWishes) {
         const { data, error } = await supabase
           .from('wishes')
@@ -98,15 +97,16 @@ export default function GalleryPage() {
       }
     } catch (err: any) {
       console.error('Gallery fetch error:', err);
-      // Fallback to sessionStorage if network fails
       try {
         const cached = sessionStorage.getItem('onewishes_gallery_cache');
         if (cached) {
           setWishes(JSON.parse(cached));
-          return;
+        } else {
+          setLoadError(err.name === 'AbortError' ? 'Connecting to historical archive timed out.' : err.message);
         }
-      } catch (e) {}
-      setLoadError(err.name === 'AbortError' ? 'Gallery request timed out' : (err.message || 'Error loading gallery'));
+      } catch (e) {
+        setLoadError(err.message || 'Error opening vault.');
+      }
     } finally {
       clearTimeout(timeoutId);
       setLoading(false);
@@ -115,7 +115,6 @@ export default function GalleryPage() {
   }, []);
 
   useEffect(() => {
-    // Instant hydration from cache
     try {
       const cached = sessionStorage.getItem('onewishes_gallery_cache');
       if (cached) {
@@ -124,60 +123,68 @@ export default function GalleryPage() {
       }
     } catch (e) {}
 
-    loadGallery(false);
+    loadGallery();
   }, [loadGallery]);
 
   const filteredWishes = wishes.filter((w) => {
-    const matchesSearch =
-      (w.to_name || '').toLowerCase().includes(search.toLowerCase()) ||
-      (w.from_name || '').toLowerCase().includes(search.toLowerCase()) ||
-      (w.message || '').toLowerCase().includes(search.toLowerCase());
-
     const matchesTier = tierFilter === 'all' || w.tier === tierFilter;
-    return matchesSearch && matchesTier;
+    const matchesSearch =
+      search === '' ||
+      w.to_name?.toLowerCase().includes(search.toLowerCase()) ||
+      w.from_name?.toLowerCase().includes(search.toLowerCase()) ||
+      w.message?.toLowerCase().includes(search.toLowerCase());
+    return matchesTier && matchesSearch;
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
-      <div className="space-y-4 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#14120e] border border-[#d4af37]/35 text-[#e5c07b] text-[10px] font-bold uppercase tracking-widest rounded-full">
-          <Sparkles className="w-3 h-3 text-[#d4af37]" />
-          <span>Public Keepsake Showcase</span>
-        </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#f5f2eb] uppercase tracking-tighter">
-          Public Showcase
+    <main className="min-h-screen bg-[#0b0908] text-[#f7f2e7] selection:bg-[#c5a059] selection:text-[#0b0908] px-4 sm:px-6 py-12 max-w-7xl mx-auto space-y-12">
+      
+      {/* Museum Title & Colophon */}
+      <div className="text-center space-y-3 max-w-2xl mx-auto">
+        <span className="text-xs font-courier tracking-[0.25em] uppercase text-[#c5a059] font-bold block">
+          THE HISTORICAL ARCHIVE VAULT
+        </span>
+        <h1 className="font-garamond text-4xl sm:text-6xl italic text-[#f7f2e7] font-normal">
+          Public Keepsake Missives
         </h1>
-        <p className="text-[#b5afa6] text-sm uppercase tracking-widest">
-          Explore heartfelt keepsake wishes sealed across infinity.
+        <p className="font-courier text-xs text-[#a89684] uppercase tracking-widest leading-relaxed">
+          Explore timeless wishes preserved across human history • EST. 1890 - 2026
         </p>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-t border-b border-[#d4af37]/20 py-6">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between border-t border-b border-[#3a2c20] py-4">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-3.5 w-4 h-4 text-[#e5c07b]" />
+          <Search className="absolute left-3.5 top-3 w-4 h-4 text-[#c5a059]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="SEARCH BY RECIPIENT OR SENDER..."
-            className="w-full pl-12 pr-4 py-3 bg-[#070709] border border-[#d4af37]/20 text-xs text-[#f5f2eb] placeholder-[#605a54] focus:outline-none focus:border-[#d4af37] transition-colors uppercase tracking-widest rounded-sm"
+            placeholder="SEARCH MISSIVES OR RECIPIENTS..."
+            className="w-full pl-10 pr-4 py-2 bg-[#14100d] border border-[#3a2c20] text-xs font-courier text-[#f7f2e7] placeholder-[#6e5849] focus:outline-none focus:border-[#c5a059] rounded"
           />
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto justify-between md:justify-end">
+        <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
           <div className="flex items-center gap-2">
-            {['all', 'golden', 'onewish'].map((t) => (
+            {[
+              { id: 'all', label: 'All Keepsakes' },
+              { id: 'golden', label: 'Golden Canisters' },
+              { id: 'onewish', label: 'Worldwide Monuments' },
+            ].map((t) => (
               <button
-                key={t}
-                onClick={() => setTierFilter(t)}
-                className={`px-5 py-2.5 border text-xs font-bold uppercase tracking-widest transition-all rounded-sm ${
-                  tierFilter === t
-                    ? 'bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] border-transparent shadow-[0_0_16px_rgba(212,175,55,0.35)]'
-                    : 'bg-[#09090c] text-[#b5afa6] border-[#d4af37]/20 hover:text-[#f5f2eb] hover:border-[#d4af37]/50'
+                key={t.id}
+                onClick={() => {
+                  sounds.playTypewriterStrike();
+                  setTierFilter(t.id);
+                }}
+                className={`px-3.5 py-1.5 rounded text-xs font-courier tracking-wider transition-all ${
+                  tierFilter === t.id
+                    ? 'bg-[#c5a059] text-[#0b0908] font-bold shadow-md'
+                    : 'bg-[#181310] border border-[#3a2c20] text-[#a89684] hover:text-[#f7f2e7]'
                 }`}
               >
-                {t}
+                {t.label}
               </button>
             ))}
           </div>
@@ -185,10 +192,10 @@ export default function GalleryPage() {
           <button
             onClick={() => loadGallery(true)}
             disabled={isRefreshing}
-            title="Refresh showcase"
-            className="p-2.5 bg-[#09090c] border border-[#d4af37]/20 text-[#b5afa6] hover:text-[#e5c07b] hover:border-[#d4af37]/50 transition-colors disabled:opacity-50 rounded-sm"
+            title="Refresh Ledger"
+            className="p-2 rounded bg-[#181310] border border-[#3a2c20] text-[#a89684] hover:text-[#c5a059] disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#e5c07b]' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#c5a059]' : ''}`} />
           </button>
         </div>
       </div>
@@ -196,33 +203,27 @@ export default function GalleryPage() {
       {/* Grid Content */}
       {loading ? (
         <div className="py-24 flex items-center justify-center">
-          <JarLoader text="GALLERY" subtext="Unsealing public keepsakes across infinity..." size="lg" />
+          <JarLoader text="ARCHIVE" subtext="Unsealing historic missives..." size="lg" />
         </div>
       ) : loadError && wishes.length === 0 ? (
-        <div className="py-20 text-center space-y-6 max-w-md mx-auto">
-          <div className="w-12 h-12 mx-auto rounded-full bg-[#14120e] border border-[#d4af37]/35 flex items-center justify-center text-[#e5c07b]">
-            <AlertCircle className="w-6 h-6" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-bold uppercase tracking-wider text-[#f5f2eb]">Could Not Load Gallery</h3>
-            <p className="text-xs text-[#b5afa6] uppercase tracking-widest leading-relaxed">
-              {loadError}
-            </p>
-          </div>
+        <div className="py-20 text-center space-y-4 max-w-md mx-auto">
+          <AlertCircle className="w-8 h-8 text-[#c5a059] mx-auto" />
+          <h3 className="font-garamond text-xl italic text-[#f7f2e7]">Could Not Access Ledger</h3>
+          <p className="font-courier text-xs text-[#a89684]">{loadError}</p>
           <button
             onClick={() => loadGallery(true)}
-            className="px-6 py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(212,175,55,0.35)] hover:brightness-110 transition-all rounded-sm"
+            className="px-6 py-2 rounded bg-[#c5a059] text-[#0b0908] font-courier text-xs font-bold uppercase tracking-wider"
           >
-            Try Again
+            Reconnect to Vault
           </button>
         </div>
       ) : filteredWishes.length === 0 ? (
-        <div className="text-[#b5afa6] text-center py-20 text-sm uppercase tracking-widest font-bold border border-dashed border-[#d4af37]/25 p-12 rounded-sm">
-          No public wishes match your search. Be the first to create one!
+        <div className="text-center py-20 font-courier text-xs text-[#a89684] border border-dashed border-[#3a2c20] p-12 rounded">
+          No archived missives match your query. Inscribe the first historic keepsake!
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredWishes.map((w) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredWishes.map((w, idx) => {
             const wishHref = w.slug
               ? `/w/${w.slug}`
               : (w.tier === 'onewish'
@@ -235,57 +236,60 @@ export default function GalleryPage() {
               <Link
                 key={w.id}
                 href={wishHref}
-                className="p-1 rounded-2xl bg-gradient-to-b from-[#3a2f26]/40 via-[#1c1612]/60 to-[#0e0c0a] border border-[#423528] hover:border-[#dca766] transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_15px_40px_rgba(220,167,102,0.15)] min-h-[340px]"
+                className="vintage-parchment rounded-sm p-6 flex flex-col justify-between hover:scale-[1.01] transition-all group shadow-lg border border-[#c4a882]/70 relative overflow-hidden min-h-[300px]"
               >
-                <div className="p-6 sm:p-7 rounded-[calc(1rem-2px)] bg-[#14110e] flex flex-col justify-between h-full space-y-5">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-[#3d332a]/60 pb-3">
-                      <span className="px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-widest rounded-full bg-[#1e1713] border border-[#dca766]/30 text-[#dca766]">
-                        {w.tier === 'golden' ? 'GOLDEN ROLL' : 'MASTER NEGATIVE'}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-xs text-[#dca766] font-mono">
-                        <Heart className="w-3.5 h-3.5 fill-current text-[#dca766]" />
-                        <span className="font-bold">{w.likes_count || 0}</span>
-                      </span>
-                    </div>
+                {/* Corner Brass Brackets */}
+                <div className="absolute top-2 left-2 w-3 h-3 vintage-brass-bracket-tl" />
+                <div className="absolute top-2 right-2 w-3 h-3 vintage-brass-bracket-tr" />
+                <div className="absolute bottom-2 left-2 w-3 h-3 vintage-brass-bracket-bl" />
+                <div className="absolute bottom-2 right-2 w-3 h-3 vintage-brass-bracket-br" />
 
-                    {mediaPreview && (
-                      <div className="relative w-full h-44 overflow-hidden bg-[#090807] border border-[#423528] rounded-xl shadow-md group-hover:border-[#dca766] transition-all">
-                        <img
-                          src={mediaPreview}
-                          alt={`Keepsake to ${w.to_name}`}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 vintage-film-filter"
-                        />
-                        <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/80 backdrop-blur-sm border border-[#dca766]/35 text-[8px] font-mono text-[#dca766] uppercase tracking-widest rounded-full">
-                          ✦ 35MM ARCHIVE
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="space-y-1.5 text-left">
-                      <div className="text-[10px] font-mono text-[#a8713a] uppercase tracking-wider">
-                        DEDICATION
-                      </div>
-                      <h3 className="font-serif font-bold text-xl text-[#f7f3ea] uppercase tracking-wide group-hover:text-[#dca766] transition-colors">
-                        FOR: {w.to_name}
-                      </h3>
-                      <p className="text-sm text-[#bfae9c] leading-relaxed line-clamp-3 font-serif italic">
-                        &ldquo;{w.message}&rdquo;
-                      </p>
-                    </div>
+                <div className="space-y-4">
+                  {/* Card Header */}
+                  <div className="flex items-center justify-between border-b border-[#d8c3a3] pb-3">
+                    <span className="text-[10px] font-courier font-bold tracking-widest uppercase text-[#7d1d23]">
+                      {w.tier === 'golden' ? '📜 35MM GOLD ROLL' : '🏛️ WORLDWIDE MASTER'}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-xs text-[#7d1d23] font-courier font-bold">
+                      <Heart className="w-3.5 h-3.5 fill-current text-[#7d1d23]" />
+                      <span>{w.likes_count || 0}</span>
+                    </span>
                   </div>
 
-                  <div className="pt-4 border-t border-[#3d332a]/60 flex items-center justify-between text-xs font-mono">
-                    <span className="text-[#7a6a5d] text-[10px] uppercase">SEALED BY:</span>
-                    <span className="text-[#dca766] font-bold uppercase">{w.from_name}</span>
+                  {/* Recipient */}
+                  <div>
+                    <span className="text-[10px] font-courier text-[#6e5849] uppercase tracking-wider block">
+                      Addressed To:
+                    </span>
+                    <h3 className="font-garamond text-xl text-[#231916] font-bold italic line-clamp-1 group-hover:text-[#7d1d23] transition-colors">
+                      {w.to_name || 'Kindred Spirit'}
+                    </h3>
                   </div>
+
+                  {/* Message Quote */}
+                  <p className="font-garamond text-sm text-[#382b24] italic line-clamp-3 leading-relaxed">
+                    "{w.message}"
+                  </p>
+
+                  {/* Attached Media Thumbnail */}
+                  {mediaPreview && (
+                    <div className="w-full h-32 rounded overflow-hidden border border-[#d8c3a3] shadow-inner">
+                      <img src={mediaPreview} alt="Artifact thumbnail" className="w-full h-full object-cover sepia-[0.3]" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Footer Metadata */}
+                <div className="pt-4 border-t border-[#d8c3a3] flex items-center justify-between text-[10px] font-courier text-[#5a4336] mt-4">
+                  <span>INSCRIBER: <strong>{w.from_name || `@${w.sender_username}`}</strong></span>
+                  <span className="text-[#7d1d23] font-bold group-hover:underline">OPEN MISSIVE →</span>
                 </div>
               </Link>
             );
           })}
         </div>
       )}
-    </div>
+
+    </main>
   );
 }
