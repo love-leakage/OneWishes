@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   ArrowRight, Heart, X, Film, Upload, Loader2, Sparkles, 
   CheckCircle2, Camera, Calendar, Clock, Share2, Bookmark,
@@ -28,6 +28,22 @@ interface MediaPreview {
 }
 
 type WishingEra = '1890s' | '1930s' | '1950s' | '1970s';
+
+function extractFirstMedia(raw?: string | null): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if (trimmed.startsWith('[')) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed[0]?.url || null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+  return trimmed.startsWith('http') ? trimmed : null;
+}
 
 export default function HomePage() {
   const [selectedTier, setSelectedTier] = useState<'golden' | 'onewish'>('golden');
@@ -77,7 +93,7 @@ export default function HomePage() {
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Today's Onewish State
+  // Today's Onewish State (Instant 0ms hydration from sessionStorage)
   const [todayOnewish, setTodayOnewish] = useState<any>(() => {
     if (typeof window === 'undefined') return null;
     try {
@@ -156,26 +172,38 @@ export default function HomePage() {
           supabase.auth.getSession(),
         ]);
 
+        let loadedWish: any = null;
+
         if (bookingRes.data?.wish_id) {
-          const wish = (bookingRes.data as any).wishes;
-          if (wish) {
-            setTodayOnewish(wish);
-            try {
-              sessionStorage.setItem(`onewishes_today_${today}`, JSON.stringify(wish));
-            } catch (e) {}
-          } else {
+          const rawWish = (bookingRes.data as any).wishes;
+          loadedWish = Array.isArray(rawWish) ? rawWish[0] : rawWish;
+          if (!loadedWish) {
             const { data: directWish } = await supabase
               .from('wishes')
               .select('*')
               .eq('id', bookingRes.data.wish_id)
               .maybeSingle();
-            if (directWish) {
-              setTodayOnewish(directWish);
-              try {
-                sessionStorage.setItem(`onewishes_today_${today}`, JSON.stringify(directWish));
-              } catch (e) {}
-            }
+            loadedWish = directWish;
           }
+        }
+
+        // If today has no booking, display the latest public wish as fallback
+        if (!loadedWish) {
+          const { data: latestWish } = await supabase
+            .from('wishes')
+            .select('*')
+            .eq('privacy', 'public')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          loadedWish = latestWish;
+        }
+
+        if (loadedWish) {
+          setTodayOnewish(loadedWish);
+          try {
+            sessionStorage.setItem(`onewishes_today_${today}`, JSON.stringify(loadedWish));
+          } catch (e) {}
         }
 
         if (sessionRes.data?.session?.user) {
@@ -252,7 +280,7 @@ export default function HomePage() {
     setIsPostcardFlipped(!isPostcardFlipped);
   };
 
-  // Wish Media Handlers
+  // Ultra-Fast Direct Presigned & Edge Media Upload
   const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
@@ -291,23 +319,52 @@ export default function HomePage() {
           )
         );
 
-        const formData = new FormData();
-        formData.append('file', compressedResult.file);
+        let uploadedUrl: string | null = null;
 
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!res.ok) {
-          throw new Error('Upload to vault failed');
+        // Strategy 1: High-Speed Direct Presigned R2 Upload (< 200ms)
+        try {
+          const presignRes = await fetch(
+            `/api/upload?filename=${encodeURIComponent(file.name)}&type=${encodeURIComponent(compressedResult.file.type || 'image/webp')}`
+          );
+          if (presignRes.ok) {
+            const { uploadUrl, publicUrl } = await presignRes.json();
+            const r2Put = await fetch(uploadUrl, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': compressedResult.file.type || 'image/webp',
+              },
+              body: compressedResult.file,
+            });
+            if (r2Put.ok) {
+              uploadedUrl = publicUrl;
+            }
+          }
+        } catch (presignErr) {
+          console.warn('Direct R2 presign upload fallback:', presignErr);
         }
 
-        const data = await res.json();
+        // Strategy 2: Server POST fallback if direct upload wasn't used
+        if (!uploadedUrl) {
+          const formData = new FormData();
+          formData.append('file', compressedResult.file);
+
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!res.ok) {
+            throw new Error('Upload to vault failed');
+          }
+
+          const data = await res.json();
+          uploadedUrl = data.url;
+        }
+
         setMediaList((prev) =>
           prev.map((item) =>
             item.id === tempId
-              ? { ...item, r2Url: data.url, isUploading: false }
+              ? { ...item, r2Url: uploadedUrl!, isUploading: false }
               : item
           )
         );
@@ -315,7 +372,7 @@ export default function HomePage() {
         setMediaList((prev) =>
           prev.map((item) =>
             item.id === tempId
-              ? { ...item, isUploading: false, uploadError: err.message }
+              ? { ...item, isUploading: false, uploadError: err.message || 'Upload failed' }
               : item
           )
         );
@@ -390,7 +447,6 @@ export default function HomePage() {
       return;
     }
 
-    // Prepend era tag if chosen, so reader renders with historical ritual
     const formattedMessage = message || 'May our hopes outlive the stars and time itself.';
 
     const wishData = {
@@ -434,6 +490,8 @@ export default function HomePage() {
 
     window.location.href = `/w/${slug}`;
   };
+
+  const spotlightMedia = extractFirstMedia(todayOnewish?.media_url);
 
   return (
     <main className="min-h-screen bg-[#0b0908] text-[#f7f2e7] selection:bg-[#c5a059] selection:text-[#0b0908] font-sans pb-28 relative overflow-x-hidden">
@@ -542,7 +600,7 @@ export default function HomePage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <p className="font-garamond text-xl sm:text-3xl text-[#231916] leading-relaxed italic mb-8 animate-film-flicker">
+                    <p className="font-garamond text-xl sm:text-3xl text-[#231916] leading-relaxed italic mb-6 animate-film-flicker">
                       "{todayOnewish?.message || 'May the light find you wherever the evening shadows fall, and may every quiet courage in your heart be met with grace.'}"
                     </p>
 
@@ -591,12 +649,18 @@ export default function HomePage() {
                   DELIVERY TO: {todayOnewish?.to_name?.toUpperCase() || 'EVERY CORNER OF THE GLOBE'} . STOP
                 </div>
 
-                <p className="font-courier text-lg sm:text-2xl font-bold text-[#1f1713] leading-relaxed tracking-wider uppercase">
+                <p className="font-courier text-lg sm:text-2xl font-bold text-[#1f1713] leading-relaxed tracking-wider uppercase mb-4">
                   {(todayOnewish?.message || 'HOLD FAST TO HOPE . STOP . THE DARKNESS NEVER OUTLASTS THE DAWN . STOP . YOU ARE REMEMBERED AND CHERISHED . STOP .')
                     .replace(/\. /g, ' . STOP . ')}
                 </p>
 
-                <div className="mt-6 pt-3 border-t border-[#d3be98] text-xs font-courier text-[#5e4b3c] flex justify-between">
+                {todayOnewish?.media_url && (
+                  <div className="mb-4 rounded overflow-hidden border border-[#c4b08d] shadow-sm max-w-sm">
+                    <WishMediaGallery mediaUrl={todayOnewish.media_url} mediaType={todayOnewish.media_type} />
+                  </div>
+                )}
+
+                <div className="mt-4 pt-3 border-t border-[#d3be98] text-xs font-courier text-[#5e4b3c] flex justify-between">
                   <span>ORIGIN: {todayOnewish?.from_name?.toUpperCase() || 'ONEWISHES VAULT'}</span>
                   <span>SPEED: 60 WPM</span>
                 </div>
@@ -661,9 +725,9 @@ export default function HomePage() {
 
                 {/* Flippable Content */}
                 {!isPostcardFlipped ? (
-                  /* Front: Heartfelt Fountain Pen Message */
+                  /* Front: Heartfelt Fountain Pen Message with Photo */
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center py-2">
-                    <div className="md:col-span-8">
+                    <div className="md:col-span-7">
                       <p className="font-garamond text-2xl sm:text-3xl text-[#1e1916] italic leading-relaxed mb-6">
                         "{todayOnewish?.message || 'Dearest friend, wishing you fair winds over the Atlantic, laughter beneath golden sunsets, and safe returns to the ones who love you.'}"
                       </p>
@@ -673,12 +737,22 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <div className="md:col-span-4 border-l border-[#d8c3a3] pl-0 md:pl-6 flex flex-col items-center justify-center text-center">
-                      <div className="w-24 h-32 border-2 border-dashed border-[#1d3557] rounded flex flex-col items-center justify-center p-2 text-center bg-[#f0eae0] shadow-sm mb-3">
-                        <span className="text-[10px] font-courier font-bold text-[#a62626] uppercase">30 FRANCS</span>
-                        <Film className="w-6 h-6 text-[#1d3557] my-1" />
-                        <span className="text-[8px] font-courier text-[#5e4b3c]">AIR POST 1958</span>
-                      </div>
+                    <div className="md:col-span-5 border-l border-[#d8c3a3] pl-0 md:pl-6 flex flex-col items-center justify-center text-center">
+                      {spotlightMedia ? (
+                        <div className="w-full aspect-[4/3] rounded overflow-hidden border border-[#d8c3a3] shadow-md mb-3">
+                          <img 
+                            src={spotlightMedia} 
+                            alt="Airmail Artifact" 
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-24 h-32 border-2 border-dashed border-[#1d3557] rounded flex flex-col items-center justify-center p-2 text-center bg-[#f0eae0] shadow-sm mb-3">
+                          <span className="text-[10px] font-courier font-bold text-[#a62626] uppercase">30 FRANCS</span>
+                          <Film className="w-6 h-6 text-[#1d3557] my-1" />
+                          <span className="text-[8px] font-courier text-[#5e4b3c]">AIR POST 1958</span>
+                        </div>
+                      )}
                       <div className="vintage-postmark text-[10px]">
                         PARIS - NEW YORK
                       </div>
@@ -710,9 +784,9 @@ export default function HomePage() {
               {/* Photo viewport */}
               <div className="relative aspect-[4/3] bg-[#181513] rounded-sm overflow-hidden border border-[#dcd0be] mb-6 shadow-inner">
                 <div className={`w-full h-full flex items-center justify-center relative ${isPolaroidDeveloped ? 'animate-polaroid-develop' : 'brightness-20'}`}>
-                  {todayOnewish?.media_url ? (
+                  {spotlightMedia ? (
                     <img 
-                      src={todayOnewish.media_url} 
+                      src={spotlightMedia} 
                       alt="Polaroid Memory" 
                       className="w-full h-full object-cover" 
                     />
@@ -1104,6 +1178,11 @@ export default function HomePage() {
                     {item.isUploading && (
                       <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                         <Loader2 className="w-4 h-4 text-[#c5a059] animate-spin" />
+                      </div>
+                    )}
+                    {item.uploadError && (
+                      <div className="absolute inset-0 bg-red-950/80 p-1 flex items-center justify-center text-[8px] text-red-200 text-center font-mono">
+                        Error
                       </div>
                     )}
                     <button

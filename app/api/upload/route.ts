@@ -16,9 +16,9 @@ const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || 'https://pub-0352
  */
 export async function GET(req: NextRequest) {
   try {
-    const filename = req.nextUrl.searchParams.get('filename') || 'upload.png';
-    const contentType = req.nextUrl.searchParams.get('type') || 'application/octet-stream';
-    const ext = filename.split('.').pop() || 'png';
+    const filename = req.nextUrl.searchParams.get('filename') || 'upload.webp';
+    const contentType = req.nextUrl.searchParams.get('type') || 'image/webp';
+    const ext = filename.split('.').pop() || 'webp';
     const cleanExt = ext.replace(/[^a-zA-Z0-9]/g, '');
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${cleanExt}`;
 
@@ -31,6 +31,9 @@ export async function GET(req: NextRequest) {
     const targetUrl = `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${R2_BUCKET_NAME}/${fileName}`;
     const signedReq = await aws.sign(targetUrl, {
       method: 'PUT',
+      headers: {
+        'Content-Type': contentType,
+      },
       aws: { signQuery: true },
     });
 
@@ -48,25 +51,42 @@ export async function GET(req: NextRequest) {
 }
 
 /**
- * POST: Fallback server-side upload
+ * POST: Server-side upload supporting both multipart/form-data and direct binary
  */
 export async function POST(req: NextRequest) {
   try {
-    const filename = req.nextUrl.searchParams.get('filename') || 'upload.png';
-    const contentType = req.nextUrl.searchParams.get('type') || 'application/octet-stream';
-    
-    // Read raw body
-    const arrayBuffer = await req.arrayBuffer();
+    let arrayBuffer: ArrayBuffer;
+    let fileName: string;
+    let contentType = 'image/jpeg';
+
+    const reqContentType = req.headers.get('content-type') || '';
+
+    if (reqContentType.includes('multipart/form-data')) {
+      const formData = await req.formData();
+      const file = formData.get('file') as File | null;
+      if (!file) {
+        return NextResponse.json({ error: 'No file provided in form data' }, { status: 400 });
+      }
+      arrayBuffer = await file.arrayBuffer();
+      contentType = file.type || 'image/jpeg';
+      const origName = file.name || 'image.jpg';
+      const ext = origName.split('.').pop() || (contentType.includes('webp') ? 'webp' : 'jpg');
+      const cleanExt = ext.replace(/[^a-zA-Z0-9]/g, '');
+      fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${cleanExt}`;
+    } else {
+      const filenameParam = req.nextUrl.searchParams.get('filename') || 'upload.jpg';
+      contentType = req.nextUrl.searchParams.get('type') || reqContentType || 'application/octet-stream';
+      arrayBuffer = await req.arrayBuffer();
+      const ext = filenameParam.split('.').pop() || 'jpg';
+      const cleanExt = ext.replace(/[^a-zA-Z0-9]/g, '');
+      fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${cleanExt}`;
+    }
 
     if (arrayBuffer.byteLength === 0) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+      return NextResponse.json({ error: 'Uploaded file is empty' }, { status: 400 });
     }
     
-    const ext = filename.split('.').pop() || 'png';
-    const cleanExt = ext.replace(/[^a-zA-Z0-9]/g, '');
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${cleanExt}`;
-    
-    // 1. Try Native Cloudflare R2 Binding first (0ms CPU, instant edge write)
+    // 1. Try Native Cloudflare R2 Binding first (instant edge write)
     try {
       const { env } = getCloudflareContext();
       if (env && (env as any).R2_BUCKET) {
@@ -134,7 +154,6 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'No filename or url provided' }, { status: 400 });
     }
 
-    // Security check: only allow alphanumeric, dots, dashes, underscores
     const cleanKey = key.replace(/[^a-zA-Z0-9.\-_]/g, '');
 
     // 1. Try Native Cloudflare R2 Binding first
