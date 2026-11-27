@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Check, Copy, Send, ArrowLeft, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Mail, Check, Copy, Send, ArrowLeft, ShieldCheck, Radio, Stamp } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
 
 export default function ContactPage() {
@@ -10,7 +10,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'General Inquiry',
+    subject: 'Archival Inquiry',
     message: '',
   });
 
@@ -36,172 +36,161 @@ export default function ContactPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-16">
+      
       {/* Header */}
       <div className="space-y-4 text-center">
-        <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#b5afa6] hover:text-[#e5c07b] transition-colors mb-4">
+        <Link href="/" className="inline-flex items-center gap-2 text-xs font-courier uppercase tracking-widest text-[#a89684] hover:text-[#c5a059] transition-colors mb-2">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to Home</span>
+          <span>Return to Registry</span>
         </Link>
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-[#d4af37]/40 bg-[#14120e] text-[11px] font-bold uppercase tracking-widest text-[#e5c07b] shadow-[0_0_16px_rgba(212,175,55,0.2)]">
-          <Mail className="w-3.5 h-3.5 text-[#d4af37]" />
-          <span>Official Communications</span>
+        <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full border border-[#3a2c20] bg-[#16120e] text-[10px] font-courier uppercase tracking-[0.25em] text-[#c5a059]">
+          <Radio className="w-3.5 h-3.5 text-[#c5a059]" />
+          <span>BUREAU TELEGRAPH DISPATCH • EST. 1890</span>
         </div>
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tight text-[#f5f2eb]">
-          Contact OneWishes
+        <h1 className="font-garamond text-4xl sm:text-6xl italic text-[#f7f2e7]">
+          Telegraph the Vault
         </h1>
-        <p className="text-sm uppercase tracking-widest font-mono text-[#b5afa6] max-w-lg mx-auto">
-          Direct human correspondence with the OneWishes founding team.
+        <p className="text-xs uppercase tracking-widest font-courier text-[#a89684] max-w-lg mx-auto">
+          Direct human correspondence with the OneWishes Archival Bureau.
         </p>
       </div>
 
-      {/* Primary Email Card */}
-      <div className="p-8 sm:p-10 bg-[#09090c] border border-[#d4af37]/25 space-y-6 shadow-2xl relative overflow-hidden rounded-sm">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-[#d4af37]/20 pb-8">
-          <div className="space-y-2 text-center sm:text-left">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-[#e5c07b] font-bold">
-              Direct Administrative Email
+      {/* Primary Telegraph Card */}
+      <div className="vintage-telegram-paper rounded-sm p-6 sm:p-10 border border-[#b08a44]/70 shadow-2xl relative space-y-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-[#c8b48c] pb-6">
+          <div className="space-y-1 text-center sm:text-left">
+            <span className="text-[10px] font-courier uppercase tracking-[0.25em] text-[#7d1d23] font-bold block">
+              WESTERN UNION DIRECT TELEGRAM ADDRESS
             </span>
-            <div className="font-serif text-2xl sm:text-3xl font-bold text-[#f5f2eb] tracking-wide break-all">
+            <div className="font-courier text-2xl sm:text-3xl font-bold text-[#241c18] tracking-wider break-all">
               {email}
             </div>
-            <p className="text-xs text-[#b5afa6] uppercase tracking-wider">
-              Guaranteed response within 24 hours.
+            <p className="text-[11px] font-courier text-[#6b584a] uppercase tracking-wider">
+              ✦ Guaranteed transmission & response within 24 hours.
             </p>
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <button
               onClick={handleCopyEmail}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 border border-[#d4af37]/25 hover:border-[#e5c07b] bg-[#050505] text-xs font-bold uppercase tracking-widest text-[#f5f2eb] transition-all rounded-sm"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 border border-[#a07e4b] hover:border-[#7d1d23] bg-white/60 text-xs font-courier font-bold uppercase tracking-widest text-[#241c18] transition-all rounded"
             >
-              {copied ? <Check className="w-4 h-4 text-[#e5c07b]" /> : <Copy className="w-4 h-4 text-[#b5afa6]" />}
-              <span>{copied ? 'Copied!' : 'Copy Email'}</span>
+              {copied ? <Check className="w-4 h-4 text-green-700" /> : <Copy className="w-4 h-4 text-[#7d1d23]" />}
+              <span>{copied ? 'Address Copied!' : 'Copy Address'}</span>
             </button>
 
             <a
               href={`mailto:${email}`}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-xs font-bold uppercase tracking-widest transition-all shadow-[0_0_16px_rgba(212,175,55,0.35)] hover:opacity-95 rounded-sm"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#7d1d23] hover:bg-[#922129] text-[#f7f2e7] text-xs font-courier font-bold uppercase tracking-widest transition-all shadow-md rounded"
             >
               <Send className="w-3.5 h-3.5" />
-              <span>Send Email</span>
+              <span>Send Dispatch</span>
             </a>
           </div>
         </div>
 
         {/* Channels Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2 font-courier">
           <div className="space-y-1">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#f5f2eb] flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#e5c07b]" />
-              Account & Scarcity
+            <div className="text-xs font-bold uppercase tracking-wider text-[#241c18] flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#7d1d23]" />
+              Lifetime Scarcity
             </div>
-            <p className="text-[11px] text-[#b5afa6] leading-relaxed">
-              Assistance with lifetime Golden Wish credits and handle reservations.
+            <p className="text-[11px] text-[#6b584a] leading-relaxed">
+              Assistance with 35mm Gold Roll lifetime credentials and handle preservation.
             </p>
           </div>
 
           <div className="space-y-1">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#f5f2eb] flex items-center gap-1.5">
-              <MessageSquare className="w-3.5 h-3.5 text-[#e5c07b]" />
-              Press & Inquiries
+            <div className="text-xs font-bold uppercase tracking-wider text-[#241c18] flex items-center gap-1.5">
+              <Stamp className="w-3.5 h-3.5 text-[#7d1d23]" />
+              Date Monoliths
             </div>
-            <p className="text-[11px] text-[#b5afa6] leading-relaxed">
-              Editorial interviews, features, and brand inquiries.
+            <p className="text-[11px] text-[#6b584a] leading-relaxed">
+              Inquiries regarding calendar date exclusivity reservations and archival verification.
             </p>
           </div>
 
           <div className="space-y-1">
-            <div className="text-xs font-bold uppercase tracking-wider text-[#f5f2eb] flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-[#e5c07b]" />
-              Technical Support
+            <div className="text-xs font-bold uppercase tracking-wider text-[#241c18] flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-[#7d1d23]" />
+              Archival Press
             </div>
-            <p className="text-[11px] text-[#b5afa6] leading-relaxed">
-              Spotlight date booking or media attachment assistance.
+            <p className="text-[11px] text-[#6b584a] leading-relaxed">
+              Curatorial partnerships, historical inquiries, and colophon citations.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Direct Contact Form */}
-      <div className="p-8 sm:p-10 bg-[#09090c] border border-[#d4af37]/25 space-y-8 rounded-sm">
-        <div className="space-y-2">
-          <h2 className="font-serif text-2xl font-bold uppercase tracking-wide text-[#f5f2eb]">
-            Send an Instant Message
+      {/* Direct Telegram Dispatch Form */}
+      <div className="p-8 sm:p-10 bg-[#14100d] border border-[#3a2c20] rounded-sm space-y-6 shadow-xl">
+        <div className="space-y-2 border-b border-[#3a2c20] pb-4">
+          <span className="text-[10px] font-courier text-[#c5a059] uppercase tracking-[0.25em] font-bold">
+            RAPID TELEGRAPH DISPATCH
+          </span>
+          <h2 className="font-garamond text-2xl sm:text-3xl italic text-[#f7f2e7]">
+            Compose Official Wire
           </h2>
-          <p className="text-xs text-[#b5afa6] uppercase tracking-wider font-mono">
-            This will open your email client pre-filled with your message.
-          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb]">
-                Your Name *
-              </label>
+        <form onSubmit={handleSubmit} className="space-y-5 font-courier text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="space-y-1.5">
+              <label className="text-[#a89684] uppercase tracking-wider block">Your Name / Scribe Moniker</label>
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g. John Doe"
-                className="w-full px-4 py-3 bg-[#070709] border border-[#d4af37]/20 text-sm text-[#f5f2eb] placeholder-[#605a54] focus:outline-none focus:border-[#d4af37] transition-colors uppercase tracking-wider rounded-sm"
+                placeholder="e.g. Thomas Edison"
+                className="w-full px-4 py-2.5 bg-[#0b0908] border border-[#3a2c20] text-[#f7f2e7] focus:outline-none focus:border-[#c5a059] rounded"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb]">
-                Your Email *
-              </label>
+            <div className="space-y-1.5">
+              <label className="text-[#a89684] uppercase tracking-wider block">Return Wire Address (Email)</label>
               <input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="name@example.com"
-                className="w-full px-4 py-3 bg-[#070709] border border-[#d4af37]/20 text-sm text-[#f5f2eb] placeholder-[#605a54] focus:outline-none focus:border-[#d4af37] transition-colors uppercase tracking-wider rounded-sm"
+                placeholder="e.g. scribe@domain.com"
+                className="w-full px-4 py-2.5 bg-[#0b0908] border border-[#3a2c20] text-[#f7f2e7] focus:outline-none focus:border-[#c5a059] rounded"
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb]">
-              Subject / Topic
-            </label>
-            <select
+          <div className="space-y-1.5">
+            <label className="text-[#a89684] uppercase tracking-wider block">Telegraph Subject</label>
+            <input
+              type="text"
+              required
               value={formData.subject}
               onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-              className="w-full px-4 py-3 bg-[#070709] border border-[#d4af37]/20 text-sm text-[#f5f2eb] focus:outline-none focus:border-[#d4af37] transition-colors uppercase tracking-wider rounded-sm"
-            >
-              <option value="General Inquiry">General Inquiry</option>
-              <option value="Account & Handle Issue">Account & Handle Issue</option>
-              <option value="Golden Wish Credits">Golden Wish Credits</option>
-              <option value="Onewish Date Booking">Onewish Date Booking</option>
-              <option value="Bug Report">Bug Report</option>
-              <option value="Partnership / Press">Partnership / Press</option>
-            </select>
+              placeholder="Nature of inquiry..."
+              className="w-full px-4 py-2.5 bg-[#0b0908] border border-[#3a2c20] text-[#f7f2e7] focus:outline-none focus:border-[#c5a059] rounded"
+            />
           </div>
 
-          <div className="space-y-2">
-            <label className="block text-xs font-bold uppercase tracking-widest text-[#f5f2eb]">
-              Message *
-            </label>
+          <div className="space-y-1.5">
+            <label className="text-[#a89684] uppercase tracking-wider block">Wire Transmission (Message)</label>
             <textarea
               required
               rows={5}
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-              placeholder="Write your note here..."
-              className="w-full px-4 py-3 bg-[#070709] border border-[#d4af37]/20 text-sm text-[#f5f2eb] placeholder-[#605a54] focus:outline-none focus:border-[#d4af37] transition-colors uppercase tracking-wider resize-none rounded-sm"
+              placeholder="Inscribe your dispatch here..."
+              className="w-full px-4 py-2.5 bg-[#0b0908] border border-[#3a2c20] text-[#f7f2e7] focus:outline-none focus:border-[#c5a059] rounded"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] hover:opacity-95 text-[#050505] font-bold text-xs uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(212,175,55,0.35)] flex items-center justify-center gap-2 rounded-sm"
+            className="w-full py-3.5 bg-[#c5a059] hover:bg-[#d4b069] text-[#0b0908] font-courier font-bold uppercase tracking-widest text-xs transition-all shadow-md rounded flex items-center justify-center gap-2"
           >
-            <Send className="w-4 h-4" />
-            <span>Send to admin@onewishes.com</span>
+            <Send className="w-4 h-4 text-[#0b0908]" />
+            <span>Transmit Wire to Bureau</span>
           </button>
         </form>
       </div>

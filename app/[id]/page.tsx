@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Heart, Instagram, Share2, Check, MessageCircle, Send, Sparkles, ArrowRight } from 'lucide-react';
+import { Heart, Instagram, Share2, Check, MessageCircle, Send, Sparkles, ArrowRight, Stamp, Feather, Radio } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { JarLoader } from '@/components/JarLoader';
 import { WishLikeButton } from '@/components/WishLikeButton';
@@ -174,8 +174,8 @@ export default function DynamicRootPage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `@${profile?.username || cleanUser} | OneWishes Archival Vault`,
-          text: `View @${profile?.username || cleanUser}'s everlasting keepsake wishes on OneWishes:`,
+          title: `@${profile?.username || cleanUser} | Chronicle Archival Folio`,
+          text: `Inspect @${profile?.username || cleanUser}'s historic archival keepsakes on OneWishes:`,
           url,
         });
         return;
@@ -184,6 +184,7 @@ export default function DynamicRootPage() {
     if (navigator.clipboard) {
       await navigator.clipboard.writeText(url);
       setCopied(true);
+      sounds.playChime();
       setTimeout(() => setCopied(false), 2000);
     }
   };
@@ -191,7 +192,7 @@ export default function DynamicRootPage() {
   if (loading && !profile && !onewish) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <JarLoader text="ONEWISHES" subtext="Unsealing archival vault..." size="md" />
+        <JarLoader text="CHRONICLE VAULT" subtext="Accessing archival register..." size="md" />
       </div>
     );
   }
@@ -206,24 +207,29 @@ export default function DynamicRootPage() {
     if (!onewish) {
       return (
         <div className="max-w-xl mx-auto px-4 py-28 text-center space-y-6">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#14120e] border border-[#d4af37]/40 flex items-center justify-center text-[#e5c07b] text-xl font-bold shadow-[0_0_20px_rgba(212,175,55,0.25)]">
+          <div className="w-16 h-16 mx-auto rounded-full bg-[#181310] border border-[#3a2c20] flex items-center justify-center text-[#c5a059] text-2xl font-garamond shadow-xl">
             ✦
           </div>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#f5f2eb] uppercase tracking-tighter">
-            Spotlight Open
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#16120e] border border-[#3a2c20] text-[10px] font-courier uppercase tracking-widest text-[#c5a059]">
+            <Radio className="w-3 h-3 text-[#c5a059]" />
+            <span>CHRONICLE SPOTLIGHT OPEN</span>
+          </div>
+          <h2 className="font-garamond text-4xl sm:text-5xl italic text-[#f7f2e7]">
+            Ledger Page Unclaimed
           </h2>
-          <p className="text-[#e5c07b] font-mono text-sm uppercase tracking-widest font-bold">
+          <p className="font-courier text-xs uppercase tracking-widest text-[#c5a059] font-bold">
             {formattedDate}
           </p>
-          <p className="text-[#b5afa6] text-xs uppercase tracking-widest max-w-sm mx-auto leading-relaxed">
-            No one has claimed this date worldwide. Be the sole individual across infinity to seal an eternal wish on this day.
+          <p className="font-courier text-xs text-[#a89684] uppercase tracking-widest max-w-sm mx-auto leading-relaxed">
+            No person has yet inscribed this date into the global monument. Be the sole individual in human history to seal this day forever.
           </p>
           <div className="pt-2">
             <Link
-              href={`/?date=${id}#create-section`}
-              className="inline-block px-8 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_24px_rgba(212,175,55,0.35)] rounded-sm"
+              href={`/?date=${id}#darkroom-studio`}
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#c5a059] hover:bg-[#d4b069] text-[#0b0908] font-courier font-bold text-xs uppercase tracking-widest transition-all shadow-lg rounded"
             >
-              Claim {id} Spotlight
+              <Stamp className="w-4 h-4 text-[#0b0908]" />
+              <span>Inscribe {id} Missive</span>
             </Link>
           </div>
         </div>
@@ -231,57 +237,71 @@ export default function DynamicRootPage() {
     }
 
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 space-y-12">
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#14120e] border border-[#d4af37]/40 rounded-full text-[10px] font-mono text-[#e5c07b] uppercase tracking-widest shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-            <span>✦ WORLDWIDE FRONTPAGE SPOTLIGHT</span>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 space-y-12">
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-2 px-4 py-1 bg-[#16120e] border border-[#3a2c20] rounded-full text-[10px] font-courier text-[#c5a059] uppercase tracking-[0.25em]">
+            <Sparkles className="w-3 h-3 text-[#c5a059]" />
+            <span>WORLDWIDE CHRONICLE MONUMENT • SOLE INSCRIPTION</span>
           </div>
-          <h1 className="font-serif text-4xl sm:text-6xl font-black uppercase tracking-tighter text-[#f5f2eb]">
-            THE ONEWISH
+          <h1 className="font-garamond text-4xl sm:text-6xl italic text-[#f7f2e7]">
+            The Historic Monument
           </h1>
-          <p className="text-[#e5c07b] font-bold tracking-widest uppercase text-sm sm:text-base font-mono">
-            {formattedDate}
+          <p className="text-[#c5a059] font-bold tracking-widest uppercase text-xs sm:text-sm font-courier">
+            RECORDED ON: {formattedDate}
           </p>
         </div>
         
-        {/* Luxury Archival Keepsake Letter Container */}
-        <div className="archival-letter p-1 border border-[#d4af37]/35 bg-[#09090b] shadow-[0_0_45px_rgba(212,175,55,0.12)] relative rounded-sm">
-          {/* Corner Accents */}
-          <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#d4af37]/70" />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#d4af37]/70" />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#d4af37]/70" />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#d4af37]/70" />
+        {/* Vintage Parchment Monument Container */}
+        <div className="vintage-parchment rounded-sm p-6 sm:p-12 md:p-16 relative shadow-2xl border border-[#c4a882] space-y-8">
+          {/* Corner Brass Brackets */}
+          <div className="absolute top-3 left-3 w-4 h-4 vintage-brass-bracket-tl pointer-events-none" />
+          <div className="absolute top-3 right-3 w-4 h-4 vintage-brass-bracket-tr pointer-events-none" />
+          <div className="absolute bottom-3 left-3 w-4 h-4 vintage-brass-bracket-bl pointer-events-none" />
+          <div className="absolute bottom-3 right-3 w-4 h-4 vintage-brass-bracket-br pointer-events-none" />
 
-          <div className="bg-[#050507] p-8 sm:p-14 border border-[#d4af37]/20 space-y-8 relative">
-            <div className="flex items-center justify-between border-b border-[#d4af37]/25 pb-5">
-              <Link href={`/${onewish.to_username || ''}`} className="text-sm font-bold tracking-widest text-[#e5c07b] uppercase hover:text-[#f5f2eb] transition-colors">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#d8c3a3] pb-6 gap-4">
+            <div>
+              <span className="font-courier text-[10px] uppercase tracking-[0.25em] text-[#7d1d23] font-bold block">
+                IMMUTABLE DATE REGISTRATION
+              </span>
+              <Link href={`/${onewish.to_username || ''}`} className="font-garamond text-2xl sm:text-3xl italic font-bold text-[#231916] hover:text-[#7d1d23] transition-colors">
                 FOR: {onewish.to_name.toUpperCase()} {onewish.to_username ? `(@${onewish.to_username})` : ''}
               </Link>
-              <span className="px-3.5 py-1 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] text-[10px] font-bold uppercase tracking-widest shadow-[0_0_12px_rgba(212,175,55,0.35)] rounded-sm">
-                ONEWISH SPOTLIGHT
-              </span>
             </div>
+            <div className="flex items-center gap-3">
+              <div className="vintage-postmark text-[9px] hidden sm:block">
+                GLOBAL SPOTLIGHT
+              </div>
+              <div className="w-12 h-12 rounded-full wax-seal-emboss flex items-center justify-center text-[#f7f2e7] font-garamond text-xl font-bold shadow-lg shrink-0">
+                ✦
+              </div>
+            </div>
+          </div>
 
-            {onewish.media_url && (
-              <div className="rounded-sm overflow-hidden border border-[#d4af37]/30 shadow-2xl">
+          <div className="relative py-6 px-4 sm:px-8 bg-white/30 rounded border border-[#d8c3a3]/60 shadow-inner">
+            <span className="text-[#c5a059]/40 font-garamond text-8xl leading-none absolute -top-6 left-2 select-none">“</span>
+            <p className="font-garamond text-2xl sm:text-4xl text-[#231916] leading-[1.4] italic text-center font-normal relative z-10">
+              {onewish.message}
+            </p>
+            <span className="text-[#c5a059]/40 font-garamond text-8xl leading-none absolute -bottom-14 right-2 select-none">”</span>
+          </div>
+
+          {onewish.media_url && (
+            <div className="polaroid-frame p-3 sm:p-5 rounded-sm max-w-xl mx-auto shadow-xl space-y-3">
+              <div className="overflow-hidden rounded-sm border border-[#d6c7b2]">
                 <WishMediaGallery mediaUrl={onewish.media_url} mediaType={onewish.media_type} />
               </div>
-            )}
-
-            <div className="relative py-4 px-2 sm:px-6">
-              <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -top-4 left-0 select-none">“</span>
-              <p className="font-serif text-2xl sm:text-4xl text-[#f5f2eb] leading-relaxed uppercase italic tracking-wide text-center">
-                {onewish.message}
-              </p>
-              <span className="text-[#d4af37]/30 font-serif text-6xl leading-none absolute -bottom-8 right-0 select-none">”</span>
+              <div className="text-center font-courier text-[10px] text-[#7a6453] tracking-widest uppercase">
+                ✦ ARCHIVAL PHOTOGRAPHIC SPECIMEN ✦
+              </div>
             </div>
+          )}
 
-            <div className="pt-6 border-t border-[#d4af37]/20 flex flex-col sm:flex-row items-center justify-between gap-6">
-              <Link href={`/${onewish.sender_username}`} className="text-sm text-[#f5f2eb] font-bold uppercase tracking-widest hover:text-[#e5c07b] transition-colors">
-                SEALED BY: @{onewish.sender_username}
-              </Link>
-              <WishLikeButton wishId={onewish.id} initialLikes={onewish.likes_count} showText />
-            </div>
+          <div className="pt-6 border-t border-[#d8c3a3] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <Link href={`/${onewish.sender_username}`} className="font-courier text-xs text-[#523d2f] uppercase hover:text-[#7d1d23] transition-colors">
+              ENGRAVED BY: <strong className="text-[#7d1d23]">@{onewish.sender_username}</strong>
+            </Link>
+            <WishLikeButton wishId={onewish.id} initialLikes={onewish.likes_count} showText />
           </div>
         </div>
       </div>
@@ -292,10 +312,16 @@ export default function DynamicRootPage() {
   if (!profile) {
     return (
       <div className="max-w-md mx-auto px-4 py-32 text-center space-y-6">
-        <h2 className="font-serif text-4xl font-bold text-[#f5f2eb] uppercase tracking-tighter">Profile Not Found</h2>
-        <p className="text-[#b5afa6] text-sm uppercase tracking-widest">The user @{id} does not exist.</p>
-        <Link href="/" className="inline-block px-8 py-4 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(212,175,55,0.35)] rounded-sm">
-          Return to Home
+        <div className="w-16 h-16 mx-auto rounded-full bg-[#181310] border border-[#3a2c20] flex items-center justify-center text-[#c5a059] text-2xl font-garamond shadow-xl">
+          ✦
+        </div>
+        <h2 className="font-garamond text-4xl italic text-[#f7f2e7]">Archival Folio Unfound</h2>
+        <p className="font-courier text-xs text-[#a89684] uppercase tracking-widest">The scribe @{id} is not registered in the historical ledger.</p>
+        <Link
+          href="/"
+          className="inline-block px-8 py-3.5 bg-[#c5a059] hover:bg-[#d4b069] text-[#0b0908] font-courier font-bold text-xs uppercase tracking-widest transition-all rounded shadow-md"
+        >
+          Return to Registry
         </Link>
       </div>
     );
@@ -307,40 +333,41 @@ export default function DynamicRootPage() {
   const activeWishesList = activeTab === 'received' ? receivedWishes : sentWishes;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-20 space-y-16">
-      {/* Profile Header */}
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 space-y-16">
+      
+      {/* Scribe Folio Header */}
       <div className="flex flex-col items-center text-center space-y-6">
-        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#d4af37]/50 p-1 overflow-hidden bg-[#09090c] shadow-[0_0_24px_rgba(212,175,55,0.2)]">
+        <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-2 border-[#c5a059]/60 p-1 overflow-hidden bg-[#16120e] shadow-[0_0_24px_rgba(197,160,89,0.25)]">
           {profile.avatar_url ? (
             <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover rounded-full" />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-[#d4af37] to-[#e5c07b] text-[#050505] flex items-center justify-center font-serif text-5xl font-bold uppercase">
+            <div className="w-full h-full bg-gradient-to-br from-[#c5a059] to-[#8c6228] text-[#0b0908] flex items-center justify-center font-garamond text-5xl font-bold uppercase">
               {profile.username.charAt(0)}
             </div>
           )}
         </div>
         
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#14120e] border border-[#d4af37]/40 rounded-full text-[10px] font-mono text-[#e5c07b] uppercase tracking-widest shadow-sm">
-            {profile.isUnclaimed ? '✦ UNCLAIMED CITIZEN VAULT' : '✦ VERIFIED ONEWISHES CITIZEN'}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#16120e] border border-[#3a2c20] rounded-full text-[10px] font-courier text-[#c5a059] uppercase tracking-widest">
+            {profile.isUnclaimed ? '✦ UNCLAIMED HISTORICAL CITIZEN' : '✦ VERIFIED SCRIBE OF THE CHRONICLE VAULT'}
           </div>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold uppercase tracking-tighter text-[#f5f2eb]">
+          <h1 className="font-garamond text-4xl sm:text-6xl italic text-[#f7f2e7]">
             @{profile.username}
           </h1>
-          <p className="text-xs uppercase tracking-widest text-[#b5afa6]">
-            {profile.isUnclaimed ? 'Wishes sealed across infinity for this recipient' : 'Permanent Archival Vault'}
+          <p className="text-xs font-courier uppercase tracking-widest text-[#a89684]">
+            {profile.isUnclaimed ? 'Preserved missives inscribed for this recipient' : 'Personal Archival Folio • Permanent Registry'}
           </p>
         </div>
 
-        {/* Golden Wish Scarcity Badges */}
-        <div className="flex flex-col items-center gap-3 p-4 sm:p-5 bg-[#09090c] border border-[#d4af37]/30 rounded-2xl max-w-md w-full shadow-[0_0_30px_rgba(212,175,55,0.12)]">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-[#e5c07b] flex flex-wrap items-center justify-center gap-2">
+        {/* Golden Roll Scarcity Badges */}
+        <div className="flex flex-col items-center gap-3 p-4 sm:p-5 bg-[#14100d] border border-[#3a2c20] rounded-lg max-w-md w-full shadow-lg">
+          <div className="text-[11px] font-courier font-bold uppercase tracking-widest text-[#c5a059] flex flex-wrap items-center justify-center gap-2">
             <div className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>LIFETIME GOLDEN CREDITS</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#c5a059]" />
+              <span>35mm GOLD ROLLS (LIFETIME COVENANT)</span>
             </div>
-            <span className="px-2 py-0.5 bg-[#14120e] border border-[#d4af37]/40 rounded-full text-[10px]">
-              {goldenRemaining} / 3 AVAILABLE
+            <span className="px-2.5 py-0.5 bg-[#1b1511] border border-[#3a2c20] rounded-full text-[10px]">
+              {goldenRemaining} OF 3 REMAINING
             </span>
           </div>
 
@@ -350,14 +377,17 @@ export default function DynamicRootPage() {
               return (
                 <div
                   key={slot}
-                  className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1.5 py-2 px-1 sm:px-3 rounded-xl sm:rounded-full border text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all text-center ${
+                  className={`flex flex-col items-center justify-center gap-1 py-2 px-2 rounded border text-[10px] font-courier font-bold uppercase tracking-wider transition-all text-center ${
                     isUsed
-                      ? 'border-[#211624] bg-[#050507] text-[#7a756f] opacity-50'
-                      : 'border-[#d4af37] bg-[#14120e] text-[#e5c07b] shadow-[0_0_12px_rgba(212,175,55,0.2)]'
+                      ? 'border-[#2a221d] bg-[#0d0a08] text-[#6b584a] opacity-60'
+                      : 'border-[#c5a059] bg-[#1e1713] text-[#c5a059] shadow-sm'
                   }`}
                 >
-                  <span>✦ Wish {slot}</span>
-                  <span className="text-[9px] font-normal">{isUsed ? 'Claimed' : 'Available'}</span>
+                  <span className="flex items-center gap-1">
+                    <span className={`w-2 h-2 rounded-full ${isUsed ? 'bg-[#4a3a2d]' : 'bg-[#c5a059] animate-pulse'}`} />
+                    Roll {slot}
+                  </span>
+                  <span className="text-[8px] font-normal tracking-tight">{isUsed ? 'Exposed & Sealed' : 'Virgin Film'}</span>
                 </div>
               );
             })}
@@ -371,74 +401,80 @@ export default function DynamicRootPage() {
               href={`https://instagram.com/${profile.instagram_handle}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#09090c] border border-[#d4af37]/25 hover:border-[#e5c07b] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#b5afa6] hover:text-[#f5f2eb] transition-all truncate"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#14100d] border border-[#3a2c20] hover:border-[#c5a059] rounded text-[11px] font-courier font-bold uppercase tracking-wider text-[#a89684] hover:text-[#f7f2e7] transition-all truncate"
             >
-              <Instagram className="w-3.5 h-3.5 text-[#e5c07b] shrink-0" />
+              <Instagram className="w-3.5 h-3.5 text-[#c5a059] shrink-0" />
               <span className="truncate">@{profile.instagram_handle}</span>
             </a>
           )}
 
           <button
             onClick={handleShareProfile}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#f5f2eb] hover:bg-white text-[#050505] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all shadow-sm truncate"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#f7f2e7] hover:bg-white text-[#0b0908] rounded text-[11px] font-courier font-bold uppercase tracking-wider transition-all shadow-sm truncate"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-green-700 shrink-0" /> : <Share2 className="w-3.5 h-3.5 shrink-0" />}
-            <span>{copied ? 'Copied!' : 'Share'}</span>
+            <span>{copied ? 'Copied!' : 'Share Folio'}</span>
           </button>
 
           <a
-            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Send a rare, everlasting keepsake wish to @${profile.username} on OneWishes: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Dispatch an eternal keepsake missive to @${profile.username} on OneWishes Chronicle Vault: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#09090c] border border-[#d4af37]/25 hover:border-[#e5c07b] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#b5afa6] hover:text-[#f5f2eb] transition-all truncate"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#14100d] border border-[#3a2c20] hover:border-[#c5a059] rounded text-[11px] font-courier font-bold uppercase tracking-wider text-[#a89684] hover:text-[#f7f2e7] transition-all truncate"
           >
             <MessageCircle className="w-3.5 h-3.5 text-green-500 shrink-0" />
-            <span>WhatsApp</span>
+            <span>Telegram</span>
           </a>
 
           <Link
-            href={`/?to=${profile.username}#create-section`}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_16px_rgba(212,175,55,0.35)] truncate hover:opacity-95"
+            href={`/?to=${profile.username}#darkroom-studio`}
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#c5a059] hover:bg-[#d4b069] text-[#0b0908] rounded text-[11px] font-courier font-bold uppercase tracking-wider transition-all shadow-md truncate"
           >
             <Send className="w-3.5 h-3.5 shrink-0" />
-            <span>Send Wish</span>
+            <span>Send Missive</span>
           </Link>
         </div>
       </div>
 
       {/* Tabs: Received vs Sent Wishes */}
       <div className="space-y-8">
-        <div className="w-full max-w-md mx-auto grid grid-cols-2 border-b border-[#d4af37]/20">
+        <div className="w-full max-w-md mx-auto grid grid-cols-2 border-b border-[#3a2c20]">
           <button
-            onClick={() => setActiveTab('received')}
-            className={`pb-3 sm:pb-4 px-2 sm:px-6 text-xs sm:text-sm font-bold uppercase tracking-wider sm:tracking-widest transition-all relative text-center ${
+            onClick={() => {
+              sounds.playTypewriterStrike();
+              setActiveTab('received');
+            }}
+            className={`pb-3.5 px-4 text-xs font-courier font-bold uppercase tracking-widest transition-all relative text-center ${
               activeTab === 'received'
-                ? 'text-[#f5f2eb]'
-                : 'text-[#7a756f] hover:text-[#b5afa6]'
+                ? 'text-[#f7f2e7]'
+                : 'text-[#6b584a] hover:text-[#a89684]'
             }`}
           >
-            <span>Received ({receivedWishes.length})</span>
+            <span>Received Ledger ({receivedWishes.length})</span>
             {activeTab === 'received' && (
               <motion.div
                 layoutId="tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4af37] to-[#e5c07b] shadow-[0_0_8px_#d4af37]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#c5a059] shadow-[0_0_8px_#c5a059]"
               />
             )}
           </button>
 
           <button
-            onClick={() => setActiveTab('sent')}
-            className={`pb-3 sm:pb-4 px-2 sm:px-6 text-xs sm:text-sm font-bold uppercase tracking-wider sm:tracking-widest transition-all relative text-center ${
+            onClick={() => {
+              sounds.playTypewriterStrike();
+              setActiveTab('sent');
+            }}
+            className={`pb-3.5 px-4 text-xs font-courier font-bold uppercase tracking-widest transition-all relative text-center ${
               activeTab === 'sent'
-                ? 'text-[#f5f2eb]'
-                : 'text-[#7a756f] hover:text-[#b5afa6]'
+                ? 'text-[#f7f2e7]'
+                : 'text-[#6b584a] hover:text-[#a89684]'
             }`}
           >
-            <span>Sent ({sentWishes.length})</span>
+            <span>Dispatched Ledger ({sentWishes.length})</span>
             {activeTab === 'sent' && (
               <motion.div
                 layoutId="tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#e5c07b]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#c5a059]"
               />
             )}
           </button>
@@ -447,20 +483,20 @@ export default function DynamicRootPage() {
         {/* Wishes Grid */}
         {loadingWishes && activeWishesList.length === 0 ? (
           <div className="py-20 flex items-center justify-center">
-            <JarLoader text="ONEWISHES" subtext="Unsealing wishes..." size="sm" />
+            <JarLoader text="CHRONICLE LEDGER" subtext="Unsealing folio records..." size="sm" />
           </div>
         ) : activeWishesList.length === 0 ? (
-          <div className="text-center py-16 space-y-4 bg-[#09090c] border border-[#d4af37]/25 p-8 rounded-sm">
-            <p className="text-sm text-[#b5afa6] uppercase tracking-widest font-bold">
+          <div className="text-center py-16 space-y-4 bg-[#14100d] border border-dashed border-[#3a2c20] p-8 rounded">
+            <p className="text-xs font-courier text-[#a89684] uppercase tracking-widest">
               {activeTab === 'received'
-                ? `No wishes received yet for @${profile.username}.`
-                : `@${profile.username} has not sent any wishes yet.`}
+                ? `No keepsake missives have been received by @${profile.username} yet.`
+                : `@${profile.username} has not yet dispatched any missives.`}
             </p>
             <Link
-              href="/#create-section"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_16px_rgba(212,175,55,0.3)] rounded-sm"
+              href="/#darkroom-studio"
+              className="inline-block px-6 py-2.5 bg-[#c5a059] hover:bg-[#d4b069] text-[#0b0908] font-courier font-bold text-xs uppercase tracking-widest transition-all shadow-md rounded"
             >
-              Write First Wish
+              Inscribe First Missive
             </Link>
           </div>
         ) : (
@@ -475,43 +511,49 @@ export default function DynamicRootPage() {
               return (
                 <div
                   key={w.id}
-                  className="p-6 sm:p-8 bg-[#09090c] border border-[#d4af37]/25 hover:border-[#e5c07b] transition-all flex flex-col justify-between group shadow-xl hover:shadow-[0_0_30px_rgba(212,175,55,0.12)] min-h-[320px] relative rounded-sm"
+                  className="vintage-parchment rounded-sm p-6 sm:p-8 border border-[#c4a882] shadow-xl flex flex-col justify-between group min-h-[320px] relative overflow-hidden"
                 >
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b border-[#d4af37]/20 pb-4">
-                      <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-sm ${
-                        w.tier === 'golden' ? 'bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505]' : 'bg-[#e5c07b] text-[#050505]'
+                  {/* Brass Corner Brackets */}
+                  <div className="absolute top-2 left-2 w-3 h-3 vintage-brass-bracket-tl pointer-events-none" />
+                  <div className="absolute top-2 right-2 w-3 h-3 vintage-brass-bracket-tr pointer-events-none" />
+                  <div className="absolute bottom-2 left-2 w-3 h-3 vintage-brass-bracket-bl pointer-events-none" />
+                  <div className="absolute bottom-2 right-2 w-3 h-3 vintage-brass-bracket-br pointer-events-none" />
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-[#d8c3a3] pb-3">
+                      <span className={`px-2.5 py-0.5 text-[9px] font-courier font-bold uppercase tracking-widest rounded ${
+                        w.tier === 'golden' ? 'bg-[#7d1d23] text-[#f7f2e7]' : 'bg-[#c5a059] text-[#0b0908]'
                       }`}>
-                        {w.tier}
+                        {w.tier === 'golden' ? 'GOLDEN CYLINDER' : 'CHRONICLE MONUMENT'}
                       </span>
-                      <span className="text-[10px] font-mono text-[#b5afa6]">
+                      <span className="text-[10px] font-courier text-[#6b584a]">
                         {new Date(w.created_at).toLocaleDateString()}
                       </span>
                     </div>
 
                     {w.media_url && (
-                      <div className="rounded-sm overflow-hidden border border-[#d4af37]/20">
-                        <WishMediaGallery mediaUrl={w.media_url} mediaType={w.media_type} maxHeight="max-h-[220px]" />
+                      <div className="polaroid-frame p-2 rounded-sm border border-[#d6c7b2]">
+                        <WishMediaGallery mediaUrl={w.media_url} mediaType={w.media_type} maxHeight="max-h-[200px]" />
                       </div>
                     )}
 
-                    <Link href={wishHref} className="block group-hover:text-[#e5c07b] transition-colors">
-                      <p className="text-sm text-[#f5f2eb] leading-relaxed line-clamp-4 font-serif italic uppercase">
+                    <Link href={wishHref} className="block group-hover:text-[#7d1d23] transition-colors">
+                      <p className="text-base sm:text-lg text-[#231916] leading-relaxed line-clamp-4 font-garamond italic">
                         "{w.message}"
                       </p>
                     </Link>
                   </div>
 
-                  <div className="pt-6 mt-6 border-t border-[#d4af37]/20 flex flex-wrap gap-2 justify-between items-center text-xs font-bold uppercase tracking-widest z-10">
-                    <span className="text-[#b5afa6] truncate max-w-[140px] sm:max-w-[180px]">
+                  <div className="pt-4 mt-4 border-t border-[#d8c3a3] flex flex-wrap gap-2 justify-between items-center text-xs font-courier uppercase tracking-widest z-10">
+                    <span className="text-[#523d2f] truncate max-w-[150px] sm:max-w-[200px]">
                       {activeTab === 'received' ? `FROM: @${w.sender_username}` : `TO: @${w.to_username || 'Recipient'}`}
                     </span>
                     <div className="flex items-center gap-3 shrink-0">
                       <Link
                         href={wishHref}
-                        className="text-[11px] text-[#e5c07b] hover:underline flex items-center gap-1 font-mono font-bold"
+                        className="text-[11px] text-[#7d1d23] font-bold hover:underline flex items-center gap-1 font-courier"
                       >
-                        <span>View</span>
+                        <span>Inspect</span>
                         <span>→</span>
                       </Link>
                       <WishLikeButton wishId={w.id} initialLikes={w.likes_count} showText />

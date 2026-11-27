@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
-import { Menu, X, LogOut, Volume2, VolumeX } from 'lucide-react';
+import { Menu, X, LogOut, Volume2, VolumeX, Stamp, Compass } from 'lucide-react';
 import { sounds } from '@/lib/sounds';
 
 export const Navbar = () => {
@@ -33,7 +33,6 @@ export const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    // Immediate hydration from cache so avatar and username display instantly
     try {
       const cached = localStorage.getItem('onewishes_cached_profile');
       if (cached) {
@@ -92,6 +91,7 @@ export const Navbar = () => {
   }, []);
 
   const handleGoogleLogin = async () => {
+    sounds.playWaxSealBreak();
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -101,12 +101,11 @@ export const Navbar = () => {
   };
 
   const handleLogout = async () => {
+    sounds.playTypewriterStrike();
     try {
-      // 1. Immediately wipe component state so UI updates instantly
       setUser(null);
       setProfile(null);
 
-      // 2. Clear all cached storage keys immediately
       if (typeof window !== 'undefined') {
         localStorage.removeItem('onewishes_cached_profile');
         Object.keys(localStorage).forEach((key) => {
@@ -118,7 +117,6 @@ export const Navbar = () => {
         window.dispatchEvent(new CustomEvent('onewishes:profile-updated', { detail: null }));
       }
 
-      // 3. Perform Supabase sign out with 800ms safety timeout to prevent hanging
       await Promise.race([
         supabase.auth.signOut(),
         new Promise((resolve) => setTimeout(resolve, 800)),
@@ -133,201 +131,194 @@ export const Navbar = () => {
   };
 
   const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Golden Wish', href: '/goldenwish' },
-    { label: 'Onewish', href: '/onewish' },
-    { label: 'Gallery', href: '/gallery' },
-    { label: 'About', href: '/about' },
-    { label: 'Contact', href: '/contact' },
+    { label: 'Archive', href: '/' },
+    { label: 'Golden Roll', href: '/goldenwish' },
+    { label: 'Monument', href: '/onewish' },
+    { label: 'Vault Gallery', href: '/gallery' },
+    { label: 'Colophon', href: '/about' },
+    { label: 'Telegraph', href: '/contact' },
   ];
 
   return (
     <div className="sticky top-4 z-50 w-full px-3 sm:px-6 pointer-events-none">
-      <header className="pointer-events-auto max-w-6xl mx-auto rounded-full bg-[#120f0d]/95 backdrop-blur-2xl border border-[#423528] shadow-[0_12px_45px_rgba(0,0,0,0.95)] transition-all px-4 sm:px-6 py-2.5 relative">
-        {/* Subtle vintage border highlight */}
-        <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#dca766]/35 to-transparent pointer-events-none" />
+      <header className="pointer-events-auto max-w-6xl mx-auto rounded-full bg-[#120f0d]/95 backdrop-blur-2xl border border-[#423326] shadow-[0_12px_45px_rgba(0,0,0,0.95)] transition-all px-4 sm:px-6 py-2.5 relative">
+        {/* Subtle brass border highlight */}
+        <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#c5a059]/40 to-transparent pointer-events-none" />
 
         <div className="flex items-center justify-between">
         
-        {/* Logo with vintage film reel accent */}
-        <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-          <div className="relative">
-            <img 
-              src="/logo-tight.png" 
-              alt="OneWishes Logo" 
-              className="h-8 sm:h-10 w-auto object-contain drop-shadow-[0_0_14px_rgba(220,167,102,0.45)] transition-transform group-hover:scale-105" 
-            />
-            {/* Spinning vintage reel ring overlay on hover */}
-            <div className="absolute -inset-1 rounded-full border border-dashed border-[#dca766]/20 animate-reel-spin pointer-events-none" />
-          </div>
-          <span className="font-serif font-black text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f7ecd5] to-[#dca766] transition-opacity">
-            ONEWISHES
-          </span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-xs font-mono tracking-widest uppercase transition-colors relative py-1 ${
-                  isActive ? 'text-[#dca766] font-bold' : 'text-[#bfae9c] hover:text-[#f7f3ea]'
-                }`}
-              >
-                {item.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#a8713a] via-[#dca766] to-[#e8bc82] rounded-full shadow-[0_0_8px_#dca766]" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Desktop Auth & Sound */}
-        <div className="hidden lg:flex items-center gap-4">
-          {/* Sound Toggle */}
-          <button
-            onClick={() => sounds.toggle()}
-            title={soundOn ? 'Sound On' : 'Sound Muted'}
-            className="p-2 border border-[#423528]/60 rounded-full text-[#bfae9c] hover:text-[#f7f3ea] hover:border-[#dca766]/60 bg-[#1a1613] transition-all"
-          >
-            {soundOn ? <Volume2 className="w-4 h-4 text-[#dca766]" /> : <VolumeX className="w-4 h-4" />}
-          </button>
-
-          {user ? (
-            <div className="flex items-center gap-3">
-              <Link 
-                href={profile?.username ? `/${profile.username}` : '/profile'} 
-                className="flex items-center gap-2 border border-[#d4af37]/30 py-1.5 px-3 rounded-full hover:border-[#e5c07b] bg-[#0d0d10] transition-all group shadow-sm"
-              >
-                {user.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full" />
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#d4af37] to-[#e5c07b] text-[#050505] flex items-center justify-center font-bold text-[10px] uppercase">
-                    {(profile?.username || user.email?.charAt(0))?.substring(0, 1)}
-                  </div>
-                )}
-                {profile?.username ? (
-                  <span className="text-xs font-bold tracking-wider uppercase text-[#f5f2eb] group-hover:text-[#e5c07b] transition-colors">
-                    @{profile.username}
-                  </span>
-                ) : (
-                  <span className="text-[10px] font-bold tracking-wider uppercase text-[#e5c07b]">
-                    Set Handle
-                  </span>
-                )}
-              </Link>
-              <button onClick={handleLogout} className="text-[#b5afa6] hover:text-[#f5f2eb] p-1.5 transition-colors" title="Log Out">
-                <LogOut className="w-4 h-4" />
-              </button>
+          {/* Logo with vintage carmine wax seal emblem & spinning brass reel */}
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+            <div className="relative">
+              <img 
+                src="/logo-tight.png" 
+                alt="OneWishes Emblem" 
+                className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_0_12px_rgba(197,160,89,0.45)] transition-transform group-hover:scale-105" 
+              />
+              <div className="absolute -inset-1 rounded-full border border-dashed border-[#c5a059]/30 animate-reel-spin pointer-events-none" />
             </div>
-          ) : (
-            <button
-              onClick={handleGoogleLogin}
-              className="px-5 py-2 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase text-xs tracking-wider hover:opacity-95 shadow-[0_0_18px_rgba(212,175,55,0.35)] transition-all"
-            >
-              Sign In
-            </button>
-          )}
-        </div>
+            <div className="flex flex-col">
+              <span className="font-garamond font-black text-base sm:text-xl tracking-[0.2em] uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#ffffff] via-[#f7ecd5] to-[#c5a059]">
+                ONEWISHES
+              </span>
+              <span className="text-[7px] font-courier text-[#8c6228] tracking-[0.25em] uppercase -mt-1 hidden sm:block">
+                EST. 1890 ARCHIVE
+              </span>
+            </div>
+          </Link>
 
-        {/* Mobile Nav Trigger & Sound */}
-        <div className="lg:hidden flex items-center gap-1.5 sm:gap-2">
-          {user && (
-            <Link 
-              href={profile?.username ? `/${profile.username}` : '/profile'} 
-              className="flex items-center gap-1 border border-[#d4af37]/30 py-1 px-2 rounded-full bg-[#0d0d10] text-[11px] font-bold uppercase tracking-wider text-[#e5c07b] max-w-[120px] truncate"
-            >
-              <span className="truncate">@{profile?.username || 'Profile'}</span>
-            </Link>
-          )}
-
-          <button
-            onClick={() => sounds.toggle()}
-            title={soundOn ? 'Sound On' : 'Sound Muted'}
-            className="p-2 border border-[#d4af37]/20 rounded-full text-[#b5afa6] hover:text-[#f5f2eb] bg-[#0d0d10]"
-          >
-            {soundOn ? <Volume2 className="w-4 h-4 text-[#e5c07b]" /> : <VolumeX className="w-4 h-4" />}
-          </button>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-[#f5f2eb] p-2 border border-[#d4af37]/20 rounded-lg bg-[#0d0d10] hover:border-[#d4af37]/50"
-            aria-label="Toggle navigation menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-[#e5c07b]" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu Dropdown Drawer */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#d4af37]/20 bg-[#070709] px-5 py-6 space-y-4 shadow-2xl">
-          <div className="space-y-2">
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-6">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`block py-2.5 px-3 rounded-lg text-sm font-bold uppercase tracking-wider transition-all ${
-                    isActive 
-                      ? 'bg-[#14120e] text-[#e5c07b] border-l-2 border-[#d4af37]' 
-                      : 'text-[#b5afa6] hover:text-[#f5f2eb] hover:bg-[#0d0d10]'
+                  onClick={() => sounds.playTypewriterStrike()}
+                  className={`text-xs font-courier tracking-widest uppercase transition-colors relative py-1 ${
+                    isActive ? 'text-[#c5a059] font-bold' : 'text-[#a89684] hover:text-[#f7f2e7]'
+                  }`}
+                >
+                  {item.label}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#7d1d23] via-[#c5a059] to-[#8c6228] rounded-full shadow-[0_0_8px_#c5a059]" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Desktop Auth & Sound */}
+          <div className="hidden lg:flex items-center gap-4">
+            {/* Sound Synthesizer Toggle */}
+            <button
+              onClick={() => sounds.toggle()}
+              title={soundOn ? 'Analog Audio Enabled' : 'Muted'}
+              className="p-2 border border-[#423326] rounded-full text-[#a89684] hover:text-[#f7f2e7] hover:border-[#c5a059]/60 bg-[#16120f] transition-all"
+            >
+              {soundOn ? <Volume2 className="w-4 h-4 text-[#c5a059]" /> : <VolumeX className="w-4 h-4" />}
+            </button>
+
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Link 
+                  href={profile?.username ? `/${profile.username}` : '/profile'} 
+                  onClick={() => sounds.playTypewriterStrike()}
+                  className="flex items-center gap-2 border border-[#423326] py-1.5 px-3 rounded-full hover:border-[#c5a059] bg-[#16120f] transition-all group shadow-sm"
+                >
+                  {user.user_metadata?.avatar_url ? (
+                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full border border-[#c5a059]/50" />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full wax-seal-emboss text-[#ffdcd9] flex items-center justify-center font-bold text-[9px] uppercase">
+                      {(profile?.username || user.email?.charAt(0))?.substring(0, 1)}
+                    </div>
+                  )}
+                  {profile?.username ? (
+                    <span className="text-xs font-courier font-bold tracking-wider uppercase text-[#f7f2e7] group-hover:text-[#c5a059] transition-colors">
+                      @{profile.username}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-courier font-bold tracking-wider uppercase text-[#c5a059]">
+                      Set Handle
+                    </span>
+                  )}
+                </Link>
+                <button onClick={handleLogout} className="text-[#8c735d] hover:text-[#ff8d8c] p-1.5 transition-colors" title="Seal & Exit">
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleGoogleLogin}
+                className="px-5 py-2 rounded-full wax-seal-emboss text-white font-courier font-bold uppercase text-xs tracking-wider hover:scale-105 active:scale-95 shadow-md transition-all flex items-center gap-1.5"
+              >
+                <Stamp className="w-3.5 h-3.5 text-[#ffdcd9]" />
+                <span>Sign In</span>
+              </button>
+            )}
+          </div>
+
+          {/* Mobile Nav Trigger & Sound */}
+          <div className="lg:hidden flex items-center gap-1.5 sm:gap-2">
+            {user && (
+              <Link 
+                href={profile?.username ? `/${profile.username}` : '/profile'} 
+                className="flex items-center gap-1 border border-[#423326] py-1 px-2.5 rounded-full bg-[#16120f] text-[11px] font-courier font-bold uppercase tracking-wider text-[#c5a059] max-w-[120px] truncate"
+              >
+                <span className="truncate">@{profile?.username || 'Profile'}</span>
+              </Link>
+            )}
+
+            <button
+              onClick={() => sounds.toggle()}
+              title={soundOn ? 'Sound On' : 'Sound Muted'}
+              className="p-2 border border-[#423326] rounded-full text-[#a89684] hover:text-[#f7f2e7] bg-[#16120f]"
+            >
+              {soundOn ? <Volume2 className="w-4 h-4 text-[#c5a059]" /> : <VolumeX className="w-4 h-4" />}
+            </button>
+
+            <button
+              onClick={() => {
+                sounds.playTypewriterStrike();
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              className="text-[#f7f2e7] p-2 border border-[#423326] rounded-lg bg-[#16120f] hover:border-[#c5a059]/60"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+
+        </div>
+
+        {/* Mobile Dropdown Menu (Styled as an Antique Folded Missive) */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden mt-3 pt-3 border-t border-[#423326] flex flex-col gap-2 pb-2">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => {
+                    sounds.playTypewriterStrike();
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`text-xs font-courier tracking-widest uppercase py-2 px-3 rounded ${
+                    isActive ? 'bg-[#2a2018] text-[#c5a059] font-bold' : 'text-[#a89684] hover:text-[#f7f2e7]'
                   }`}
                 >
                   {item.label}
                 </Link>
               );
             })}
-          </div>
 
-          <div className="pt-4 border-t border-[#d4af37]/20 space-y-3">
-            {user ? (
-              <div className="flex items-center justify-between pt-2">
-                <Link 
-                  href={profile?.username ? `/${profile.username}` : '/profile'} 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2.5 border border-[#d4af37]/30 py-2 px-4 rounded-full bg-[#0d0d10] text-xs font-bold uppercase tracking-wider text-[#f5f2eb]"
-                >
-                  {user.user_metadata?.avatar_url && (
-                    <img src={user.user_metadata.avatar_url} alt="Profile" className="w-6 h-6 rounded-full" />
-                  )}
-                  <span>@{profile?.username || 'My Profile'}</span>
-                </Link>
-
-                <button 
-                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }} 
-                  className="inline-flex items-center gap-1.5 text-xs text-[#b5afa6] hover:text-[#f5f2eb] p-2 font-mono uppercase"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            ) : (
+            {!user && (
               <button
-                onClick={() => { handleGoogleLogin(); setMobileMenuOpen(false); }}
-                className="w-full py-3.5 bg-gradient-to-r from-[#d4af37] via-[#e5c07b] to-[#b38728] text-[#050505] font-bold uppercase tracking-wider text-xs shadow-lg"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleGoogleLogin();
+                }}
+                className="mt-2 w-full py-2.5 rounded-full wax-seal-emboss text-white font-courier text-xs font-bold uppercase tracking-wider text-center"
               >
-                Sign In with Google
+                Sign In to Archive
               </button>
             )}
 
-            <div className="pt-2 text-center">
-              <a 
-                href="mailto:admin@onewishes.com" 
-                className="text-[11px] font-mono text-[#7a756f] hover:text-[#e5c07b] transition-colors"
+            {user && (
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleLogout();
+                }}
+                className="mt-2 w-full py-2 border border-[#7d1d23]/40 text-[#ff8d8c] font-courier text-xs uppercase tracking-wider rounded text-center"
               >
-                admin@onewishes.com
-              </a>
-            </div>
+                Log Out
+              </button>
+            )}
           </div>
-        </div>
-      )}
+        )}
       </header>
     </div>
   );
